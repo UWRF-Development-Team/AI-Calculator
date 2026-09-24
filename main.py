@@ -30,8 +30,8 @@ def on_mouse_move(event):
     y = event.y
     old_x = x if old_x is None else old_x
     old_y = y if old_y is None else old_y
-    canvas.create_line(old_x, old_y, x, y, fill="black")
-    draw.line([old_x, old_y, x, y], (0, 0, 0))
+    canvas.create_line(old_x, old_y, x, y, fill="black", width=3)
+    draw.line([old_x, old_y, x, y], (0, 0, 0), width=3)
     old_x = x
     old_y = y
 
