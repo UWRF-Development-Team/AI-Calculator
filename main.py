@@ -1,4 +1,7 @@
 import tkinter as tk
+from typing import assert_type
+from pathlib import Path
+
 from PIL import Image, ImageDraw
 
 root = tk.Tk()
@@ -40,8 +43,25 @@ def on_mouse_release(event):
 
 def save_image(event):
     global text_input
-    text_input.get()
-    image.save(f"{text_input.get()}.png")
+    converted_name = convert_symbols(text_input.get()) + ".0"
+    files = Path("./generated-data")
+    highest_name = converted_name
+    # Kind of messy
+    for file in files.iterdir():
+        if len(file.name.split(".")) != 3: continue
+        if file.name.split(".", 1)[0] == highest_name.split(".", 1)[0]:
+            if int(file.name.split(".", 2)[1]) >= int(highest_name.split(".", 1)[1]):
+                highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
+    image.save(f"./generated-data/{highest_name}.png")
+
+def convert_symbols(text):
+    assert_type(text, str)
+    return (text.replace("/", "d")
+            .replace("+", "a")
+            .replace("-", "s")
+            .replace("*", "m")
+            .replace("x", "m")
+            )
 
 canvas.bind("<B1-Motion>", on_mouse_move)
 canvas.bind("<ButtonRelease-1>", on_mouse_release)
