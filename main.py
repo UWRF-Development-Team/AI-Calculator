@@ -66,9 +66,11 @@ def convert_symbols(text):
 def clear_canvas(event):
     global image
     global draw
+    global text_input
     image = Image.new("RGB", (640, 320), (255, 255, 255))
     draw = ImageDraw.Draw(image)
     canvas.delete("all")
+    text_input.delete(0, tk.END)
 
 canvas.bind("<B1-Motion>", on_mouse_move)
 canvas.bind("<ButtonRelease-1>", on_mouse_release)
