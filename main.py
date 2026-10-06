@@ -77,6 +77,19 @@ def clear_canvas(event):
     text_input.delete(0, tk.END)
     strokes = [[]]
 
+def undo():
+    global image
+    global draw
+    global text_input
+    image = Image.new("RGB", (640, 320), (255, 255, 255))
+    draw = ImageDraw.Draw(image)
+    canvas.delete("all")
+    text_input.delete(0, tk.END)
+    strokes.pop()
+    for stroke in strokes:
+        for strokePart in stroke:
+            canvas.create_line(strokePart[0], strokePart[1], strokePart[2], strokePart[3], fill="black", width=3)
+            draw.line(strokePart, (0, 0, 0), width=3)
 
 canvas.bind("<B1-Motion>", on_mouse_move)
 canvas.bind("<ButtonRelease-1>", on_mouse_release)
