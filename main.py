@@ -23,10 +23,13 @@ root.title("AI Calculator")
 old_x = None
 old_y = None
 strokes = [[]]
+undid_strokes = []
 
 def on_mouse_move(event):
     global old_x
     global old_y
+    global undid_strokes
+    undid_strokes = []
     x = event.x
     y = event.y
     old_x = x if old_x is None else old_x
@@ -71,14 +74,15 @@ def clear_canvas(event):
     global draw
     global text_input
     global strokes
+    global undid_strokes
     image = Image.new("RGB", (640, 320), (255, 255, 255))
     draw = ImageDraw.Draw(image)
     canvas.delete("all")
     text_input.delete(0, tk.END)
     strokes = [[]]
+    undid_strokes = []
 
 def undo(event):
-    print(strokes)
     global image
     global draw
     global text_input
@@ -87,7 +91,7 @@ def undo(event):
             strokes.pop()
         else:
             return
-    strokes.pop()
+    undid_strokes.append(strokes.pop())
     image = Image.new("RGB", (640, 320), (255, 255, 255))
     draw = ImageDraw.Draw(image)
     canvas.delete("all")
@@ -98,10 +102,22 @@ def undo(event):
 
     strokes.append([])
 
+def redo(event):
+    if len(undid_strokes) == 0:
+        return
+    redo_stroke = undid_strokes.pop()
+    for strokePart in redo_stroke:
+        canvas.create_line(strokePart[0], strokePart[1], strokePart[2], strokePart[3], fill="black", width=3)
+        draw.line(strokePart, (0, 0, 0), width=3)
+    strokes[-1] = redo_stroke
+    strokes.append([])
+
+
 canvas.bind("<B1-Motion>", on_mouse_move)
 canvas.bind("<ButtonRelease-1>", on_mouse_release)
 canvas.bind("<Button-3>", save_image)
 root.bind("<Control-z>", undo)
+root.bind("<Control-y>", redo)
 
 button = tk.Button(root, text="Save")
 button.bind("<Button-1>", save_image)
