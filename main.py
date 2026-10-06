@@ -127,8 +127,15 @@ clear_button = tk.Button(root, text="Clear")
 clear_button.bind("<Button-1>", clear_canvas)
 clear_button.grid(row = 1, column = 2)
 
-undo_button = tk.Button(root, text="Undo")
+undo_redo_frame = tk.Frame(root)
+undo_redo_frame.grid(row = 1, column = 0, sticky="ws")
+
+undo_button = tk.Button(undo_redo_frame, text="Undo")
 undo_button.bind("<Button-1>", undo)
-undo_button.grid(row = 1, column = 0, sticky="ws")
+undo_button.grid(row = 0, column = 0)
+
+redo_button = tk.Button(undo_redo_frame, text="Redo")
+redo_button.bind("<Button-1>", redo)
+redo_button.grid(row = 0, column = 1)
 
 root.mainloop()
