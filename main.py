@@ -22,6 +22,7 @@ root.title("AI Calculator")
 
 old_x = None
 old_y = None
+strokes = [[]]
 
 def on_mouse_move(event):
     global old_x
@@ -30,6 +31,7 @@ def on_mouse_move(event):
     y = event.y
     old_x = x if old_x is None else old_x
     old_y = y if old_y is None else old_y
+    strokes[-1].append([old_x, old_y, x, y])
     canvas.create_line(old_x, old_y, x, y, fill="black", width=3)
     draw.line([old_x, old_y, x, y], (0, 0, 0), width=3)
     old_x = x
@@ -40,6 +42,7 @@ def on_mouse_release(event):
     global old_y
     old_x = None
     old_y = None
+    strokes.append([])
 
 def save_image(event):
     global text_input
@@ -67,10 +70,13 @@ def clear_canvas(event):
     global image
     global draw
     global text_input
+    global strokes
     image = Image.new("RGB", (640, 320), (255, 255, 255))
     draw = ImageDraw.Draw(image)
     canvas.delete("all")
     text_input.delete(0, tk.END)
+    strokes = [[]]
+
 
 canvas.bind("<B1-Motion>", on_mouse_move)
 canvas.bind("<ButtonRelease-1>", on_mouse_release)
