@@ -4,14 +4,38 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+#Creating Window
 root = tk.Tk()
+root.minsize(640, 320)
+root.title("AI Calculator")
 
-# For the user to see
+#Equations / Answers Grid
+eq_ans_frame = tk.Frame(root, bd=1, relief="solid")
+eq_ans_frame.grid(row = 0, column = 0)
+
+#Equations
+equation1 = tk.Label(eq_ans_frame, text = "Equation 1")
+equation1.grid(row = 0, column = 0)
+equation2 = tk.Label(eq_ans_frame, text = "Equation 2")
+equation2.grid(row = 1, column = 0)
+equation3 = tk.Label(eq_ans_frame, text = "Equation 3")
+equation3.grid(row = 2, column = 0)
+
+#Answers
+answer1 = tk.Label(eq_ans_frame, text = "Answer 1")
+answer1.grid(row = 0, column = 1)
+answer2 = tk.Label(eq_ans_frame, text = "Answer 2")
+answer2.grid(row = 1, column = 1)
+answer3 = tk.Label(eq_ans_frame, text = "Answer 3")
+answer3.grid(row = 2, column = 1)
+
+# Drawing Canvas
 canvas = tk.Canvas(root, width=640, height=320)
-canvas.grid(row = 0, column = 0)
+canvas.grid(row = 2, column = 0)
 
+#Text Input for saving canvas
 text_input = tk.Entry(root)
-text_input.grid(row = 1, column = 0)
+text_input.grid(row = 2, column = 0, sticky = 's')
 
 #Predicted Output From System
 output = tk.Text(root, height=1, width=40)
@@ -27,19 +51,21 @@ output.config(state='disabled') #disabled/normal for post prediction edits
 image = Image.new("RGB", (640, 320), (255, 255, 255))
 draw = ImageDraw.Draw(image)
 
-root.minsize(640, 320)
-root.title("AI Calculator")
-
 old_x = None
 old_y = None
+strokes = [[]]
+undid_strokes = []
 
 def on_mouse_move(event):
     global old_x
     global old_y
+    global undid_strokes
+    undid_strokes = []
     x = event.x
     y = event.y
     old_x = x if old_x is None else old_x
     old_y = y if old_y is None else old_y
+    strokes[-1].append([old_x, old_y, x, y])
     canvas.create_line(old_x, old_y, x, y, fill="black", width=3)
     draw.line([old_x, old_y, x, y], (0, 0, 0), width=3)
     old_x = x
@@ -50,6 +76,7 @@ def on_mouse_release(event):
     global old_y
     old_x = None
     old_y = None
+    strokes.append([])
 
 def save_image(event):
     global text_input
@@ -77,21 +104,74 @@ def clear_canvas(event):
     global image
     global draw
     global text_input
+    global strokes
+    global undid_strokes
     image = Image.new("RGB", (640, 320), (255, 255, 255))
     draw = ImageDraw.Draw(image)
     canvas.delete("all")
     text_input.delete(0, tk.END)
+    strokes = [[]]
+    undid_strokes = []
 
+def undo(event):
+    global image
+    global draw
+    global text_input
+    if len(strokes[-1]) == 0:
+        if len(strokes) > 1:
+            strokes.pop()
+        else:
+            return
+    undid_strokes.append(strokes.pop())
+    image = Image.new("RGB", (640, 320), (255, 255, 255))
+    draw = ImageDraw.Draw(image)
+    canvas.delete("all")
+    for stroke in strokes:
+        for strokePart in stroke:
+            canvas.create_line(strokePart[0], strokePart[1], strokePart[2], strokePart[3], fill="black", width=3)
+            draw.line(strokePart, (0, 0, 0), width=3)
+
+    strokes.append([])
+
+def redo(event):
+    if len(undid_strokes) == 0:
+        return
+    redo_stroke = undid_strokes.pop()
+    for strokePart in redo_stroke:
+        canvas.create_line(strokePart[0], strokePart[1], strokePart[2], strokePart[3], fill="black", width=3)
+        draw.line(strokePart, (0, 0, 0), width=3)
+    strokes[-1] = redo_stroke
+    strokes.append([])
+
+#Keybindings
 canvas.bind("<B1-Motion>", on_mouse_move)
 canvas.bind("<ButtonRelease-1>", on_mouse_release)
 canvas.bind("<Button-3>", save_image)
+root.bind("<Control-z>", undo)
+root.bind("<Control-y>", redo)
 
-button = tk.Button(root, text="Save")
-button.bind("<Button-1>", save_image)
-button.grid(row = 1, column = 1)
+#Seperate frame needed to display buttons correctly
+clear_save_frame = tk.Frame(root)
+clear_save_frame.grid(row = 2, column = 0, sticky = 'es')
 
-clear_button = tk.Button(root, text="Clear")
+save_button = tk.Button(clear_save_frame, text="Save")
+save_button.bind("<Button-1>", save_image)
+save_button.grid(row = 0, column = 0)
+
+clear_button = tk.Button(clear_save_frame, text="Clear")
 clear_button.bind("<Button-1>", clear_canvas)
-clear_button.grid(row = 1, column = 2)
+clear_button.grid(row = 0, column = 1)
+
+#Seperate frame needed to display buttons correctly
+undo_redo_frame = tk.Frame(root)
+undo_redo_frame.grid(row = 2, column = 0, sticky="ws")
+
+undo_button = tk.Button(undo_redo_frame, text="Undo")
+undo_button.bind("<Button-1>", undo)
+undo_button.grid(row = 0, column = 0)
+
+redo_button = tk.Button(undo_redo_frame, text="Redo")
+redo_button.bind("<Button-1>", redo)
+redo_button.grid(row = 0, column = 1)
 
 root.mainloop()
