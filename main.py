@@ -15,20 +15,19 @@ eq_ans_frame.grid(row = 0, column = 0)
 
 #Equations
 equation1 = tk.Label(eq_ans_frame, text = "Equation 1")
-equation1.grid(row = 0, column = 0, sticky = 'w')
+equation1.grid(row = 0, column = 0)
 equation2 = tk.Label(eq_ans_frame, text = "Equation 2")
-equation2.grid(row = 1, column = 0, sticky = 'w')
+equation2.grid(row = 1, column = 0)
 equation3 = tk.Label(eq_ans_frame, text = "Equation 3")
-equation3.grid(row = 2, column = 0, sticky = 'w')
+equation3.grid(row = 2, column = 0)
 
 #Answers
 answer1 = tk.Label(eq_ans_frame, text = "Answer 1")
-answer1.grid(row = 0, column = 1, sticky = 'e')
+answer1.grid(row = 0, column = 1)
 answer2 = tk.Label(eq_ans_frame, text = "Answer 2")
-answer2.grid(row = 1, column = 1, sticky = 'e')
+answer2.grid(row = 1, column = 1)
 answer3 = tk.Label(eq_ans_frame, text = "Answer 3")
-answer3.grid(row = 2, column = 1, sticky = 'e')
-
+answer3.grid(row = 2, column = 1)
 
 # Drawing Canvas
 canvas = tk.Canvas(root, width=640, height=320)
