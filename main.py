@@ -13,6 +13,16 @@ canvas.grid(row = 0, column = 0)
 text_input = tk.Entry(root)
 text_input.grid(row = 1, column = 0)
 
+#Predicted Output From System
+output = tk.Text(root, height=1, width=40)
+output.grid(row = 2, column = 0)
+
+predicted_input = "This is what the AI predicted." #Ideally, the AI would put it's guess in this varible
+
+output.insert(tk.END, predicted_input)
+output.config(state='disabled') #disabled/normal for post prediction edits
+
+
 # For the system to see
 image = Image.new("RGB", (640, 320), (255, 255, 255))
 draw = ImageDraw.Draw(image)
