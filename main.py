@@ -35,11 +35,11 @@ canvas.grid(row = 2, column = 0)
 
 #Text Input for saving canvas
 text_input = tk.Entry(root)
-text_input.grid(row = 2, column = 0, sticky = 's')
+text_input.grid(row = 3, column = 0, sticky = 's')
 
 #Predicted Output From System
 output = tk.Text(root, height=1, width=40)
-output.grid(row = 2, column = 0)
+output.grid(row = 1, column = 0)
 
 predicted_input = "This is what the AI predicted." #Ideally, the AI would put it's guess in this varible
 
@@ -152,7 +152,7 @@ root.bind("<Control-y>", redo)
 
 #Seperate frame needed to display buttons correctly
 clear_save_frame = tk.Frame(root)
-clear_save_frame.grid(row = 2, column = 0, sticky = 'es')
+clear_save_frame.grid(row = 3, column = 0, sticky = 'es')
 
 save_button = tk.Button(clear_save_frame, text="Save")
 save_button.bind("<Button-1>", save_image)
@@ -164,7 +164,7 @@ clear_button.grid(row = 0, column = 1)
 
 #Seperate frame needed to display buttons correctly
 undo_redo_frame = tk.Frame(root)
-undo_redo_frame.grid(row = 2, column = 0, sticky="ws")
+undo_redo_frame.grid(row = 3, column = 0, sticky="ws")
 
 undo_button = tk.Button(undo_redo_frame, text="Undo")
 undo_button.bind("<Button-1>", undo)
