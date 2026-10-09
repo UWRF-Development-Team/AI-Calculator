@@ -10,8 +10,14 @@ class DisplayFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
         
-        self.eq1 = tk.Label(self, text = "Equation 1")
-        self.eq1.grid(column = 0, row = 0)
+        self.columnconfigure(0, weight = 3)
+        self.columnconfigure(1, weight = 1)
+        self.rowconfigure(0, weight = 1, uniform = "rows")
+        self.rowconfigure(1, weight = 1, uniform = "rows")
+        self.rowconfigure(2, weight = 1, uniform = "rows")
+
+        #eq1 = ttk.Label(self, )
+
     
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
@@ -89,8 +95,7 @@ class CanvasFrame(ttk.Frame):
         self.draw = ImageDraw.Draw(self.image)
         self.canvas.delete("all")
         self.strokes = [[]]
-        self.undid_strokes = []
-        
+        self.undid_strokes = []        
     def convert_symbols(self, text):
         assert_type(text, str)
         return (text.replace("/", "d")
@@ -118,7 +123,31 @@ class CanvasFrame(ttk.Frame):
                     highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
         self.image.save(f"./training-data/{highest_name}.png")
 
+        eq_history = Path("equation-history")
+        eqs = []
+        for eq in eq_history.iterdir():
+            eqs.append(eq)
+
+        # I hate this, but iterdir() returns the files at random, so I need to make sure its done in a specific order
+        if(len(eqs) >= 3): 
+            for eq in eqs:
+                if(eq.name.split(".")[1] == "1"): 
+                    eq.unlink()
+            
+            for eq in eqs:
+                if(eq.name.split(".")[1] == "2"):
+                    eq.rename(Path.joinpath(eq_history, eq.name.split(".")[0] + ".1.png"))
+
+            for eq in eqs:
+                if(eq.name.split(".")[1] == "3"):
+                    eq.rename(Path.joinpath(eq_history, eq.name.split(".")[0] + ".2.png"))    
+
+            self.image.save("./equation-history/eq.3.png")
+        else:
+            self.image.save(f"./equation-history/eq.{len(eqs) + 1}.png")
+
     def on_resize(self, event):
+
         self.image = Image.new("RGB", (event.width, event.height), (255, 255, 255))
         self.draw = ImageDraw.Draw(self.image)
         for stroke in self.strokes:
@@ -147,7 +176,7 @@ class ToolbarFrame(ttk.Frame):
         
         self.file_name = ttk.Entry(self)
         self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
-        
+
         clear_button = ttk.Button(self, text = "clear", command = canvas.clear)
         clear_button.grid(column = 3, row = 0, sticky="SE", padx = 5, pady = 5)
         
@@ -182,7 +211,7 @@ class App(tk.Tk):
     
     def __create_frames(self):
         display_frame = DisplayFrame(self)
-        display_frame.grid(column = 0, row = 0, sticky="NEW")
+        display_frame.grid(column = 0, row = 0, sticky="N")
 
         canvas_frame = CanvasFrame(self)
         canvas_frame.grid(column = 0, row = 2, sticky="NESW")
