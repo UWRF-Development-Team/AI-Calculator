@@ -53,10 +53,12 @@ draw = ImageDraw.Draw(image)
 
 old_x = None
 old_y = None
+bounds_x1 = None
+bounds_y1 = None
 strokes = [[]]
 undid_strokes = []
 
-def on_mouse_move(event):
+def draw_on_move(event):
     global old_x
     global old_y
     global undid_strokes
@@ -71,7 +73,7 @@ def on_mouse_move(event):
     old_x = x
     old_y = y
 
-def on_mouse_release(event):
+def stop_draw(event):
     global old_x
     global old_y
     old_x = None
@@ -113,7 +115,7 @@ def clear_canvas(event):
     strokes = [[]]
     undid_strokes = []
 
-def undo(event):
+def draw_undo(event):
     global image
     global draw
     global text_input
@@ -133,7 +135,7 @@ def undo(event):
 
     strokes.append([])
 
-def redo(event):
+def draw_redo(event):
     if len(undid_strokes) == 0:
         return
     redo_stroke = undid_strokes.pop()
@@ -143,12 +145,19 @@ def redo(event):
     strokes[-1] = redo_stroke
     strokes.append([])
 
+def bind_draw():
+    canvas.bind("<B1-Motion>", draw_on_move)
+    canvas.bind("<ButtonRelease-1>", stop_draw)
+    root.bind("<Control-z>", draw_undo)
+    root.bind("<Control-y>", draw_redo)
+
+def bind_boxes():
+    # todo
+    print()
+
 #Keybindings
-canvas.bind("<B1-Motion>", on_mouse_move)
-canvas.bind("<ButtonRelease-1>", on_mouse_release)
-canvas.bind("<Button-3>", save_image)
-root.bind("<Control-z>", undo)
-root.bind("<Control-y>", redo)
+
+bind_draw()
 
 #Seperate frame needed to display buttons correctly
 clear_save_frame = tk.Frame(root)
@@ -167,11 +176,11 @@ undo_redo_frame = tk.Frame(root)
 undo_redo_frame.grid(row = 3, column = 0, sticky="ws")
 
 undo_button = tk.Button(undo_redo_frame, text="Undo")
-undo_button.bind("<Button-1>", undo)
+undo_button.bind("<Button-1>", draw_undo)
 undo_button.grid(row = 0, column = 0)
 
 redo_button = tk.Button(undo_redo_frame, text="Redo")
-redo_button.bind("<Button-1>", redo)
+redo_button.bind("<Button-1>", draw_redo)
 redo_button.grid(row = 0, column = 1)
 
 root.mainloop()
