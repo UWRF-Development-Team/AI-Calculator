@@ -219,7 +219,7 @@ def bind_boxes():
     canvas.bind("<Button-1>", bounds_start)
     canvas.bind("<ButtonRelease-1>", bounds_rectangle)
     root.bind("<Control-z>", bounds_undo)
-    root.bind("Control-y>", bounds_redo)
+    root.bind("<Control-y>", bounds_redo)
 
 def toggle_mode(event):
     if drawing:
