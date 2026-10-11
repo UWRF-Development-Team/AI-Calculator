@@ -211,6 +211,8 @@ def bind_draw():
     canvas.bind("<ButtonRelease-1>", stop_draw)
     root.bind("<Control-z>", draw_undo)
     root.bind("<Control-y>", draw_redo)
+    redo_button.bind("<Button-1>", draw_redo)
+    undo_button.bind("<Button-1>", draw_undo)
 
 def bind_boxes():
     global drawing
@@ -220,6 +222,8 @@ def bind_boxes():
     canvas.bind("<ButtonRelease-1>", bounds_rectangle)
     root.bind("<Control-z>", bounds_undo)
     root.bind("<Control-y>", bounds_redo)
+    redo_button.bind("<Button-1>", bounds_redo)
+    undo_button.bind("<Button-1>", bounds_undo)
 
 def toggle_mode(event):
     if drawing:
@@ -228,8 +232,6 @@ def toggle_mode(event):
         bind_draw()
 
 #Keybindings
-
-bind_draw()
 
 root.bind("<Control-q>", toggle_mode)
 
@@ -250,11 +252,11 @@ undo_redo_frame = tk.Frame(root)
 undo_redo_frame.grid(row = 3, column = 0, sticky="ws")
 
 undo_button = tk.Button(undo_redo_frame, text="Undo")
-undo_button.bind("<Button-1>", draw_undo)
 undo_button.grid(row = 0, column = 0)
 
 redo_button = tk.Button(undo_redo_frame, text="Redo")
-redo_button.bind("<Button-1>", draw_redo)
 redo_button.grid(row = 0, column = 1)
+
+bind_draw()
 
 root.mainloop()
