@@ -145,6 +145,15 @@ def draw_redo(event):
     strokes[-1] = redo_stroke
     strokes.append([])
 
+def bounds_start(event):
+    global bounds_x1
+    global bounds_y1
+    bounds_x1 = event.x
+    bounds_y1 = event.y
+
+def bounds_rectangle(event):
+    canvas.create_rectangle(bounds_x1, bounds_y1, event.x, event.y, fill="#f008")
+
 def bind_draw():
     canvas.bind("<B1-Motion>", draw_on_move)
     canvas.bind("<ButtonRelease-1>", stop_draw)
@@ -152,7 +161,8 @@ def bind_draw():
     root.bind("<Control-y>", draw_redo)
 
 def bind_boxes():
-    # todo
+    canvas.bind("<Button-1>", bounds_start)
+    canvas.bind("<ButtonRelease-1>", bounds_rectangle)
     print()
 
 #Keybindings
