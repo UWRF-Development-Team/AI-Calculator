@@ -1,6 +1,7 @@
 import tkinter as tk
 from typing import assert_type
 from pathlib import Path
+import json
 
 from PIL import Image, ImageDraw
 
@@ -95,6 +96,29 @@ def save_image(event):
             if int(file.name.split(".", 2)[1]) >= int(highest_name.split(".", 1)[1]):
                 highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
     image.save(f"./training-data/{highest_name}.png")
+    update_json(highest_name+".png", text_input.get())
+
+def update_json(file_name, key):
+    if len(key) != len(bounds): raise ValueError("key does not match bounds")
+    training_json = json.load(open("./data.json"))
+
+    save_bounds = []
+    # Sorts by the first element in each list in ascending order, exactly what we want!
+    for i, bound in enumerate(sorted(bounds)):
+        bound_dict = {
+            "character": key[i],
+            "start": [bound[0], bound[1]],
+            "end": [bound[2], bound[3]],
+        }
+        save_bounds.append(bound_dict)
+
+    image_data = {
+        "filename": file_name,
+        "bounds": save_bounds
+    }
+
+    training_json.append(image_data)
+    json.dump(training_json, open("./data.json", "w"))
 
 def convert_symbols(text):
     assert_type(text, str)
@@ -108,6 +132,7 @@ def convert_symbols(text):
 def clear_canvas(event):
     global image, draw, text_input, strokes, undid_strokes, bounds, undid_bounds, drawing
     drawing = True
+    bind_draw()
     image = Image.new("RGB", (640, 320), (255, 255, 255))
     draw = ImageDraw.Draw(image)
     canvas.delete("all")
