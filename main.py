@@ -57,6 +57,9 @@ bounds_x1 = None
 bounds_y1 = None
 strokes = [[]]
 undid_strokes = []
+bounds = []
+undid_bounds = []
+drawing = True
 
 def draw_on_move(event):
     global old_x
@@ -103,17 +106,16 @@ def convert_symbols(text):
             )
 
 def clear_canvas(event):
-    global image
-    global draw
-    global text_input
-    global strokes
-    global undid_strokes
+    global image, draw, text_input, strokes, undid_strokes, bounds, undid_bounds, drawing
+    drawing = True
     image = Image.new("RGB", (640, 320), (255, 255, 255))
     draw = ImageDraw.Draw(image)
     canvas.delete("all")
     text_input.delete(0, tk.END)
     strokes = [[]]
     undid_strokes = []
+    bounds = []
+    undid_bounds = []
 
 def draw_undo(event):
     global image
@@ -153,21 +155,57 @@ def bounds_start(event):
 
 def bounds_rectangle(event):
     canvas.create_rectangle(bounds_x1, bounds_y1, event.x, event.y, fill="#f008")
+    bounds.append([bounds_x1, bounds_y1, event.x, event.y])
+
+def bounds_undo(event):
+    if len(bounds) < 1: return
+    undid_rectangle = bounds.pop()
+    undid_bounds.append(undid_rectangle)
+
+    # have to redo EVERYTHING
+    canvas.delete("all")
+    for stroke in strokes:
+        for strokePart in stroke:
+            canvas.create_line(strokePart[0], strokePart[1], strokePart[2], strokePart[3], fill="black", width=3)
+
+    for box in bounds:
+        canvas.create_rectangle(box[0], box[1], box[2], box[3], fill="#f008")
+
+def bounds_redo(event):
+    if len(undid_bounds) < 1: return
+    redid_rectangle = undid_bounds.pop()
+    bounds.append(redid_rectangle)
+
+    canvas.create_rectangle(redid_rectangle[0], redid_rectangle[1], redid_rectangle[2], redid_rectangle[3], fill="#f008")
+
 
 def bind_draw():
+    global drawing
+    drawing = True
     canvas.bind("<B1-Motion>", draw_on_move)
     canvas.bind("<ButtonRelease-1>", stop_draw)
     root.bind("<Control-z>", draw_undo)
     root.bind("<Control-y>", draw_redo)
 
 def bind_boxes():
+    global drawing
+    drawing = False
     canvas.bind("<Button-1>", bounds_start)
     canvas.bind("<ButtonRelease-1>", bounds_rectangle)
-    print()
+    root.bind("<Control-z>", bounds_undo)
+    root.bind("Control-y>", bounds_redo)
+
+def toggle_mode(event):
+    if drawing:
+        bind_boxes()
+    else:
+        bind_draw()
 
 #Keybindings
 
 bind_draw()
+
+root.bind("<Control-q>", toggle_mode)
 
 #Seperate frame needed to display buttons correctly
 clear_save_frame = tk.Frame(root)
