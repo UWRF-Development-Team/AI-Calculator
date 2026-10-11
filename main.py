@@ -154,7 +154,7 @@ def bounds_start(event):
     bounds_y1 = event.y
 
 def bounds_rectangle(event):
-    canvas.create_rectangle(bounds_x1, bounds_y1, event.x, event.y, fill="#f008")
+    canvas.create_rectangle(bounds_x1, bounds_y1, event.x, event.y, outline="#ff0000", width=3)
     bounds.append([bounds_x1, bounds_y1, event.x, event.y])
 
 def bounds_undo(event):
@@ -169,14 +169,14 @@ def bounds_undo(event):
             canvas.create_line(strokePart[0], strokePart[1], strokePart[2], strokePart[3], fill="black", width=3)
 
     for box in bounds:
-        canvas.create_rectangle(box[0], box[1], box[2], box[3], fill="#f008")
+        canvas.create_rectangle(box[0], box[1], box[2], box[3], outline="#ff0000", width=3)
 
 def bounds_redo(event):
     if len(undid_bounds) < 1: return
     redid_rectangle = undid_bounds.pop()
     bounds.append(redid_rectangle)
 
-    canvas.create_rectangle(redid_rectangle[0], redid_rectangle[1], redid_rectangle[2], redid_rectangle[3], fill="#f008")
+    canvas.create_rectangle(redid_rectangle[0], redid_rectangle[1], redid_rectangle[2], redid_rectangle[3], outline="#ff0000", width=3)
 
 
 def bind_draw():
@@ -190,6 +190,7 @@ def bind_draw():
 def bind_boxes():
     global drawing
     drawing = False
+    canvas.unbind("<B1-Motion>")
     canvas.bind("<Button-1>", bounds_start)
     canvas.bind("<ButtonRelease-1>", bounds_rectangle)
     root.bind("<Control-z>", bounds_undo)
