@@ -52,10 +52,10 @@ class CanvasFrame(ttk.Frame):
         self.strokes = [[]]
         self.undid_strokes = []
 
-        self.canvas = tk.Canvas(self, bg="grey", highlightthickness = 0)
-        self.canvas.pack(fill = "both", expand = 1)
+        self.canvas = tk.Canvas(self, bg="grey", highlightthickness = 0, width=640, height=320)
+        self.canvas.grid(row = 2, column = 0)
 
-        self.image = Image.new("RGB", (1, 1), (255, 255, 255))
+        self.image = Image.new("RGB", (640, 320), (255, 255, 255))
         self.draw = ImageDraw.Draw(self.image)
 
         # keybinds
@@ -90,7 +90,7 @@ class CanvasFrame(ttk.Frame):
         redo_stroke = self.undid_strokes.pop()
         for line in redo_stroke:
             self.canvas.create_line(line[0], line[1], line[2], line[3], fill = "black", width = 3)
-            self.draw.line(linfe, (0, 0, 0), width = 3)
+            self.draw.line(line, (0, 0, 0), width = 3)
         self.strokes[-1] = redo_stroke
         self.strokes.append([])
 
@@ -189,22 +189,23 @@ class ToolbarFrame(ttk.Frame):
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("AI Calc. Calc is short for calculator btw chat just using slang incase youre new to the stream")
+        self.title("AI Calculator!")
     
-        self.window_height = 640 
-        self.window_width  = 640
-        screen_height = self.winfo_screenheight()
-        screen_width  = self.winfo_screenwidth()
-        center_x = int(screen_width / 2 - self.window_width / 2)
-        center_y = int(screen_height / 2 - self.window_height / 2)
-        self.geometry(f'{self.window_width}x{self.window_height}+{center_x}+{center_y}')
-        self.minsize(640, 640)
+        # self.window_height = 640
+        # self.window_width  = 640
+        # screen_height = self.winfo_screenheight()
+        # screen_width  = self.winfo_screenwidth()
+        # center_x = int(screen_width / 2 - self.window_width / 2)
+        # center_y = int(screen_height / 2 - self.window_height / 2)
+        # self.geometry(f'{self.window_width}x{self.window_height}+{center_x}+{center_y}')
+        # self.minsize(640, 320)
 
 
         self.columnconfigure(0, weight = 1)
-        self.rowconfigure(0, weight = 3, uniform = "rows")
-        self.rowconfigure(2, weight = 6, uniform = "rows")
-        self.rowconfigure(3, weight = 1, uniform = "rows")
+        # self.rowconfigure(0, weight = 3, uniform = "rows")
+        # self.rowconfigure(1, weight = 0, uniform = "rows")
+        self.rowconfigure(2, weight = 1,)
+        # self.rowconfigure(3, weight = 1, uniform = "rows")
 
         self.__create_frames()
     
@@ -213,7 +214,7 @@ class App(tk.Tk):
         display_frame.grid(column = 0, row = 0, sticky="N")
 
         canvas_frame = CanvasFrame(self)
-        canvas_frame.grid(column = 0, row = 2, sticky="NESW")
+        canvas_frame.grid(column = 0, row = 2)
 
         toolbar_frame = ToolbarFrame(self, canvas_frame)
         toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
@@ -222,4 +223,6 @@ class App(tk.Tk):
 
 if __name__ == "__main__":
     app = App()
+    app.update_idletasks()
+    app.minsize(app.winfo_width(), app.winfo_height())
     app.mainloop()
