@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import TclError, ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageTk
 
 
 # Display Frame
@@ -10,26 +10,49 @@ class DisplayFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
         
+        self["relief"] = "solid"
+        self["borderwidth"] = 2
+
         self.columnconfigure(0, weight = 3)
         self.columnconfigure(1, weight = 1)
         self.rowconfigure(0, weight = 1, uniform = "rows")
         self.rowconfigure(1, weight = 1, uniform = "rows")
         self.rowconfigure(2, weight = 1, uniform = "rows")
+        self.rowconfigure(3, weight = 1, uniform = "rows")
 
-        #eq1 = ttk.Label(self, )
+        self.eq1 = ttk.Label(self, text = "Equation 1")
+        self.eq2 = ttk.Label(self, text = "Equation 2")
+        self.eq3 = ttk.Label(self, text = "Equation 3")
+        self.a1 = ttk.Label(self, text = "Answer 1")
+        self.a2 = ttk.Label(self, text = "Answer 2")
+        self.a3 = ttk.Label(self, text = "Answer 3")
 
-    
+        self.output = tk.Text (self, height = 1, width = 40)
+        self.output.grid(row = 3)
+        self.output.insert(index = 1.0, chars = "AI OUTPUT")
+        self.output.config(state = "disabled")
+
+        self.eq1.grid(column = 0, row = 0, sticky = "W")
+        self.eq2.grid(column = 0, row = 1, sticky = "W")
+        self.eq3.grid(column = 0, row = 2, sticky = "W")
+        self.a1.grid(column = 1, row = 0, sticky = "E")
+        self.a2.grid(column = 1, row = 1, sticky = "E")
+        self.a3.grid(column = 1, row = 2, sticky = "E")
+        self.output.grid(column = 0, row = 3, columnspan = 3, sticky ="EW")
+
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
+
+        self['padding'] = 5
 
         self.old_x = None
         self.old_y = None
         self.strokes = [[]]
         self.undid_strokes = []
 
-        self.canvas = tk.Canvas(self, bg="red", highlightthickness = 0)
+        self.canvas = tk.Canvas(self, bg="grey", highlightthickness = 0)
         self.canvas.pack(fill = "both", expand = 1)
 
         self.image = Image.new("RGB", (1, 1), (255, 255, 255))
@@ -67,7 +90,7 @@ class CanvasFrame(ttk.Frame):
         redo_stroke = self.undid_strokes.pop()
         for line in redo_stroke:
             self.canvas.create_line(line[0], line[1], line[2], line[3], fill = "black", width = 3)
-            self.draw.line(line, (0, 0, 0), width = 3)
+            self.draw.line(linfe, (0, 0, 0), width = 3)
         self.strokes[-1] = redo_stroke
         self.strokes.append([])
 
@@ -96,6 +119,7 @@ class CanvasFrame(ttk.Frame):
         self.canvas.delete("all")
         self.strokes = [[]]
         self.undid_strokes = []        
+    
     def convert_symbols(self, text):
         assert_type(text, str)
         return (text.replace("/", "d")
@@ -123,31 +147,7 @@ class CanvasFrame(ttk.Frame):
                     highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
         self.image.save(f"./training-data/{highest_name}.png")
 
-        eq_history = Path("equation-history")
-        eqs = []
-        for eq in eq_history.iterdir():
-            eqs.append(eq)
-
-        # I hate this, but iterdir() returns the files at random, so I need to make sure its done in a specific order
-        if(len(eqs) >= 3): 
-            for eq in eqs:
-                if(eq.name.split(".")[1] == "1"): 
-                    eq.unlink()
-            
-            for eq in eqs:
-                if(eq.name.split(".")[1] == "2"):
-                    eq.rename(Path.joinpath(eq_history, eq.name.split(".")[0] + ".1.png"))
-
-            for eq in eqs:
-                if(eq.name.split(".")[1] == "3"):
-                    eq.rename(Path.joinpath(eq_history, eq.name.split(".")[0] + ".2.png"))    
-
-            self.image.save("./equation-history/eq.3.png")
-        else:
-            self.image.save(f"./equation-history/eq.{len(eqs) + 1}.png")
-
     def on_resize(self, event):
-
         self.image = Image.new("RGB", (event.width, event.height), (255, 255, 255))
         self.draw = ImageDraw.Draw(self.image)
         for stroke in self.strokes:
@@ -169,19 +169,19 @@ class ToolbarFrame(ttk.Frame):
         self.rowconfigure(0, weight = 1)
 
         undo_button = ttk.Button(self, text = "undo", command = canvas.undo)
-        undo_button.grid(column = 0, row = 0, sticky="SW", padx = 5, pady = 5)
+        undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
 
         redo_button = ttk.Button(self, text = "redo", command = canvas.redo)
-        redo_button.grid(column = 1, row = 0, sticky="SW", padx = 5, pady = 5)
+        redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
         
         self.file_name = ttk.Entry(self)
         self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
 
         clear_button = ttk.Button(self, text = "clear", command = canvas.clear)
-        clear_button.grid(column = 3, row = 0, sticky="SE", padx = 5, pady = 5)
+        clear_button.grid(column = 3, row = 0, sticky="ES", padx = 5, pady = 5)
         
         save_button = ttk.Button(self, text = "save", command = self.save)
-        save_button.grid(column = 4, row = 0, sticky="SE", padx = 5, pady = 5)
+        save_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
         
     def save(self):
         self.canvas.save(self.file_name.get())
@@ -191,19 +191,18 @@ class App(tk.Tk):
         super().__init__()
         self.title("AI Calc. Calc is short for calculator btw chat just using slang incase youre new to the stream")
     
-        self.window_height = 640
+        self.window_height = 640 
         self.window_width  = 640
         screen_height = self.winfo_screenheight()
         screen_width  = self.winfo_screenwidth()
         center_x = int(screen_width / 2 - self.window_width / 2)
         center_y = int(screen_height / 2 - self.window_height / 2)
-
         self.geometry(f'{self.window_width}x{self.window_height}+{center_x}+{center_y}')
-        self.resizable(0, 0)
+        self.minsize(640, 640)
+
 
         self.columnconfigure(0, weight = 1)
         self.rowconfigure(0, weight = 3, uniform = "rows")
-        self.rowconfigure(1, weight = 1, uniform = "rows")
         self.rowconfigure(2, weight = 6, uniform = "rows")
         self.rowconfigure(3, weight = 1, uniform = "rows")
 
