@@ -4,6 +4,10 @@ from typing import assert_type
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageTk
 
+background_color = "#ded8e8"
+canvas_color = "#f5ebf2"
+accent_color_light = "#f2e7ef"
+accent_color_dark = "#ebdde8"
 
 # Display Frame
 class DisplayFrame(ttk.Frame):
@@ -45,14 +49,17 @@ class CanvasFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
 
-        self['padding'] = 5
+        # self['padding'] = 5
+        # self['bg'] = canvas_color
+        # self.padding = 5
+        # self.background = canvas_color
 
         self.old_x = None
         self.old_y = None
         self.strokes = [[]]
         self.undid_strokes = []
 
-        self.canvas = tk.Canvas(self, bg="grey", highlightthickness = 0, width=640, height=320)
+        self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
         self.image = Image.new("RGB", (640, 320), (255, 255, 255))
@@ -190,6 +197,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("AI Calculator!")
+        self.configure(background=background_color, padx=5, pady=5)
     
         # self.window_height = 640
         # self.window_width  = 640
