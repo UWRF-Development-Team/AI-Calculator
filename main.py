@@ -87,7 +87,7 @@ def stop_draw(event):
 def save_image(event):
     global text_input
     converted_name = convert_symbols(text_input.get()) + ".0"
-    files = Path("training-data")
+    files = Path("training-data/images")
     highest_name = converted_name
     # Kind of messy
     for file in files.iterdir():
@@ -95,12 +95,12 @@ def save_image(event):
         if file.name.split(".", 1)[0] == highest_name.split(".", 1)[0]:
             if int(file.name.split(".", 2)[1]) >= int(highest_name.split(".", 1)[1]):
                 highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
-    image.save(f"./training-data/{highest_name}.png")
+    image.save(f"./training-data/images/{highest_name}.png")
     update_json(highest_name+".png", text_input.get())
 
 def update_json(file_name, key):
     if len(key) != len(bounds): raise ValueError("key does not match bounds")
-    training_json = json.load(open("./data.json"))
+    training_json = json.load(open("./training-data/data.json"))
 
     save_bounds = []
     # Sorts by the first element in each list in ascending order, exactly what we want!
@@ -118,7 +118,7 @@ def update_json(file_name, key):
     }
 
     training_json.append(image_data)
-    json.dump(training_json, open("./data.json", "w"))
+    json.dump(training_json, open("./training-data/data.json", "w"))
 
 def convert_symbols(text):
     assert_type(text, str)
