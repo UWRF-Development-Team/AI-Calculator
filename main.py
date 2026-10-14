@@ -12,9 +12,11 @@ accent_color_dark = "#ebdde8"
 
 #Creating Window
 root = tk.Tk()
-root.minsize(640, 320)
 root.title("AI Calculator")
 root.configure(bg=background_color, padx=5, pady=5)
+
+root.grid_columnconfigure(0, weight = 1)
+root.grid_rowconfigure(0, weight = 1)
 
 #Equations / Answers Grid
 eq_ans_frame = tk.Frame(root, bd=1, relief="solid")
@@ -182,5 +184,8 @@ undo_button.grid(row = 0, column = 0)
 redo_button = tk.Button(undo_redo_frame, text="Redo", bg=accent_color_light)
 redo_button.bind("<Button-1>", redo)
 redo_button.grid(row = 0, column = 1)
+
+root.update_idletasks()
+root.minsize(root.winfo_width(), root.winfo_height())
 
 root.mainloop()
