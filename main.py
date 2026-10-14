@@ -8,6 +8,9 @@ from PIL import Image, ImageDraw
 root = tk.Tk()
 root.title("AI Calculator")
 
+root.grid_columnconfigure(0, weight = 1)
+root.grid_rowconfigure(0, weight = 1)
+
 #Equations / Answers Grid
 eq_ans_frame = tk.Frame(root, bd=1, relief="solid")
 eq_ans_frame.grid(row = 0, column = 0)
