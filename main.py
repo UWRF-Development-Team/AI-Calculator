@@ -6,7 +6,6 @@ from PIL import Image, ImageDraw
 
 #Creating Window
 root = tk.Tk()
-root.minsize(640, 320)
 root.title("AI Calculator")
 
 #Equations / Answers Grid
@@ -173,5 +172,8 @@ undo_button.grid(row = 0, column = 0)
 redo_button = tk.Button(undo_redo_frame, text="Redo")
 redo_button.bind("<Button-1>", redo)
 redo_button.grid(row = 0, column = 1)
+
+root.update_idletasks()
+root.minsize(root.winfo_width(), root.winfo_height())
 
 root.mainloop()
