@@ -5,8 +5,8 @@ class History:
         self.canvas = canvas
         # ImageDraw from PIL, not Image
         self.image = image
-        self.main_history = StrokeCollection([])
-        self.undo_history = StrokeCollection([])
+        self.main_history = StrokeCollection()
+        self.undo_history = StrokeCollection()
 
     def redraw(self):
         # Fill area with white
@@ -39,8 +39,9 @@ class History:
 
     def add_stroke(self, stroke):
         self.main_history.push(stroke)
+        self.undo_history = StrokeCollection()
 
     def reset(self):
-        self.main_history = StrokeCollection([])
-        self.undo_history = StrokeCollection([])
+        self.main_history = StrokeCollection()
+        self.undo_history = StrokeCollection()
         self.redraw()

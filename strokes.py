@@ -47,9 +47,9 @@ class BoundingStroke(Stroke):
         pass
 
 class StrokeCollection(Stroke):
-    def __init__(self, strokes):
+    def __init__(self, strokes=None):
         super().__init__(None, None, None)
-        self.strokes = strokes
+        self.strokes = strokes if strokes is not None else []
 
     def draw_canvas(self, canvas):
         for stroke in self.strokes:
