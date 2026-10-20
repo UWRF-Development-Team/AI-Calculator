@@ -3,6 +3,8 @@ from tkinter import TclError, ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageTk
+from PIL.ImageDraw2 import Brush
+
 from strokes import *
 from history import *
 
@@ -58,14 +60,16 @@ class CanvasFrame(ttk.Frame):
 
         self.old_x = None
         self.old_y = None
-        self.strokes = [[]]
-        self.undid_strokes = []
+        self.drawing = True
+        self.current_stroke = []
 
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
-        self.image = Image.new("RGB", (640, 320), (255, 255, 255))
-        self.draw = ImageDraw.Draw(self.image)
+        image = Image.new("RGB", (640, 320), (255, 255, 255))
+        self.draw = ImageDraw.Draw(image)
+
+        self.history = History(self.canvas, self.draw)
 
         # keybinds
         self.canvas.bind("<B1-Motion>", self.on_mouse_pressed)
@@ -76,22 +80,44 @@ class CanvasFrame(ttk.Frame):
 
     # Drawing
     def on_mouse_pressed(self, event):
-        self.undid_strokes = []
         x = event.x
         y = event.y
-        self.old_x = x if self.old_x is None else self.old_x
-        self.old_y = y if self.old_y is None else self.old_y
-        self.strokes[-1].append([self.old_x, self.old_y, x, y])
-        self.canvas.create_line(self.old_x, self.old_y, x, y, fill = "black", width = 3)
-        self.draw.line([self.old_x, self.old_y, x, y], (0, 0, 0), width = 3)
+
+        if self.old_x is None:
+            self.old_x = x
+            self.old_y = y
+            if not self.drawing:
+                self.current_stroke.append([x, y])
+
+        start = CoordinatePair(self.old_x, self.old_y)
+        end = CoordinatePair(x, y)
+        if self.drawing:
+            stroke = BrushStroke(start, end)
+            stroke.draw(self.canvas, self.draw)
+            self.current_stroke.append(stroke)
+        else:
+            if len(self.current_stroke) == 0:
+                self.current_stroke.append([])
+            self.history.redraw()
+            stroke = BoundingStroke(start, end)
+            stroke.draw(self.canvas, self.draw)
+
         self.old_x = x
         self.old_y = y
 
     # Stops drawing
     def on_mouse_released(self, event):
+        if self.drawing:
+            self.history.add_stroke(StrokeCollection(self.current_stroke))
+            self.current_stroke = []
+        else:
+            start = CoordinatePair(self.current_stroke[0], self.current_stroke[1])
+            end = CoordinatePair(event.x, event.y)
+            self.history.add_stroke(BoundingStroke(start, end))
+
         self.old_x = None
         self.old_y = None
-        self.strokes.append([])
+
 
     def redo(self, event = None): 
         if len(self.undid_strokes) == 0:
