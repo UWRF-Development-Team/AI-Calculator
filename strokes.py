@@ -58,3 +58,9 @@ class StrokeCollection(Stroke):
     def draw_image(self, image):
         for stroke in self.strokes:
             stroke.draw_image(image)
+
+    def push(self, stroke):
+        self.strokes.append(stroke)
+
+    def pop(self):
+        return self.strokes.pop()
