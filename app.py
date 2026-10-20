@@ -139,7 +139,7 @@ class CanvasFrame(ttk.Frame):
         if len(file_name) == 0:
             messagebox.showerror(title = "Save Error", message = "Need a file name!")
             return 
-        if len(self.history.main_history) == 0:
+        if self.history.main_history.is_empty():
             messagebox.showerror(title = "Save Error", message = "Cannot save an empty file!")
             return
         bounds = self.history.main_history.get_strokes_of_type(BoundingStroke)
@@ -160,7 +160,7 @@ class CanvasFrame(ttk.Frame):
         self.update_json(highest_name + ".png", file_name, bounds)
 
     def update_json(self, file_name, key, bounds):
-        if len(key) != len(bounds): raise ValueError("key does not match bounds")
+        if len(key) != bounds.length(): raise ValueError("key does not match bounds")
         training_json = json.load(open("./data.json"))
 
         save_bounds = []

@@ -34,7 +34,7 @@ class History:
         if self.undo_history.is_empty():
             raise LookupError("Can't redo, no strokes exist")
 
-        self.main_history.push(self.main_history.pop())
+        self.main_history.push(self.undo_history.pop())
         self.redraw()
 
     def add_stroke(self, stroke):
