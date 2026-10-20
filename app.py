@@ -76,7 +76,11 @@ class CanvasFrame(ttk.Frame):
         self.canvas.bind("<ButtonRelease-1>", self.on_mouse_released)
         self.winfo_toplevel().bind("<Control-z>", self.undo)
         self.winfo_toplevel().bind("<Control-y>", self.redo)
+        self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
+
+    def toggle(self, event):
+        self.drawing = not self.drawing
 
     # Drawing
     def on_mouse_pressed(self, event):
