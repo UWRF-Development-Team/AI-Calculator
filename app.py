@@ -120,40 +120,13 @@ class CanvasFrame(ttk.Frame):
 
 
     def redo(self, event = None): 
-        if len(self.undid_strokes) == 0:
-            return
-        redo_stroke = self.undid_strokes.pop()
-        for line in redo_stroke:
-            self.canvas.create_line(line[0], line[1], line[2], line[3], fill = "black", width = 3)
-            self.draw.line(line, (0, 0, 0), width = 3)
-        self.strokes[-1] = redo_stroke
-        self.strokes.append([])
+        self.history.redo()
 
     def undo(self, event = None):
-        if len(self.strokes[-1]) == 0:
-            if len(self.strokes) > 0:
-                self.strokes.pop()
-            else:
-                return
-
-        self.undid_strokes.append(self.strokes.pop())
-        self.image = Image.new("RGB", self.image.size, (255, 255, 255))
-        self.draw = ImageDraw.Draw(self.image)
-        self.canvas.delete("all")
-        
-        for stroke in self.strokes:
-            for line in stroke:
-                self.canvas.create_line(line[0], line[1], line[2], line[3], fill = "black", width = 3)
-                self.draw.line(line, (0, 0, 0), width = 3)
-
-        self.strokes.append([])
+        self.history.undo()
 
     def clear(self):
-        self.image = Image.new("RGB", self.image.size, (255, 255, 255))
-        self.draw = ImageDraw.Draw(self.image)
-        self.canvas.delete("all")
-        self.strokes = [[]]
-        self.undid_strokes = []        
+        self.history.reset()
     
     def convert_symbols(self, text):
         assert_type(text, str)
