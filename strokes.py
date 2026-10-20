@@ -70,3 +70,26 @@ class StrokeCollection(Stroke):
 
     def length(self):
         return len(self.strokes)
+
+    def get_strokes_of_type(self, class_type):
+        return_list = []
+        for stroke in self.strokes:
+            if isinstance(stroke, class_type):
+                return_list.append(stroke)
+        return StrokeCollection(return_list)
+
+    def sort(self):
+        new_strokes = []
+        # I hate sorting
+        # Sorts by lowest start x (left to right) very slowly
+        while len(self.strokes > 0):
+            smallest = None
+            for stroke in self.strokes:
+                if smallest is None or stroke.start.x < smallest.start.x:
+                    smallest = stroke
+            new_strokes.append(smallest)
+            self.strokes.remove(smallest)
+        self.strokes = new_strokes
+
+    def as_list(self):
+        return self.strokes

@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import TclError, ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageTk
-from PIL.ImageDraw2 import Brush
+from PIL import Image, ImageDraw
+import json
 
 from strokes import *
 from history import *
@@ -66,8 +66,8 @@ class CanvasFrame(ttk.Frame):
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
-        image = Image.new("RGB", (640, 320), (255, 255, 255))
-        self.draw = ImageDraw.Draw(image)
+        self.image = Image.new("RGB", (640, 320), (255, 255, 255))
+        self.draw = ImageDraw.Draw(self.image)
 
         self.history = History(self.canvas, self.draw)
 
@@ -96,8 +96,6 @@ class CanvasFrame(ttk.Frame):
             stroke.draw(self.canvas, self.draw)
             self.current_stroke.append(stroke)
         else:
-            if len(self.current_stroke) == 0:
-                self.current_stroke.append([])
             self.history.redraw()
             stroke = BoundingStroke(start, end)
             stroke.draw(self.canvas, self.draw)
@@ -111,7 +109,7 @@ class CanvasFrame(ttk.Frame):
             self.history.add_stroke(StrokeCollection(self.current_stroke))
             self.current_stroke = []
         else:
-            start = CoordinatePair(self.current_stroke[0], self.current_stroke[1])
+            start = CoordinatePair(self.current_stroke[0][1], self.current_stroke[0][1])
             end = CoordinatePair(event.x, event.y)
             self.history.add_stroke(BoundingStroke(start, end))
 
@@ -139,11 +137,16 @@ class CanvasFrame(ttk.Frame):
 
     def save(self, file_name):
         if len(file_name) == 0:
-            messagebox.showerror(title = "Save Error", message = "Need file name")
+            messagebox.showerror(title = "Save Error", message = "Need a file name!")
             return 
-        if len(self.strokes[0]) == 0:
-            messagebox.showerror(title = "Save Error", message = "Cannot save empty file")
+        if len(self.history.main_history) == 0:
+            messagebox.showerror(title = "Save Error", message = "Cannot save an empty file!")
             return
+        bounds = self.history.main_history.get_strokes_of_type(BoundingStroke)
+        if len(file_name) != len(bounds):
+            messagebox.showerror(title="Save Error", message="Key does not match bounds!")
+            return
+
 
         converted_name = self.convert_symbols(file_name) + ".0"
         files = Path("training-data")
@@ -154,14 +157,33 @@ class CanvasFrame(ttk.Frame):
                 if int(file.name.split(".", 2)[1]) >= int(highest_name.split(".", 1)[1]):
                     highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
         self.image.save(f"./training-data/{highest_name}.png")
+        self.update_json(highest_name + ".png", file_name, bounds)
+
+    def update_json(self, file_name, key, bounds):
+        if len(key) != len(bounds): raise ValueError("key does not match bounds")
+        training_json = json.load(open("./data.json"))
+
+        save_bounds = []
+        # Sorted previously
+        bounds = bounds.sort()
+        for i, bound in enumerate(bounds.as_list()):
+            bound_dict = {
+                "character": key[i],
+                "start": bound.start,
+                "end": bound.end,
+            }
+            save_bounds.append(bound_dict)
+
+        image_data = {
+            "filename": file_name,
+            "bounds": save_bounds
+        }
+
+        training_json.append(image_data)
+        json.dump(training_json, open("./data.json", "w"))
 
     def on_resize(self, event):
-        self.image = Image.new("RGB", (event.width, event.height), (255, 255, 255))
-        self.draw = ImageDraw.Draw(self.image)
-        for stroke in self.strokes:
-            for line in stroke:
-                self.draw.line(line, (0, 0, 0), width = 3)
-
+        self.history.redraw()
 
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
