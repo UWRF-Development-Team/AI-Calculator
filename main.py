@@ -5,33 +5,44 @@ import json
 
 from PIL import Image, ImageDraw
 
+#Creating color varibles:
+background_color = "#ded8e8"
+canvas_color = "#f5ebf2"
+accent_color_light = "#f2e7ef"
+accent_color_dark = "#ebdde8"
+
 #Creating Window
 root = tk.Tk()
-root.minsize(640, 320)
 root.title("AI Calculator")
+root.configure(bg=background_color, padx=5, pady=5)
+
+root.grid_columnconfigure(0, weight = 1)
+root.grid_rowconfigure(0, weight = 1)
 
 #Equations / Answers Grid
 eq_ans_frame = tk.Frame(root, bd=1, relief="solid")
 eq_ans_frame.grid(row = 0, column = 0)
 
 #Equations
-equation1 = tk.Label(eq_ans_frame, text = "Equation 1")
+equation1 = tk.Label(eq_ans_frame, text = "Equation 1", bg=accent_color_light)
 equation1.grid(row = 0, column = 0)
-equation2 = tk.Label(eq_ans_frame, text = "Equation 2")
+equation2 = tk.Label(eq_ans_frame, text = "Equation 2", bg=accent_color_dark)
 equation2.grid(row = 1, column = 0)
-equation3 = tk.Label(eq_ans_frame, text = "Equation 3")
+equation3 = tk.Label(eq_ans_frame, text = "Equation 3", bg=accent_color_light)
 equation3.grid(row = 2, column = 0)
 
 #Answers
-answer1 = tk.Label(eq_ans_frame, text = "Answer 1")
+answer1 = tk.Label(eq_ans_frame, text = "Answer 1", bg=accent_color_light)
 answer1.grid(row = 0, column = 1)
-answer2 = tk.Label(eq_ans_frame, text = "Answer 2")
+answer2 = tk.Label(eq_ans_frame, text = "Answer 2", bg=accent_color_dark)
 answer2.grid(row = 1, column = 1)
-answer3 = tk.Label(eq_ans_frame, text = "Answer 3")
+answer3 = tk.Label(eq_ans_frame, text = "Answer 3", bg=accent_color_light)
 answer3.grid(row = 2, column = 1)
 
 # Drawing Canvas
-canvas = tk.Canvas(root, width=640, height=320)
+canvas_frame = tk.Frame(root, relief="solid", padx=5, pady=5, background=canvas_color)
+canvas_frame.grid(row = 2, column = 0)
+canvas = tk.Canvas(canvas_frame, width=640, height=320, bg=canvas_color)
 canvas.grid(row = 2, column = 0)
 
 #Text Input for saving canvas
@@ -239,11 +250,11 @@ root.bind("<Control-q>", toggle_mode)
 clear_save_frame = tk.Frame(root)
 clear_save_frame.grid(row = 3, column = 0, sticky = 'es')
 
-save_button = tk.Button(clear_save_frame, text="Save")
+save_button = tk.Button(clear_save_frame, text="Save", bg=accent_color_light)
 save_button.bind("<Button-1>", save_image)
 save_button.grid(row = 0, column = 0)
 
-clear_button = tk.Button(clear_save_frame, text="Clear")
+clear_button = tk.Button(clear_save_frame, text="Clear", bg=accent_color_light)
 clear_button.bind("<Button-1>", clear_canvas)
 clear_button.grid(row = 0, column = 1)
 
@@ -251,12 +262,15 @@ clear_button.grid(row = 0, column = 1)
 undo_redo_frame = tk.Frame(root)
 undo_redo_frame.grid(row = 3, column = 0, sticky="ws")
 
-undo_button = tk.Button(undo_redo_frame, text="Undo")
+undo_button = tk.Button(undo_redo_frame, text="Undo", bg=accent_color_light)
 undo_button.grid(row = 0, column = 0)
 
-redo_button = tk.Button(undo_redo_frame, text="Redo")
+redo_button = tk.Button(undo_redo_frame, text="Redo", bg=accent_color_light)
 redo_button.grid(row = 0, column = 1)
 
 bind_draw()
+
+root.update_idletasks()
+root.minsize(root.winfo_width(), root.winfo_height())
 
 root.mainloop()
