@@ -64,3 +64,9 @@ class StrokeCollection(Stroke):
 
     def pop(self):
         return self.strokes.pop()
+
+    def is_empty(self):
+        return self.length() == 0
+
+    def length(self):
+        return len(self.strokes)

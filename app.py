@@ -4,6 +4,7 @@ from typing import assert_type
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageTk
 from strokes import *
+from history import *
 
 background_color = "#ded8e8"
 canvas_color = "#f5ebf2"
