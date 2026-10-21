@@ -21,7 +21,7 @@ BATCH_SIZE = 32
 BOXES_PREDICT = 25
 
 # this was originally 640, 320, 3 but our images are monochrome so we can reduce the input size
-def build_model(boxes_predict, convolves, input_shape=(320, 640, 1)):
+def build_model(convolves, input_shape=(320, 640, 1)):
     model = models.Sequential()
 
     model.add(layers.Input(shape=input_shape))
@@ -38,8 +38,8 @@ def build_model(boxes_predict, convolves, input_shape=(320, 640, 1)):
 
     # x1, y1, x2, y2, confidence 
     # (we're gonna kill low confidence boxes after prediction)
-    model.add(layers.Dense(boxes_predict*5, activation='sigmoid'))
-    model.add(layers.Reshape((boxes_predict, 5)))
+    model.add(layers.Dense(BOXES_PREDICT*5, activation='sigmoid'))
+    model.add(layers.Reshape((BOXES_PREDICT, 5)))
 
     return model
 
