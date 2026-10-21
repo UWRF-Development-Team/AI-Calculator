@@ -237,7 +237,6 @@ class App(tk.Tk):
         self.columnconfigure(0, weight = 1)
         # self.rowconfigure(0, weight = 3, uniform = "rows")
         # self.rowconfigure(1, weight = 0, uniform = "rows")
-        self.rowconfigure(0, weight = 1)
         self.rowconfigure(2, weight = 1,)
         # self.rowconfigure(3, weight = 1, uniform = "rows")
 
