@@ -8,10 +8,10 @@ import json
 from strokes import *
 from history import *
 
-background_color = "#ded8e8"
-canvas_color = "#f5ebf2"
-accent_color_light = "#f2e7ef"
-accent_color_dark = "#ebdde8"
+background_color = "#E1E2E4"
+canvas_color = "#F8F9FA"
+accent_color_light = "#ad1233"
+accent_color_dark = "#696E71"
 
 # Display Frame
 class DisplayFrame(ttk.Frame):
@@ -92,6 +92,7 @@ class CanvasFrame(ttk.Frame):
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
+        self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 5, highlightbackground=accent_color_dark, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
         self.image = Image.new("RGB", (640, 320), (255, 255, 255))
@@ -255,6 +256,9 @@ class ToolbarFrame(ttk.Frame):
     def __init__(self, container, canvas):
         super().__init__(container)
         self.canvas = canvas
+
+        ttk.Style().configure("My.TFrame", background=accent_color_light)
+        self.configure(style="My.TFrame")
 
         self.columnconfigure(0, weight = 1)
         self.columnconfigure(1, weight = 1)
