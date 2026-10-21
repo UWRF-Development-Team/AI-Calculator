@@ -222,7 +222,7 @@ class CanvasFrame(ttk.Frame):
 
         # Append to array
         training_json.append(image_data)
-        json.dump(training_json, open("./data.json", "w"))
+        json.dump(training_json, open("./data.json", "w"), indent=2)
 
     def on_resize(self, event):
         self.history.redraw()
