@@ -22,7 +22,7 @@ class DisplayFrame(ttk.Frame):
         self.columnconfigure(0, weight = 0)
         self.columnconfigure(1, weight = 1)
         self.columnconfigure(2, weight = 1)
-        self.columnconfigure(2, weight = 0)
+        self.columnconfigure(3, weight = 0)
         self.rowconfigure(0, weight = 1, uniform = "rows")
         self.rowconfigure(1, weight = 1, uniform = "rows")
         self.rowconfigure(2, weight = 1, uniform = "rows")
@@ -36,6 +36,11 @@ class DisplayFrame(ttk.Frame):
         self.a2 = ttk.Label(self, text = "Answer 2")
         self.a3 = ttk.Label(self, text = "Answer 3")
 
+        #Copy Buttons
+        self.copy1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
+        self.copy2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
+        self.copy3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
+
         #AI Output Row
         self.output = tk.Text (self, height = 1, width = 40)
         self.output.grid(row = 3)
@@ -43,13 +48,20 @@ class DisplayFrame(ttk.Frame):
         self.output.config(state = "disabled")
 
         #Setting elelments into cells
-        self.eq1.grid(column = 0, row = 0, sticky = "W")
-        self.eq2.grid(column = 0, row = 1, sticky = "W")
-        self.eq3.grid(column = 0, row = 2, sticky = "W")
-        self.a1.grid(column = 1, row = 0, sticky = "E")
-        self.a2.grid(column = 1, row = 1, sticky = "E")
-        self.a3.grid(column = 1, row = 2, sticky = "E")
-        self.output.grid(column = 0, row = 3, columnspan = 3, sticky ="EW")
+        self.eq1.grid(column = 1, row = 0, sticky = "W")
+        self.eq2.grid(column = 1, row = 1, sticky = "W")
+        self.eq3.grid(column = 1, row = 2, sticky = "W")
+        self.a1.grid(column = 2, row = 0, sticky = "E")
+        self.a2.grid(column = 2, row = 1, sticky = "E")
+        self.a3.grid(column = 2, row = 2, sticky = "E")
+        self.copy1.grid(column = 3, row = 0, sticky = "E")
+        self.copy2.grid(column = 3, row = 1, sticky = "E")
+        self.copy3.grid(column = 3, row = 2, sticky = "E")
+        self.output.grid(column = 1, row = 3, columnspan = 2, sticky ="EW")
+
+    def copy(self, answer):
+        self.clipboard_clear()
+        self.clipboard_append(answer)
 
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
