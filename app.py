@@ -50,7 +50,7 @@ class DisplayFrame(ttk.Frame):
         self.output.insert(index = 1.0, chars = "AI OUTPUT")
         self.output.config(state = "disabled")
 
-        #Setting elelments into cells
+        #Setting elements into cells
         self.copyeq1.grid(column = 0, row = 0, sticky = "W")
         self.copyeq2.grid(column = 0, row = 1, sticky = "W")
         self.copyeq3.grid(column = 0, row = 2, sticky = "W")
