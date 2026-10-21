@@ -79,7 +79,7 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
 
-    def toggle(self, event):
+    def toggle(self, event=None):
         self.drawing = not self.drawing
 
     # Drawing
@@ -123,13 +123,13 @@ class CanvasFrame(ttk.Frame):
         self.old_y = None
 
 
-    def redo(self, event = None): 
+    def redo(self, event=None):
         self.history.redo()
 
-    def undo(self, event = None):
+    def undo(self, event=None):
         self.history.undo()
 
-    def clear(self):
+    def clear(self, event=None):
         self.history.reset()
     
     def convert_symbols(self, text):
@@ -167,6 +167,7 @@ class CanvasFrame(ttk.Frame):
 
     def update_json(self, file_name, key, bounds):
         if len(key) != bounds.length(): raise ValueError("key does not match bounds")
+        # todo if not exists
         training_json = json.load(open("./data.json"))
 
         save_bounds = []
@@ -213,11 +214,14 @@ class ToolbarFrame(ttk.Frame):
         self.file_name = ttk.Entry(self)
         self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
 
+        toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
+        toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
+
         clear_button = ttk.Button(self, text = "clear", command = canvas.clear)
-        clear_button.grid(column = 3, row = 0, sticky="ES", padx = 5, pady = 5)
+        clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
         
         save_button = ttk.Button(self, text = "save", command = self.save)
-        save_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
+        save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
     def save(self):
         self.canvas.save(self.file_name.get())

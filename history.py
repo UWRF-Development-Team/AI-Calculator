@@ -25,14 +25,14 @@ class History:
 
     def undo(self):
         if self.main_history.is_empty():
-            raise LookupError("Can't undo, no strokes exist")
+            return
 
         self.undo_history.push(self.main_history.pop())
         self.redraw()
 
     def redo(self):
         if self.undo_history.is_empty():
-            raise LookupError("Can't redo, no strokes exist")
+            return
 
         self.main_history.push(self.undo_history.pop())
         self.redraw()
