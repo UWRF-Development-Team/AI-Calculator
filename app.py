@@ -131,6 +131,7 @@ class CanvasFrame(ttk.Frame):
         self.history.undo()
 
     def clear(self, event=None):
+        self.drawing = True
         self.history.reset()
     
     def convert_symbols(self, text):
@@ -221,7 +222,7 @@ class ToolbarFrame(ttk.Frame):
         toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
         toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
 
-        clear_button = ttk.Button(self, text = "clear", command = canvas.clear)
+        clear_button = ttk.Button(self, text = "clear", command = self.clear)
         clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
         
         save_button = ttk.Button(self, text = "save", command = self.save)
@@ -229,6 +230,10 @@ class ToolbarFrame(ttk.Frame):
         
     def save(self):
         self.canvas.save(self.file_name.get())
+
+    def clear(self, event=None):
+        self.canvas.clear()
+        self.file_name.delete(0, tk.END)
 
 class App(tk.Tk):
     def __init__(self):

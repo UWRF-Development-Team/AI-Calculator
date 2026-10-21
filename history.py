@@ -52,7 +52,7 @@ class History:
         self.main_history.push(stroke)
         self.undo_history = StrokeCollection()
 
-    # Reset history, but does not change the canvas or image
+    # Reset history, and clears the canvas and image
     def reset(self):
         self.main_history = StrokeCollection()
         self.undo_history = StrokeCollection()
