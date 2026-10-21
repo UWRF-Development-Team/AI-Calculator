@@ -93,13 +93,14 @@ class CanvasFrame(ttk.Frame):
             if not self.drawing:
                 self.current_stroke.append([x, y])
 
-        start = CoordinatePair(self.old_x, self.old_y)
         end = CoordinatePair(x, y)
         if self.drawing:
+            start = CoordinatePair(self.old_x, self.old_y)
             stroke = BrushStroke(start, end)
             stroke.draw(self.canvas, self.draw)
             self.current_stroke.append(stroke)
         else:
+            start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
             self.history.redraw()
             stroke = BoundingStroke(start, end)
             stroke.draw(self.canvas, self.draw)
@@ -111,11 +112,13 @@ class CanvasFrame(ttk.Frame):
     def on_mouse_released(self, event):
         if self.drawing:
             self.history.add_stroke(StrokeCollection(self.current_stroke))
-            self.current_stroke = []
         else:
-            start = CoordinatePair(self.current_stroke[0][1], self.current_stroke[0][1])
+            start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
             end = CoordinatePair(event.x, event.y)
+            # TODO make sure lower x is the start (could be done in the object)
             self.history.add_stroke(BoundingStroke(start, end))
+
+        self.current_stroke = []
 
         self.old_x = None
         self.old_y = None
@@ -147,7 +150,7 @@ class CanvasFrame(ttk.Frame):
             messagebox.showerror(title = "Save Error", message = "Cannot save an empty file!")
             return
         bounds = self.history.main_history.get_strokes_of_type(BoundingStroke)
-        if len(file_name) != len(bounds):
+        if len(file_name) != bounds.length():
             messagebox.showerror(title="Save Error", message="Key does not match bounds!")
             return
 
@@ -169,12 +172,12 @@ class CanvasFrame(ttk.Frame):
 
         save_bounds = []
         # Sorted previously
-        bounds = bounds.sort()
+        bounds.sort()
         for i, bound in enumerate(bounds.as_list()):
             bound_dict = {
                 "character": key[i],
-                "start": bound.start,
-                "end": bound.end,
+                "start": bound.start.as_list(),
+                "end": bound.end.as_list(),
             }
             save_bounds.append(bound_dict)
 

@@ -82,7 +82,7 @@ class StrokeCollection(Stroke):
         new_strokes = []
         # I hate sorting
         # Sorts by lowest start x (left to right) very slowly
-        while len(self.strokes > 0):
+        while not self.is_empty():
             smallest = None
             for stroke in self.strokes:
                 if smallest is None or stroke.start.x < smallest.start.x:
