@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw, ImageTk
 
 background_color = "#E1E2E4"
 canvas_color = "#F8F9FA"
-accent_color_light = "#C21807"
+accent_color_light = "#ad1233"
 accent_color_dark = "#696E71"
 
 # Display Frame
@@ -167,6 +167,9 @@ class ToolbarFrame(ttk.Frame):
     def __init__(self, container, canvas):
         super().__init__(container)
         self.canvas = canvas
+
+        ttk.Style().configure("My.TFrame", background=accent_color_light)
+        self.configure(style="My.TFrame")
 
         self.columnconfigure(0, weight = 1)
         self.columnconfigure(1, weight = 1)
