@@ -115,7 +115,6 @@ class CanvasFrame(ttk.Frame):
         else:
             start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
             end = CoordinatePair(event.x, event.y)
-            # TODO make sure lower x is the start (could be done in the object)
             self.history.add_stroke(BoundingStroke(start, end))
 
         self.current_stroke = []

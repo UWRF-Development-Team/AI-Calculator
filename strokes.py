@@ -39,12 +39,20 @@ class BrushStroke(Stroke):
 class BoundingStroke(Stroke):
     def __init__(self, start, end):
         super().__init__(start, end, "red")
+        self.swap_if_needed()
 
     def draw_canvas(self, canvas):
         canvas.create_rectangle(self.start.x, self.start.y, self.end.x, self.end.y, outline=self.color, width=3)
 
     def draw_image(self, image):
         pass
+
+    def swap_if_needed(self):
+        if self.start.x > self.end.x:
+            temp = self.start
+            self.start = self.end
+            self.end = temp
+
 
 class StrokeCollection(Stroke):
     def __init__(self, strokes=None):
