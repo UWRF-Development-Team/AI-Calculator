@@ -2,7 +2,11 @@ import tkinter as tk
 from tkinter import TclError, ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageTk
+from PIL import Image, ImageDraw
+import json
+
+from strokes import *
+from history import *
 
 background_color = "#ded8e8"
 canvas_color = "#f5ebf2"
@@ -79,78 +83,95 @@ class CanvasFrame(ttk.Frame):
         # self.padding = 5
         # self.background = canvas_color
 
+        # Object variables to store persistent state
+        # First three are used to track brush strokes between each mouse move call
         self.old_x = None
         self.old_y = None
-        self.strokes = [[]]
-        self.undid_strokes = []
+        self.current_stroke = []
+        self.drawing = True
 
+        # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
         self.image = Image.new("RGB", (640, 320), (255, 255, 255))
         self.draw = ImageDraw.Draw(self.image)
 
-        # keybinds
+        # Initialize history
+        self.history = History(self.canvas, self.draw)
+
+        # Keybinds
         self.canvas.bind("<B1-Motion>", self.on_mouse_pressed)
         self.canvas.bind("<ButtonRelease-1>", self.on_mouse_released)
         self.winfo_toplevel().bind("<Control-z>", self.undo)
         self.winfo_toplevel().bind("<Control-y>", self.redo)
+        self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
+
+    def toggle(self, event=None):
+        self.drawing = not self.drawing
 
     # Drawing
     def on_mouse_pressed(self, event):
-        self.undid_strokes = []
         x = event.x
         y = event.y
-        self.old_x = x if self.old_x is None else self.old_x
-        self.old_y = y if self.old_y is None else self.old_y
-        self.strokes[-1].append([self.old_x, self.old_y, x, y])
-        self.canvas.create_line(self.old_x, self.old_y, x, y, fill = "black", width = 3)
-        self.draw.line([self.old_x, self.old_y, x, y], (0, 0, 0), width = 3)
+
+        # Check if this is the first movement of a new stroke (collection)
+        if self.old_x is None:
+            # Just draw in the same place this time
+            self.old_x = x
+            self.old_y = y
+            # self.current_stroke is unused for bounding
+            # Use it to store the starting coordinates instead
+            if not self.drawing:
+                self.current_stroke.append([x, y])
+
+        end = CoordinatePair(x, y)
+        if self.drawing:
+            start = CoordinatePair(self.old_x, self.old_y)
+            stroke = BrushStroke(start, end)
+            stroke.draw(self.canvas, self.draw)
+            self.current_stroke.append(stroke)
+        else:
+            # Use starting coordinates, not previous ones
+            start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
+            # Redraw without saving history for moving box effect
+            self.history.redraw()
+            stroke = BoundingStroke(start, end)
+            stroke.draw(self.canvas, self.draw)
+
+        # Reset old variables
         self.old_x = x
         self.old_y = y
 
     # Stops drawing
     def on_mouse_released(self, event):
+        # Don't draw in this method because it was done in the last on_mouse_pressed() call
+        if self.drawing:
+            # Create new stroke collection and save it
+            self.history.add_stroke(StrokeCollection(self.current_stroke))
+        else:
+            start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
+            end = CoordinatePair(event.x, event.y)
+            # Save in history, unlike when moving
+            self.history.add_stroke(BoundingStroke(start, end))
+
+        # Reset some states
+        self.current_stroke = []
+
         self.old_x = None
         self.old_y = None
-        self.strokes.append([])
 
-    def redo(self, event = None): 
-        if len(self.undid_strokes) == 0:
-            return
-        redo_stroke = self.undid_strokes.pop()
-        for line in redo_stroke:
-            self.canvas.create_line(line[0], line[1], line[2], line[3], fill = "black", width = 3)
-            self.draw.line(line, (0, 0, 0), width = 3)
-        self.strokes[-1] = redo_stroke
-        self.strokes.append([])
 
-    def undo(self, event = None):
-        if len(self.strokes[-1]) == 0:
-            if len(self.strokes) > 0:
-                self.strokes.pop()
-            else:
-                return
+    def redo(self, event=None):
+        self.history.redo()
 
-        self.undid_strokes.append(self.strokes.pop())
-        self.image = Image.new("RGB", self.image.size, (255, 255, 255))
-        self.draw = ImageDraw.Draw(self.image)
-        self.canvas.delete("all")
-        
-        for stroke in self.strokes:
-            for line in stroke:
-                self.canvas.create_line(line[0], line[1], line[2], line[3], fill = "black", width = 3)
-                self.draw.line(line, (0, 0, 0), width = 3)
+    def undo(self, event=None):
+        self.history.undo()
 
-        self.strokes.append([])
-
-    def clear(self):
-        self.image = Image.new("RGB", self.image.size, (255, 255, 255))
-        self.draw = ImageDraw.Draw(self.image)
-        self.canvas.delete("all")
-        self.strokes = [[]]
-        self.undid_strokes = []        
+    def clear(self, event=None):
+        self.drawing = True
+        self.history.reset()
     
     def convert_symbols(self, text):
         assert_type(text, str)
@@ -162,30 +183,72 @@ class CanvasFrame(ttk.Frame):
         )
 
     def save(self, file_name):
+        # If the file name was forgotten
         if len(file_name) == 0:
-            messagebox.showerror(title = "Save Error", message = "Need file name")
-            return 
-        if len(self.strokes[0]) == 0:
-            messagebox.showerror(title = "Save Error", message = "Cannot save empty file")
+            messagebox.showerror(title = "Save Error", message = "Need a file name!")
+            return
+        # If no image was drawn
+        if self.history.main_history.is_empty():
+            messagebox.showerror(title = "Save Error", message = "Cannot save an empty file!")
+            return
+        # If the number of bounds does not match the number of glyphs in the target
+        bounds = self.history.main_history.get_strokes_of_type(BoundingStroke)
+        if len(file_name) != bounds.length():
+            messagebox.showerror(title="Save Error", message="Key does not match bounds!")
             return
 
+        # Parse name to remove special characters
         converted_name = self.convert_symbols(file_name) + ".0"
         files = Path("training-data")
+        # If directory is missing, make it
+        if not files.is_dir():
+            files.mkdir()
+
+        # We should probably rewrite this
+        # Renames the file to avoid file collisions by incrementing the .n part of the filename
         highest_name = converted_name
         for file in files.iterdir():
             if len(file.name.split(".")) != 3: continue
             if file.name.split(".", 1)[0] == highest_name.split(".", 1)[0]:
                 if int(file.name.split(".", 2)[1]) >= int(highest_name.split(".", 1)[1]):
                     highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
+
         self.image.save(f"./training-data/{highest_name}.png")
+        self.update_json(highest_name + ".png", file_name, bounds)
+
+    def update_json(self, file_name, key, bounds):
+        # Double check that the target and boxes have the same number of features
+        if len(key) != bounds.length(): raise ValueError("key does not match bounds")
+
+        # Create empty JSON array if the file does not exist
+        if not Path("./data.json").is_file():
+            json.dump([], open("./data.json", "x"))
+        training_json = json.load(open("./data.json"))
+
+        save_bounds = []
+        # Sort bounds left to right
+        bounds.sort()
+        # Generate an object for each bound
+        for i, bound in enumerate(bounds.as_list()):
+            bound_dict = {
+                "character": key[i],
+                "start": bound.start.as_list(),
+                "end": bound.end.as_list(),
+            }
+            save_bounds.append(bound_dict)
+
+        # Save file name (key) and bounds data (value)
+        image_data = {
+            "filename": file_name,
+            "bounds": save_bounds
+        }
+
+        # Append to array
+        training_json.append(image_data)
+        json.dump(training_json, open("./data.json", "w"), indent=2)
 
     def on_resize(self, event):
-        self.image = Image.new("RGB", (event.width, event.height), (255, 255, 255))
-        self.draw = ImageDraw.Draw(self.image)
-        for stroke in self.strokes:
-            for line in stroke:
-                self.draw.line(line, (0, 0, 0), width = 3)
-
+        self.history.redraw()
 
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
@@ -209,14 +272,21 @@ class ToolbarFrame(ttk.Frame):
         self.file_name = ttk.Entry(self)
         self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
 
-        clear_button = ttk.Button(self, text = "clear", command = canvas.clear)
-        clear_button.grid(column = 3, row = 0, sticky="ES", padx = 5, pady = 5)
+        toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
+        toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
+
+        clear_button = ttk.Button(self, text = "clear", command = self.clear)
+        clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
         
         save_button = ttk.Button(self, text = "save", command = self.save)
-        save_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
+        save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
     def save(self):
         self.canvas.save(self.file_name.get())
+
+    def clear(self, event=None):
+        self.canvas.clear()
+        self.file_name.delete(0, tk.END)
 
 class App(tk.Tk):
     def __init__(self):
