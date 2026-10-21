@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import TclError, ttk, messagebox
 from typing import assert_type 
@@ -156,6 +157,9 @@ class CanvasFrame(ttk.Frame):
 
         converted_name = self.convert_symbols(file_name) + ".0"
         files = Path("training-data")
+        if not files.is_dir():
+            os.makedirs("./training-data")
+            files = Path("training-data")
         highest_name = converted_name
         for file in files.iterdir():
             if len(file.name.split(".")) != 3: continue
@@ -167,11 +171,11 @@ class CanvasFrame(ttk.Frame):
 
     def update_json(self, file_name, key, bounds):
         if len(key) != bounds.length(): raise ValueError("key does not match bounds")
-        # todo if not exists
+        if not Path("./data.json").is_file():
+            json.dump([], open("./data.json", "x"))
         training_json = json.load(open("./data.json"))
 
         save_bounds = []
-        # Sorted previously
         bounds.sort()
         for i, bound in enumerate(bounds.as_list()):
             bound_dict = {
