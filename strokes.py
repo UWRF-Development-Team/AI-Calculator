@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+# Stores coordinates as an object, for more explicit referencing
 class CoordinatePair:
     def __init__(self, x, y):
         self.x = x
@@ -8,6 +9,9 @@ class CoordinatePair:
     def as_list(self):
         return [self.x, self.y]
 
+# Abstract class Stroke sets up for classes to extend it
+# Contains a start and end point (CoordinatePair) as well as a color (str), hex or color name
+# Has a method to draw on the canvas, the pillow image, as well as one to do both
 class Stroke(ABC):
     def __init__(self, start, end, color):
         self.start = start
@@ -26,6 +30,8 @@ class Stroke(ABC):
     def draw_image(self, image):
         pass
 
+# Color must be black
+# Overridden methods draw a simple straight line
 class BrushStroke(Stroke):
     def __init__(self, start, end):
         super().__init__(start, end, "black")
@@ -41,22 +47,29 @@ class BoundingStroke(Stroke):
         super().__init__(start, end, "red")
         self.swap_if_needed()
 
+    # Creates a red unfilled rectangle
     def draw_canvas(self, canvas):
         canvas.create_rectangle(self.start.x, self.start.y, self.end.x, self.end.y, outline=self.color, width=3)
 
+    # Bounding boxes should not be in the image itself, pass
     def draw_image(self, image):
         pass
 
+    # Ensure that the starting CoordinatePair is the leftmost one
     def swap_if_needed(self):
         if self.start.x > self.end.x:
             temp = self.start
             self.start = self.end
             self.end = temp
 
-
+# A Stroke that contains other Strokes
+# Useful for long lines that are a number of smaller strokes
+# Also useful as a collection in other ways
+# Overrides draw methods to do so on its collection
 class StrokeCollection(Stroke):
     def __init__(self, strokes=None):
         super().__init__(None, None, None)
+        # Default to an empty list if not provided
         self.strokes = strokes if strokes is not None else []
 
     def draw_canvas(self, canvas):
@@ -79,6 +92,7 @@ class StrokeCollection(Stroke):
     def length(self):
         return len(self.strokes)
 
+    # Return all strokes of a given type/class
     def get_strokes_of_type(self, class_type):
         return_list = []
         for stroke in self.strokes:
@@ -86,13 +100,15 @@ class StrokeCollection(Stroke):
                 return_list.append(stroke)
         return StrokeCollection(return_list)
 
+    # Sorts list by lowest start x (left to right)
+    # Questionable performance
     def sort(self):
         new_strokes = []
-        # I hate sorting
-        # Sorts by lowest start x (left to right) very slowly
         while not self.is_empty():
             smallest = None
             for stroke in self.strokes:
+                # Can't sort collections intuitively as they have no coordinates
+                if isinstance(stroke, StrokeCollection): raise ValueError("Cannot sort nested StrokeCollections!")
                 if smallest is None or stroke.start.x < smallest.start.x:
                     smallest = stroke
             new_strokes.append(smallest)
