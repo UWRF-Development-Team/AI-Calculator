@@ -37,9 +37,12 @@ class DisplayFrame(ttk.Frame):
         self.a3 = ttk.Label(self, text = "Answer 3")
 
         #Copy Buttons
-        self.copy1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
-        self.copy2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
-        self.copy3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
+        self.copya1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
+        self.copya2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
+        self.copya3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
+        self.copyeq1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq1["text"]))
+        self.copyeq2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq2["text"]))
+        self.copyeq3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq3["text"]))
 
         #AI Output Row
         self.output = tk.Text (self, height = 1, width = 40)
@@ -48,15 +51,18 @@ class DisplayFrame(ttk.Frame):
         self.output.config(state = "disabled")
 
         #Setting elelments into cells
+        self.copyeq1.grid(column = 0, row = 0, sticky = "W")
+        self.copyeq2.grid(column = 0, row = 1, sticky = "W")
+        self.copyeq3.grid(column = 0, row = 2, sticky = "W")
         self.eq1.grid(column = 1, row = 0, sticky = "W")
         self.eq2.grid(column = 1, row = 1, sticky = "W")
         self.eq3.grid(column = 1, row = 2, sticky = "W")
         self.a1.grid(column = 2, row = 0, sticky = "E")
         self.a2.grid(column = 2, row = 1, sticky = "E")
         self.a3.grid(column = 2, row = 2, sticky = "E")
-        self.copy1.grid(column = 3, row = 0, sticky = "E")
-        self.copy2.grid(column = 3, row = 1, sticky = "E")
-        self.copy3.grid(column = 3, row = 2, sticky = "E")
+        self.copya1.grid(column = 3, row = 0, sticky = "E")
+        self.copya2.grid(column = 3, row = 1, sticky = "E")
+        self.copya3.grid(column = 3, row = 2, sticky = "E")
         self.output.grid(column = 1, row = 3, columnspan = 2, sticky ="EW")
 
     def copy(self, answer):
