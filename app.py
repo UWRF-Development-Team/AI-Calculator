@@ -199,10 +199,10 @@ class CanvasFrame(ttk.Frame):
 
         # Parse name to remove special characters
         converted_name = self.convert_symbols(file_name) + ".0"
-        files = Path("training-data")
+        files = Path("./training-data/images")
         # If directory is missing, make it
         if not files.is_dir():
-            files.mkdir()
+            files.mkdir(parents=True)
 
         # We should probably rewrite this
         # Renames the file to avoid file collisions by incrementing the .n part of the filename
@@ -221,9 +221,9 @@ class CanvasFrame(ttk.Frame):
         if len(key) != bounds.length(): raise ValueError("key does not match bounds")
 
         # Create empty JSON array if the file does not exist
-        if not Path("./data.json").is_file():
-            json.dump([], open("./data.json", "x"))
-        training_json = json.load(open("./data.json"))
+        if not Path("./training-data/data.json").is_file():
+            json.dump([], open("./training-data/data.json", "x"))
+        training_json = json.load(open("./training-data/data.json"))
 
         save_bounds = []
         # Sort bounds left to right
@@ -245,7 +245,7 @@ class CanvasFrame(ttk.Frame):
 
         # Append to array
         training_json.append(image_data)
-        json.dump(training_json, open("./data.json", "w"), indent=2)
+        json.dump(training_json, open("./training-data/data.json", "w"), indent=2)
 
     def on_resize(self, event):
         self.history.redraw()
