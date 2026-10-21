@@ -4,10 +4,10 @@ from typing import assert_type
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageTk
 
-background_color = "#ded8e8"
-canvas_color = "#f5ebf2"
-accent_color_light = "#f2e7ef"
-accent_color_dark = "#ebdde8"
+background_color = "#E1E2E4"
+canvas_color = "#F8F9FA"
+accent_color_light = "#C21807"
+accent_color_dark = "#696E71"
 
 # Display Frame
 class DisplayFrame(ttk.Frame):
@@ -59,7 +59,7 @@ class CanvasFrame(ttk.Frame):
         self.strokes = [[]]
         self.undid_strokes = []
 
-        self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
+        self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 5, highlightbackground=accent_color_dark, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
         self.image = Image.new("RGB", (640, 320), (255, 255, 255))
