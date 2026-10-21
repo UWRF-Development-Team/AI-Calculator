@@ -168,6 +168,9 @@ class ToolbarFrame(ttk.Frame):
         super().__init__(container)
         self.canvas = canvas
 
+        ttk.Style().configure("My.TFrame", background=accent_color_light)
+        self.configure(style="My.TFrame")
+
         self.columnconfigure(0, weight = 1)
         self.columnconfigure(1, weight = 1)
         self.columnconfigure(2, weight = 3)
