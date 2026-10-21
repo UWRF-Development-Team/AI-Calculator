@@ -1,5 +1,6 @@
 import os
 import keras
+import json
 
 from keras import layers, models
 
@@ -13,6 +14,7 @@ MODEL_PATH = os.path.sep.join([OUTPUT_PATH, "segmentor.h5"])
 LR = 1e-4
 EPOCHS = 20
 BATCH_SIZE = 32
+BOXES_PREDICT = 25
 
 # this was originally 640, 320, 3 but our images are monochrome so we can reduce the input size
 def build_model(boxes_predict, convolves, input_shape=(320, 640, 1)):
@@ -37,5 +39,25 @@ def build_model(boxes_predict, convolves, input_shape=(320, 640, 1)):
 
     return model
 
-model = build_model(25, (16, 32))
-model.summary()
+# model = build_model(BOXES_PREDICT, (16, 32))
+# model.summary()
+
+data = json.load(open(BOXES))
+# print(data)
+
+# pad data with 0 confidence boxes to match output shape
+for d in range(len(data)):
+    print(json.dumps(data[d], indent=4))
+    bounds = data[d]["bounds"]
+    for i in range(bounds):
+        print(bounds)
+        for i in range(len(bounds)):
+            # some useful scrubbing, some training data might be old and doesn't have bbox confidence
+            # we can add this and set it to 1 because obviously user-made bounding boxes are fully confident
+            # print(bounds[i])
+            if not "confidence" in bounds[i]:
+                print("")
+                # b[i]["confidence"] = 1.0
+
+# print(data)
+        
