@@ -1,4 +1,3 @@
-import os
 import tkinter as tk
 from tkinter import TclError, ttk, messagebox
 from typing import assert_type 
@@ -203,8 +202,7 @@ class CanvasFrame(ttk.Frame):
         files = Path("training-data")
         # If directory is missing, make it
         if not files.is_dir():
-            os.makedirs("./training-data")
-            files = Path("training-data")
+            files.mkdir()
 
         # We should probably rewrite this
         # Renames the file to avoid file collisions by incrementing the .n part of the filename
