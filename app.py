@@ -1,11 +1,10 @@
 import tkinter as tk
-from tkinter import TclError, ttk, messagebox
+from tkinter import ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
 from PIL import Image, ImageDraw
 import json
 
-from strokes import *
 from history import *
 
 background_color = "#E1E2E4"
