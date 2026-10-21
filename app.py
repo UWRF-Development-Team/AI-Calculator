@@ -13,17 +13,22 @@ accent_color_dark = "#ebdde8"
 class DisplayFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
-        
+
         self["relief"] = "solid"
         self["borderwidth"] = 2
+        self["padding"] = 10
 
-        self.columnconfigure(0, weight = 3)
+        #Setting Rows and Columns size/style
+        self.columnconfigure(0, weight = 0)
         self.columnconfigure(1, weight = 1)
+        self.columnconfigure(2, weight = 1)
+        self.columnconfigure(2, weight = 0)
         self.rowconfigure(0, weight = 1, uniform = "rows")
         self.rowconfigure(1, weight = 1, uniform = "rows")
         self.rowconfigure(2, weight = 1, uniform = "rows")
         self.rowconfigure(3, weight = 1, uniform = "rows")
 
+        #Equation and Answer Text
         self.eq1 = ttk.Label(self, text = "Equation 1")
         self.eq2 = ttk.Label(self, text = "Equation 2")
         self.eq3 = ttk.Label(self, text = "Equation 3")
@@ -31,11 +36,13 @@ class DisplayFrame(ttk.Frame):
         self.a2 = ttk.Label(self, text = "Answer 2")
         self.a3 = ttk.Label(self, text = "Answer 3")
 
+        #AI Output Row
         self.output = tk.Text (self, height = 1, width = 40)
         self.output.grid(row = 3)
         self.output.insert(index = 1.0, chars = "AI OUTPUT")
         self.output.config(state = "disabled")
 
+        #Setting elelments into cells
         self.eq1.grid(column = 0, row = 0, sticky = "W")
         self.eq2.grid(column = 0, row = 1, sticky = "W")
         self.eq3.grid(column = 0, row = 2, sticky = "W")
@@ -212,6 +219,7 @@ class App(tk.Tk):
         self.columnconfigure(0, weight = 1)
         # self.rowconfigure(0, weight = 3, uniform = "rows")
         # self.rowconfigure(1, weight = 0, uniform = "rows")
+        self.rowconfigure(0, weight = 1)
         self.rowconfigure(2, weight = 1,)
         # self.rowconfigure(3, weight = 1, uniform = "rows")
 
@@ -219,7 +227,7 @@ class App(tk.Tk):
     
     def __create_frames(self):
         display_frame = DisplayFrame(self)
-        display_frame.grid(column = 0, row = 0, sticky="N")
+        display_frame.grid(column = 0, row = 0, sticky="NEW")
 
         canvas_frame = CanvasFrame(self)
         canvas_frame.grid(column = 0, row = 2)
