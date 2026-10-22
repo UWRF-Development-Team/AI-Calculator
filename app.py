@@ -88,6 +88,7 @@ class CanvasFrame(ttk.Frame):
         self.old_y = None
         self.current_stroke = []
         self.drawing = True
+        self.calc_mode = True
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
@@ -109,6 +110,7 @@ class CanvasFrame(ttk.Frame):
         self.canvas.bind("<Configure>", self.on_resize)
 
     def toggle(self, event=None):
+        if self.calc_mode: return
         self.drawing = not self.drawing
 
     # Drawing
@@ -250,6 +252,9 @@ class CanvasFrame(ttk.Frame):
     def on_resize(self, event):
         self.history.redraw()
 
+    def toggle_mode(self):
+        self.calc_mode = not self.calc_mode
+
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
     def __init__(self, container, canvas):
@@ -314,16 +319,22 @@ class App(tk.Tk):
         # self.rowconfigure(3, weight = 1, uniform = "rows")
 
         self.__create_frames()
-    
+        # Uppercase T means shift-t, wow
+        self.bind("<Control-T>", self.toggle_mode)
+
     def __create_frames(self):
-        display_frame = DisplayFrame(self)
-        display_frame.grid(column = 0, row = 0, sticky="NEW")
+        self.display_frame = DisplayFrame(self)
+        self.display_frame.grid(column = 0, row = 0, sticky="NEW")
 
-        canvas_frame = CanvasFrame(self)
-        canvas_frame.grid(column = 0, row = 2)
+        self.canvas_frame = CanvasFrame(self)
+        self.canvas_frame.grid(column = 0, row = 2)
 
-        toolbar_frame = ToolbarFrame(self, canvas_frame)
-        toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+        self.toolbar_frame = ToolbarFrame(self, self.canvas_frame)
+        self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+
+    def toggle_mode(self, event=None):
+        # self.toolbar_frame.toggle_mode()
+        self.canvas_frame.toggle_mode()
 
 
 
