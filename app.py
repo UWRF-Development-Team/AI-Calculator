@@ -88,6 +88,7 @@ class CanvasFrame(ttk.Frame):
         self.old_y = None
         self.current_stroke = []
         self.drawing = True
+        self.calc_mode = True
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
@@ -109,6 +110,7 @@ class CanvasFrame(ttk.Frame):
         self.canvas.bind("<Configure>", self.on_resize)
 
     def toggle(self, event=None):
+        if self.calc_mode: return
         self.drawing = not self.drawing
 
     # Drawing
@@ -250,11 +252,16 @@ class CanvasFrame(ttk.Frame):
     def on_resize(self, event):
         self.history.redraw()
 
+    def toggle_mode(self):
+        self.calc_mode = not self.calc_mode
+
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
     def __init__(self, container, canvas):
         super().__init__(container)
         self.canvas = canvas
+
+        self.calc_mode = True
 
         ttk.Style().configure("My.TFrame", background=accent_color_light)
         self.configure(style="My.TFrame")
@@ -266,23 +273,21 @@ class ToolbarFrame(ttk.Frame):
         self.columnconfigure(4, weight = 1)
         self.rowconfigure(0, weight = 1)
 
-        undo_button = ttk.Button(self, text = "undo", command = canvas.undo)
+        undo_button = ttk.Button(self, text = "Undo", command = canvas.undo)
         undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
 
-        redo_button = ttk.Button(self, text = "redo", command = canvas.redo)
+        redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
         redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
-        
+
+        # Not displayed by default
         self.file_name = ttk.Entry(self)
-        self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
+        self.toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
 
-        toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
-        toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
-
-        clear_button = ttk.Button(self, text = "clear", command = self.clear)
+        clear_button = ttk.Button(self, text = "Clear", command = self.clear)
         clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
         
-        save_button = ttk.Button(self, text = "save", command = self.save)
-        save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
+        self.save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
     def save(self):
         self.canvas.save(self.file_name.get())
@@ -290,6 +295,21 @@ class ToolbarFrame(ttk.Frame):
     def clear(self, event=None):
         self.canvas.clear()
         self.file_name.delete(0, tk.END)
+
+    def submit(self, event=None):
+        # TODO send information to model
+        pass
+
+    def toggle_mode(self):
+        if self.calc_mode:
+            self.toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
+            self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
+            self.save_button.configure(text="Save", command=self.save)
+        else:
+            self.toggle_button.grid_forget()
+            self.file_name.grid_forget()
+            self.save_button.configure(text="Submit", command=self.submit)
+        self.calc_mode = not self.calc_mode
 
 class App(tk.Tk):
     def __init__(self):
@@ -314,16 +334,22 @@ class App(tk.Tk):
         # self.rowconfigure(3, weight = 1, uniform = "rows")
 
         self.__create_frames()
-    
+        # Uppercase T means shift-t, wow
+        self.bind("<Control-T>", self.toggle_mode)
+
     def __create_frames(self):
-        display_frame = DisplayFrame(self)
-        display_frame.grid(column = 0, row = 0, sticky="NEW")
+        self.display_frame = DisplayFrame(self)
+        self.display_frame.grid(column = 0, row = 0, sticky="NEW")
 
-        canvas_frame = CanvasFrame(self)
-        canvas_frame.grid(column = 0, row = 2)
+        self.canvas_frame = CanvasFrame(self)
+        self.canvas_frame.grid(column = 0, row = 2)
 
-        toolbar_frame = ToolbarFrame(self, canvas_frame)
-        toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+        self.toolbar_frame = ToolbarFrame(self, self.canvas_frame)
+        self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+
+    def toggle_mode(self, event=None):
+        self.toolbar_frame.toggle_mode()
+        self.canvas_frame.toggle_mode()
 
 
 
