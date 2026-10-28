@@ -1,1 +1,3916 @@
-[{"filename": "1a2.0.png", "bounds": [{"character": "1", "start": [225, 122], "end": [286, 207]}, {"character": "+", "start": [298, 166], "end": [327, 197]}, {"character": "2", "start": [352, 114], "end": [435, 198]}]}, {"filename": "3a3.0.png", "bounds": [{"character": "3", "start": [227, 88], "end": [288, 168]}, {"character": "+", "start": [302, 128], "end": [328, 154]}, {"character": "3", "start": [350, 83], "end": [410, 172]}]}]
+[
+  {
+    "filename": "1a2.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          225,
+          122
+        ],
+        "end": [
+          286,
+          207
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          298,
+          166
+        ],
+        "end": [
+          327,
+          197
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          352,
+          114
+        ],
+        "end": [
+          435,
+          198
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3a3.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          227,
+          88
+        ],
+        "end": [
+          288,
+          168
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          302,
+          128
+        ],
+        "end": [
+          328,
+          154
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          350,
+          83
+        ],
+        "end": [
+          410,
+          172
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8a2.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          102,
+          108
+        ],
+        "end": [
+          232,
+          260
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          269,
+          148
+        ],
+        "end": [
+          340,
+          197
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          372,
+          106
+        ],
+        "end": [
+          482,
+          272
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9s3.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          122,
+          65
+        ],
+        "end": [
+          215,
+          239
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          271,
+          152
+        ],
+        "end": [
+          323,
+          167
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          379,
+          91
+        ],
+        "end": [
+          462,
+          223
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4d6.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          127,
+          77
+        ],
+        "end": [
+          205,
+          211
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          269,
+          82
+        ],
+        "end": [
+          349,
+          240
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          411,
+          100
+        ],
+        "end": [
+          497,
+          205
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3m1.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          137,
+          67
+        ],
+        "end": [
+          274,
+          254
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          307,
+          150
+        ],
+        "end": [
+          343,
+          190
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          382,
+          74
+        ],
+        "end": [
+          429,
+          261
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2s2.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          132,
+          64
+        ],
+        "end": [
+          224,
+          225
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          281,
+          129
+        ],
+        "end": [
+          333,
+          152
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          375,
+          86
+        ],
+        "end": [
+          459,
+          211
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5d3.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          165,
+          72
+        ],
+        "end": [
+          257,
+          238
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          292,
+          129
+        ],
+        "end": [
+          353,
+          199
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          395,
+          73
+        ],
+        "end": [
+          471,
+          226
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6s8.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          123,
+          89
+        ],
+        "end": [
+          231,
+          247
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          257,
+          145
+        ],
+        "end": [
+          314,
+          164
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          342,
+          106
+        ],
+        "end": [
+          422,
+          243
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3a6.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          116,
+          56
+        ],
+        "end": [
+          228,
+          225
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          243,
+          106
+        ],
+        "end": [
+          292,
+          174
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          308,
+          80
+        ],
+        "end": [
+          409,
+          208
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4a7.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          135,
+          85
+        ],
+        "end": [
+          218,
+          239
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          266,
+          151
+        ],
+        "end": [
+          306,
+          182
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          345,
+          96
+        ],
+        "end": [
+          429,
+          247
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1d0.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          153,
+          88
+        ],
+        "end": [
+          187,
+          256
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          239,
+          128
+        ],
+        "end": [
+          303,
+          187
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          336,
+          92
+        ],
+        "end": [
+          446,
+          248
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2m7.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          181,
+          64
+        ],
+        "end": [
+          298,
+          289
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          319,
+          133
+        ],
+        "end": [
+          365,
+          181
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          425,
+          90
+        ],
+        "end": [
+          533,
+          280
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7a8.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          160,
+          83
+        ],
+        "end": [
+          254,
+          262
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          294,
+          146
+        ],
+        "end": [
+          326,
+          190
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          368,
+          87
+        ],
+        "end": [
+          441,
+          255
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5a5.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          117,
+          79
+        ],
+        "end": [
+          239,
+          236
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          268,
+          146
+        ],
+        "end": [
+          325,
+          204
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          336,
+          95
+        ],
+        "end": [
+          431,
+          248
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8d3.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          170,
+          69
+        ],
+        "end": [
+          265,
+          243
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          318,
+          85
+        ],
+        "end": [
+          370,
+          232
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          426,
+          96
+        ],
+        "end": [
+          510,
+          231
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7s2.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          164,
+          69
+        ],
+        "end": [
+          262,
+          227
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          298,
+          143
+        ],
+        "end": [
+          358,
+          161
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          381,
+          86
+        ],
+        "end": [
+          482,
+          230
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6m7.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          99,
+          111
+        ],
+        "end": [
+          211,
+          278
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          270,
+          131
+        ],
+        "end": [
+          359,
+          206
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          420,
+          106
+        ],
+        "end": [
+          507,
+          247
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5a2.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          114,
+          65
+        ],
+        "end": [
+          223,
+          212
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          270,
+          108
+        ],
+        "end": [
+          328,
+          175
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          375,
+          68
+        ],
+        "end": [
+          492,
+          227
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9d6.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          136,
+          67
+        ],
+        "end": [
+          220,
+          174
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          250,
+          43
+        ],
+        "end": [
+          340,
+          195
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          373,
+          77
+        ],
+        "end": [
+          439,
+          171
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1m7.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          178,
+          88
+        ],
+        "end": [
+          218,
+          198
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          255,
+          116
+        ],
+        "end": [
+          307,
+          159
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          338,
+          93
+        ],
+        "end": [
+          410,
+          208
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5s6.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          131,
+          80
+        ],
+        "end": [
+          226,
+          237
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          267,
+          149
+        ],
+        "end": [
+          362,
+          163
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          397,
+          91
+        ],
+        "end": [
+          468,
+          272
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8m2.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          133,
+          71
+        ],
+        "end": [
+          250,
+          257
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          303,
+          145
+        ],
+        "end": [
+          375,
+          198
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          417,
+          80
+        ],
+        "end": [
+          508,
+          236
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9s2.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          108,
+          77
+        ],
+        "end": [
+          232,
+          232
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          285,
+          144
+        ],
+        "end": [
+          370,
+          160
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          398,
+          102
+        ],
+        "end": [
+          501,
+          245
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3d6.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          174,
+          100
+        ],
+        "end": [
+          264,
+          248
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          308,
+          110
+        ],
+        "end": [
+          355,
+          255
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          399,
+          118
+        ],
+        "end": [
+          468,
+          231
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5a3.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          123,
+          74
+        ],
+        "end": [
+          256,
+          234
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          288,
+          144
+        ],
+        "end": [
+          337,
+          201
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          382,
+          86
+        ],
+        "end": [
+          501,
+          222
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8a1.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          128,
+          64
+        ],
+        "end": [
+          229,
+          190
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          285,
+          115
+        ],
+        "end": [
+          337,
+          177
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          400,
+          92
+        ],
+        "end": [
+          436,
+          184
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9m7.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          141,
+          64
+        ],
+        "end": [
+          234,
+          196
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          261,
+          107
+        ],
+        "end": [
+          316,
+          158
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          359,
+          84
+        ],
+        "end": [
+          450,
+          203
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7s5.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          147,
+          74
+        ],
+        "end": [
+          254,
+          247
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          282,
+          147
+        ],
+        "end": [
+          350,
+          175
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          390,
+          89
+        ],
+        "end": [
+          489,
+          253
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7m7.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          145,
+          63
+        ],
+        "end": [
+          268,
+          246
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          316,
+          166
+        ],
+        "end": [
+          364,
+          215
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          412,
+          112
+        ],
+        "end": [
+          534,
+          263
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1d3.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          194,
+          64
+        ],
+        "end": [
+          242,
+          220
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          313,
+          69
+        ],
+        "end": [
+          397,
+          242
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          463,
+          82
+        ],
+        "end": [
+          562,
+          224
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4d2.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          151,
+          84
+        ],
+        "end": [
+          241,
+          231
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          301,
+          129
+        ],
+        "end": [
+          377,
+          186
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          433,
+          91
+        ],
+        "end": [
+          507,
+          219
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8m9.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          134,
+          71
+        ],
+        "end": [
+          248,
+          230
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          289,
+          136
+        ],
+        "end": [
+          325,
+          172
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          368,
+          89
+        ],
+        "end": [
+          440,
+          216
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7a4.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          170,
+          81
+        ],
+        "end": [
+          273,
+          241
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          310,
+          153
+        ],
+        "end": [
+          361,
+          197
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          404,
+          103
+        ],
+        "end": [
+          506,
+          225
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3m5.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          174,
+          59
+        ],
+        "end": [
+          284,
+          241
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          331,
+          122
+        ],
+        "end": [
+          388,
+          195
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          438,
+          72
+        ],
+        "end": [
+          520,
+          247
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9m2.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          154,
+          90
+        ],
+        "end": [
+          252,
+          240
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          314,
+          132
+        ],
+        "end": [
+          353,
+          175
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          408,
+          108
+        ],
+        "end": [
+          469,
+          236
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4m5.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          146,
+          77
+        ],
+        "end": [
+          248,
+          224
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          299,
+          114
+        ],
+        "end": [
+          343,
+          163
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          385,
+          81
+        ],
+        "end": [
+          457,
+          208
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9m9.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          134,
+          57
+        ],
+        "end": [
+          218,
+          209
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          284,
+          109
+        ],
+        "end": [
+          332,
+          168
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          381,
+          62
+        ],
+        "end": [
+          454,
+          211
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2m3.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          156,
+          61
+        ],
+        "end": [
+          220,
+          199
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          272,
+          93
+        ],
+        "end": [
+          334,
+          160
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          385,
+          70
+        ],
+        "end": [
+          461,
+          208
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6m2.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          105,
+          74
+        ],
+        "end": [
+          251,
+          278
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          284,
+          127
+        ],
+        "end": [
+          372,
+          216
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          440,
+          89
+        ],
+        "end": [
+          537,
+          305
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6m3.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          155,
+          67
+        ],
+        "end": [
+          225,
+          211
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          274,
+          122
+        ],
+        "end": [
+          316,
+          153
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          351,
+          54
+        ],
+        "end": [
+          491,
+          249
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1m1.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          169,
+          82
+        ],
+        "end": [
+          203,
+          220
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          266,
+          111
+        ],
+        "end": [
+          312,
+          173
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          382,
+          88
+        ],
+        "end": [
+          410,
+          209
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2m5.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          147,
+          73
+        ],
+        "end": [
+          233,
+          239
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          260,
+          128
+        ],
+        "end": [
+          315,
+          182
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          348,
+          88
+        ],
+        "end": [
+          438,
+          234
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4m2.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          182,
+          47
+        ],
+        "end": [
+          261,
+          169
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          291,
+          107
+        ],
+        "end": [
+          334,
+          150
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          371,
+          55
+        ],
+        "end": [
+          467,
+          194
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3s7.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          143,
+          39
+        ],
+        "end": [
+          236,
+          228
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          293,
+          129
+        ],
+        "end": [
+          328,
+          148
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          395,
+          71
+        ],
+        "end": [
+          495,
+          233
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5s3.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          127,
+          86
+        ],
+        "end": [
+          219,
+          222
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          268,
+          155
+        ],
+        "end": [
+          316,
+          177
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          359,
+          110
+        ],
+        "end": [
+          442,
+          204
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6s3.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          152,
+          99
+        ],
+        "end": [
+          246,
+          270
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          297,
+          174
+        ],
+        "end": [
+          354,
+          208
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          392,
+          117
+        ],
+        "end": [
+          486,
+          247
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1s5.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          144,
+          112
+        ],
+        "end": [
+          194,
+          240
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          247,
+          166
+        ],
+        "end": [
+          320,
+          193
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          371,
+          110
+        ],
+        "end": [
+          465,
+          243
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2s9.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          129,
+          90
+        ],
+        "end": [
+          240,
+          242
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          281,
+          171
+        ],
+        "end": [
+          352,
+          197
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          388,
+          91
+        ],
+        "end": [
+          485,
+          215
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9s5.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          191,
+          74
+        ],
+        "end": [
+          279,
+          219
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          294,
+          109
+        ],
+        "end": [
+          356,
+          150
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          380,
+          79
+        ],
+        "end": [
+          468,
+          214
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8s9.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          135,
+          81
+        ],
+        "end": [
+          240,
+          233
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          282,
+          149
+        ],
+        "end": [
+          347,
+          171
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          376,
+          93
+        ],
+        "end": [
+          464,
+          217
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7s4.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          166,
+          79
+        ],
+        "end": [
+          282,
+          265
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          310,
+          175
+        ],
+        "end": [
+          369,
+          194
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          414,
+          106
+        ],
+        "end": [
+          542,
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7s3.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          159,
+          77
+        ],
+        "end": [
+          298,
+          271
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          332,
+          175
+        ],
+        "end": [
+          398,
+          196
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          438,
+          89
+        ],
+        "end": [
+          538,
+          267
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3s9.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          157,
+          37
+        ],
+        "end": [
+          288,
+          270
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          355,
+          144
+        ],
+        "end": [
+          435,
+          169
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          468,
+          64
+        ],
+        "end": [
+          545,
+          224
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2s5.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          129,
+          63
+        ],
+        "end": [
+          259,
+          235
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          303,
+          134
+        ],
+        "end": [
+          393,
+          168
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          415,
+          71
+        ],
+        "end": [
+          541,
+          262
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1s8.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          193,
+          97
+        ],
+        "end": [
+          247,
+          230
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          309,
+          134
+        ],
+        "end": [
+          376,
+          166
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          408,
+          87
+        ],
+        "end": [
+          520,
+          223
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4s4.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          143,
+          91
+        ],
+        "end": [
+          256,
+          205
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          312,
+          127
+        ],
+        "end": [
+          391,
+          147
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          421,
+          93
+        ],
+        "end": [
+          503,
+          213
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8s5.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          117,
+          100
+        ],
+        "end": [
+          230,
+          253
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          261,
+          170
+        ],
+        "end": [
+          361,
+          198
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          366,
+          105
+        ],
+        "end": [
+          499,
+          269
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3s2.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          146,
+          67
+        ],
+        "end": [
+          267,
+          273
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          283,
+          207
+        ],
+        "end": [
+          344,
+          232
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          375,
+          111
+        ],
+        "end": [
+          492,
+          303
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1a5.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          146,
+          84
+        ],
+        "end": [
+          190,
+          239
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          235,
+          150
+        ],
+        "end": [
+          279,
+          207
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          320,
+          91
+        ],
+        "end": [
+          441,
+          248
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1d8.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          155,
+          78
+        ],
+        "end": [
+          200,
+          236
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          258,
+          132
+        ],
+        "end": [
+          310,
+          199
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          337,
+          109
+        ],
+        "end": [
+          436,
+          238
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1m5.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          143,
+          79
+        ],
+        "end": [
+          176,
+          232
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          210,
+          130
+        ],
+        "end": [
+          261,
+          201
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          314,
+          95
+        ],
+        "end": [
+          412,
+          244
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1a3.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          154,
+          86
+        ],
+        "end": [
+          201,
+          240
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          251,
+          141
+        ],
+        "end": [
+          312,
+          218
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          359,
+          92
+        ],
+        "end": [
+          459,
+          244
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1s4.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          151,
+          70
+        ],
+        "end": [
+          203,
+          252
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          252,
+          133
+        ],
+        "end": [
+          347,
+          182
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          387,
+          77
+        ],
+        "end": [
+          508,
+          254
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1d9.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          183,
+          85
+        ],
+        "end": [
+          219,
+          235
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          267,
+          109
+        ],
+        "end": [
+          351,
+          190
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          396,
+          85
+        ],
+        "end": [
+          505,
+          237
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2a1.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          138,
+          60
+        ],
+        "end": [
+          205,
+          211
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          276,
+          100
+        ],
+        "end": [
+          339,
+          160
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          387,
+          58
+        ],
+        "end": [
+          442,
+          217
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2a4.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          172,
+          42
+        ],
+        "end": [
+          243,
+          208
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          329,
+          100
+        ],
+        "end": [
+          394,
+          168
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          457,
+          71
+        ],
+        "end": [
+          584,
+          222
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2d6.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          130,
+          59
+        ],
+        "end": [
+          263,
+          262
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          303,
+          113
+        ],
+        "end": [
+          410,
+          236
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          428,
+          56
+        ],
+        "end": [
+          535,
+          299
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2m8.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          159,
+          55
+        ],
+        "end": [
+          249,
+          281
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          299,
+          97
+        ],
+        "end": [
+          353,
+          194
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          439,
+          71
+        ],
+        "end": [
+          507,
+          248
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "2a0.0.png",
+    "bounds": [
+      {
+        "character": "2",
+        "start": [
+          140,
+          84
+        ],
+        "end": [
+          209,
+          239
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          252,
+          118
+        ],
+        "end": [
+          327,
+          208
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          356,
+          100
+        ],
+        "end": [
+          427,
+          240
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3a3.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          85,
+          46
+        ],
+        "end": [
+          161,
+          230
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          220,
+          112
+        ],
+        "end": [
+          268,
+          165
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          322,
+          66
+        ],
+        "end": [
+          405,
+          210
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "1a2.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          161,
+          89
+        ],
+        "end": [
+          204,
+          240
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          253,
+          129
+        ],
+        "end": [
+          298,
+          194
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          346,
+          78
+        ],
+        "end": [
+          443,
+          254
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3d4.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          159,
+          54
+        ],
+        "end": [
+          269,
+          211
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          323,
+          57
+        ],
+        "end": [
+          385,
+          228
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          425,
+          41
+        ],
+        "end": [
+          522,
+          186
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3s8.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          140,
+          44
+        ],
+        "end": [
+          247,
+          246
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          284,
+          140
+        ],
+        "end": [
+          363,
+          165
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          397,
+          85
+        ],
+        "end": [
+          495,
+          236
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3m0.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          161,
+          39
+        ],
+        "end": [
+          275,
+          225
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          331,
+          98
+        ],
+        "end": [
+          379,
+          164
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          413,
+          78
+        ],
+        "end": [
+          529,
+          232
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4a0.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          183,
+          66
+        ],
+        "end": [
+          265,
+          216
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          287,
+          117
+        ],
+        "end": [
+          322,
+          170
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          363,
+          91
+        ],
+        "end": [
+          460,
+          213
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4d1.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          149,
+          50
+        ],
+        "end": [
+          214,
+          185
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          237,
+          87
+        ],
+        "end": [
+          304,
+          164
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          344,
+          62
+        ],
+        "end": [
+          371,
+          198
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4m3.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          138,
+          54
+        ],
+        "end": [
+          229,
+          221
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          292,
+          67
+        ],
+        "end": [
+          359,
+          178
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          442,
+          55
+        ],
+        "end": [
+          510,
+          211
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4s7.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          125,
+          96
+        ],
+        "end": [
+          220,
+          249
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          255,
+          133
+        ],
+        "end": [
+          322,
+          164
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          325,
+          88
+        ],
+        "end": [
+          439,
+          211
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4d8.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          138,
+          67
+        ],
+        "end": [
+          223,
+          234
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          277,
+          60
+        ],
+        "end": [
+          343,
+          230
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          393,
+          72
+        ],
+        "end": [
+          467,
+          181
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "4m9.0.png",
+    "bounds": [
+      {
+        "character": "4",
+        "start": [
+          186,
+          65
+        ],
+        "end": [
+          275,
+          206
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          315,
+          104
+        ],
+        "end": [
+          354,
+          179
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          381,
+          85
+        ],
+        "end": [
+          441,
+          184
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5m1.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          97,
+          65
+        ],
+        "end": [
+          212,
+          237
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          265,
+          94
+        ],
+        "end": [
+          343,
+          201
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          399,
+          69
+        ],
+        "end": [
+          450,
+          221
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5d4.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          123,
+          68
+        ],
+        "end": [
+          223,
+          226
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          297,
+          56
+        ],
+        "end": [
+          368,
+          240
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          399,
+          40
+        ],
+        "end": [
+          487,
+          186
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5a7.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          155,
+          107
+        ],
+        "end": [
+          246,
+          262
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          295,
+          169
+        ],
+        "end": [
+          339,
+          214
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          397,
+          113
+        ],
+        "end": [
+          495,
+          273
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5s8.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          142,
+          70
+        ],
+        "end": [
+          234,
+          232
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          287,
+          154
+        ],
+        "end": [
+          330,
+          179
+        ]
+      },
+      {
+        "character": "8",
+        "start": [
+          379,
+          77
+        ],
+        "end": [
+          470,
+          237
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5m9.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          166,
+          75
+        ],
+        "end": [
+          266,
+          255
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          300,
+          150
+        ],
+        "end": [
+          341,
+          202
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          391,
+          97
+        ],
+        "end": [
+          465,
+          216
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "5s0.0.png",
+    "bounds": [
+      {
+        "character": "5",
+        "start": [
+          129,
+          63
+        ],
+        "end": [
+          231,
+          238
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          275,
+          140
+        ],
+        "end": [
+          331,
+          161
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          384,
+          83
+        ],
+        "end": [
+          465,
+          225
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6s1.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          165,
+          88
+        ],
+        "end": [
+          249,
+          232
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          300,
+          154
+        ],
+        "end": [
+          339,
+          177
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          388,
+          90
+        ],
+        "end": [
+          423,
+          268
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6d4.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          189,
+          66
+        ],
+        "end": [
+          292,
+          249
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          320,
+          60
+        ],
+        "end": [
+          408,
+          252
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          449,
+          91
+        ],
+        "end": [
+          534,
+          215
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6a5.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          117,
+          59
+        ],
+        "end": [
+          214,
+          260
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          288,
+          133
+        ],
+        "end": [
+          359,
+          200
+        ]
+      },
+      {
+        "character": "5",
+        "start": [
+          392,
+          92
+        ],
+        "end": [
+          479,
+          270
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6m9.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          182,
+          73
+        ],
+        "end": [
+          284,
+          266
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          326,
+          161
+        ],
+        "end": [
+          366,
+          212
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          382,
+          101
+        ],
+        "end": [
+          466,
+          256
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "6m0.0.png",
+    "bounds": [
+      {
+        "character": "6",
+        "start": [
+          125,
+          73
+        ],
+        "end": [
+          216,
+          240
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          279,
+          130
+        ],
+        "end": [
+          316,
+          186
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          355,
+          91
+        ],
+        "end": [
+          430,
+          233
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7a1.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          165,
+          74
+        ],
+        "end": [
+          234,
+          211
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          246,
+          133
+        ],
+        "end": [
+          299,
+          176
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          327,
+          71
+        ],
+        "end": [
+          354,
+          211
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7m6.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          139,
+          80
+        ],
+        "end": [
+          217,
+          202
+        ]
+      },
+      {
+        "character": "x",
+        "start": [
+          242,
+          117
+        ],
+        "end": [
+          286,
+          170
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          304,
+          93
+        ],
+        "end": [
+          391,
+          210
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7s9.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          175,
+          98
+        ],
+        "end": [
+          269,
+          236
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          278,
+          156
+        ],
+        "end": [
+          319,
+          176
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          361,
+          112
+        ],
+        "end": [
+          439,
+          231
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "7d0.0.png",
+    "bounds": [
+      {
+        "character": "7",
+        "start": [
+          184,
+          125
+        ],
+        "end": [
+          274,
+          252
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          337,
+          134
+        ],
+        "end": [
+          375,
+          249
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          416,
+          134
+        ],
+        "end": [
+          511,
+          233
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8d4.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          144,
+          67
+        ],
+        "end": [
+          221,
+          200
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          283,
+          95
+        ],
+        "end": [
+          345,
+          214
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          389,
+          75
+        ],
+        "end": [
+          461,
+          185
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8s6.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          153,
+          94
+        ],
+        "end": [
+          263,
+          293
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          303,
+          181
+        ],
+        "end": [
+          376,
+          208
+        ]
+      },
+      {
+        "character": "6",
+        "start": [
+          423,
+          107
+        ],
+        "end": [
+          520,
+          272
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8d7.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          172,
+          95
+        ],
+        "end": [
+          283,
+          290
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          306,
+          137
+        ],
+        "end": [
+          388,
+          305
+        ]
+      },
+      {
+        "character": "7",
+        "start": [
+          432,
+          145
+        ],
+        "end": [
+          519,
+          260
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8d9.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          127,
+          68
+        ],
+        "end": [
+          230,
+          243
+        ]
+      },
+      {
+        "character": "/",
+        "start": [
+          272,
+          11
+        ],
+        "end": [
+          369,
+          254
+        ]
+      },
+      {
+        "character": "9",
+        "start": [
+          381,
+          113
+        ],
+        "end": [
+          453,
+          234
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "8s0.0.png",
+    "bounds": [
+      {
+        "character": "8",
+        "start": [
+          157,
+          72
+        ],
+        "end": [
+          236,
+          225
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          303,
+          142
+        ],
+        "end": [
+          360,
+          158
+        ]
+      },
+      {
+        "character": "0",
+        "start": [
+          387,
+          99
+        ],
+        "end": [
+          464,
+          208
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9a1.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          126,
+          66
+        ],
+        "end": [
+          201,
+          201
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          246,
+          102
+        ],
+        "end": [
+          280,
+          138
+        ]
+      },
+      {
+        "character": "1",
+        "start": [
+          343,
+          65
+        ],
+        "end": [
+          379,
+          222
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "9s4.0.png",
+    "bounds": [
+      {
+        "character": "9",
+        "start": [
+          158,
+          57
+        ],
+        "end": [
+          229,
+          205
+        ]
+      },
+      {
+        "character": "-",
+        "start": [
+          258,
+          128
+        ],
+        "end": [
+          324,
+          162
+        ]
+      },
+      {
+        "character": "4",
+        "start": [
+          348,
+          83
+        ],
+        "end": [
+          448,
+          211
+        ]
+      }
+    ]
+  }
+]
