@@ -209,7 +209,7 @@ class CanvasFrame(ttk.Frame):
         bounds = self.history.main_history.get_strokes_of_type(BoundingStroke)
         if len(file_name) != bounds.length():
             messagebox.showerror(title="Save Error", message="Key does not match bounds!")
-            #return
+            return
 
         # Parse name to remove special characters
         converted_name = self.convert_symbols(file_name) + ".0"
@@ -232,7 +232,7 @@ class CanvasFrame(ttk.Frame):
 
     def update_json(self, file_name, key, bounds):
         # Double check that the target and boxes have the same number of features
-        #if len(key) != bounds.length(): raise ValueError("key does not match bounds")
+        if len(key) != bounds.length(): raise ValueError("key does not match bounds")
 
         # Create empty JSON array if the file does not exist
         if not Path("./training-data/data.json").is_file():
@@ -363,7 +363,6 @@ class App(tk.Tk):
         # self.geometry(f'{self.window_width}x{self.window_height}+{center_x}+{center_y}')
         # self.minsize(640, 320)
 
-
         self.columnconfigure(0, weight = 1)
         # self.rowconfigure(0, weight = 3, uniform = "rows")
         # self.rowconfigure(1, weight = 0, uniform = "rows")
@@ -373,7 +372,6 @@ class App(tk.Tk):
         self.__create_frames()
         # Uppercase T means shift-t, wow
         self.bind("<Control-T>", self.toggle_mode)
-
 
     def __create_frames(self):
         self.display_frame = DisplayFrame(self)
