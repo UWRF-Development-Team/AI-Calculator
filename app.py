@@ -307,12 +307,16 @@ class ToolbarFrame(ttk.Frame):
         # Checks undos
         if self.canvas.history.main_history.is_empty():
             self.undo_button.state(["disabled"])
-            self.clear_button.state(["disabled"])
             self.save_button.state(["disabled"])
         else:
             self.undo_button.state(["!disabled"])
-            self.clear_button.state(["!disabled"])
             self.save_button.state(["!disabled"])
+
+        # Disable clear only if NOTHING has been done
+        if self.canvas.history.main_history.is_empty() and self.canvas.history.undo_history.is_empty():
+            self.clear_button.state(["disabled"])
+        else:
+            self.clear_button.state(["!disabled"])
         
         # checks redos
         if self.canvas.history.undo_history.is_empty():
