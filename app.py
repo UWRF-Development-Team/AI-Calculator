@@ -9,6 +9,21 @@ canvas_color = "#F8F9FA"
 accent_color_light = "#ad1233"
 accent_color_dark = "#696E71"
 
+# Tab Frame
+class TabsFrame(ttk.Frame):
+    def __init__(self, container):
+            super().__init__(container)
+            self.notebook = ttk.Notebook(self)
+            self.notebook.pack(fill="both", expand=True)
+
+            self.tab1 = ttk.Frame(self.notebook)
+            self.tab2 = ttk.Frame(self.notebook)
+            self.tab3 = ttk.Frame(self.notebook)
+
+            self.notebook.add(self.tab1, text="Calculator")
+            self.notebook.add(self.tab2, text="History")
+            self.notebook.add(self.tab3, text="Settings")
+
 # Display Frame
 class DisplayFrame(ttk.Frame):
     def __init__(self, container):
@@ -221,13 +236,16 @@ class App(tk.Tk):
         self.__create_frames()
     
     def __create_frames(self):
-        display_frame = DisplayFrame(self)
-        display_frame.grid(column = 0, row = 0, sticky="N")
+        tabs_frame = TabsFrame(self)
+        tabs_frame.grid(column=0, row=0)
 
-        canvas_frame = CanvasFrame(self)
+        display_frame = DisplayFrame(tabs_frame.tab1)
+        display_frame.grid(column = 0, row = 1, sticky="N")
+
+        canvas_frame = CanvasFrame(tabs_frame.tab1)
         canvas_frame.grid(column = 0, row = 2)
 
-        toolbar_frame = ToolbarFrame(self, canvas_frame)
+        toolbar_frame = ToolbarFrame(tabs_frame.tab1, canvas_frame)
         toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
 
 
