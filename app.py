@@ -91,19 +91,25 @@ class DisplayFrame(ttk.Frame):
 class DisplayFrameExtended(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
-        
+
         self["relief"] = "solid"
         self["borderwidth"] = 2
+        self["padding"] = 10
 
-        self.stored_equations = []
+        self.submited_equations = []
+        
 
-
-        self.columnconfigure(0, weight = 3)
+        #Setting Rows and Columns size/style
+        self.columnconfigure(0, weight = 0)
         self.columnconfigure(1, weight = 1)
+        self.columnconfigure(2, weight = 1)
+        self.columnconfigure(3, weight = 0)
         self.rowconfigure(0, weight = 1, uniform = "rows")
         self.rowconfigure(1, weight = 1, uniform = "rows")
         self.rowconfigure(2, weight = 1, uniform = "rows")
+        self.rowconfigure(3, weight = 1, uniform = "rows")
 
+        #Equation and Answer Text
         self.eq1 = ttk.Label(self, text = "Equation 1")
         self.eq2 = ttk.Label(self, text = "Equation 2")
         self.eq3 = ttk.Label(self, text = "Equation 3")
@@ -111,12 +117,39 @@ class DisplayFrameExtended(ttk.Frame):
         self.a2 = ttk.Label(self, text = "Answer 2")
         self.a3 = ttk.Label(self, text = "Answer 3")
 
-        self.eq1.grid(column = 0, row = 0, sticky = "W")
-        self.eq2.grid(column = 0, row = 1, sticky = "W")
-        self.eq3.grid(column = 0, row = 2, sticky = "W")
-        self.a1.grid(column = 1, row = 0, sticky = "E")
-        self.a2.grid(column = 1, row = 1, sticky = "E")
-        self.a3.grid(column = 1, row = 2, sticky = "E")        
+        #Copy Buttons
+        self.copya1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
+        self.copya2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
+        self.copya3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
+        self.copyeq1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq1["text"]))
+        self.copyeq2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq2["text"]))
+        self.copyeq3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq3["text"]))
+
+        #AI Output Row
+        self.output = tk.Text (self, height = 1, width = 40)
+        self.output.grid(row = 3)
+        self.output.insert(index = 1.0, chars = "AI OUTPUT")
+        self.output.config(state = "disabled")
+
+        #Setting elements into cells
+        self.copyeq1.grid(column = 0, row = 0, sticky = "W")
+        self.copyeq2.grid(column = 0, row = 1, sticky = "W")
+        self.copyeq3.grid(column = 0, row = 2, sticky = "W")
+        self.eq1.grid(column = 1, row = 0, sticky = "W")
+        self.eq2.grid(column = 1, row = 1, sticky = "W")
+        self.eq3.grid(column = 1, row = 2, sticky = "W")
+        self.a1.grid(column = 2, row = 0, sticky = "E")
+        self.a2.grid(column = 2, row = 1, sticky = "E")
+        self.a3.grid(column = 2, row = 2, sticky = "E")
+        self.copya1.grid(column = 3, row = 0, sticky = "E")
+        self.copya2.grid(column = 3, row = 1, sticky = "E")
+        self.copya3.grid(column = 3, row = 2, sticky = "E")
+        self.output.grid(column = 1, row = 3, columnspan = 2, sticky ="EW")
+
+    def copy(self, answer):
+        self.clipboard_clear()
+        self.clipboard_append(answer)
+       
 
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
@@ -398,19 +431,16 @@ class App(tk.Tk):
         self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame)
         self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
 
-    def toggle_mode(self, event=None):
-        self.toolbar_frame.toggle_mode()
-        self.canvas_frame.toggle_mode()
-
         # History Tab
-        display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
-        display_frame_extended.grid(column = 0, row = 0, sticky="NSEW")
-
-        
+        self.display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
+        self.display_frame_extended.grid(column = 0, row = 0, sticky="NEW")
 
         #Settings Tab
 
 
+    def toggle_mode(self, event=None):
+        self.toolbar_frame.toggle_mode()
+        self.canvas_frame.toggle_mode()
 
 if __name__ == "__main__":
     app = App()
