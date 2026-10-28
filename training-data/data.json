@@ -1,1 +1,78 @@
-[{"filename": "1a2.0.png", "bounds": [{"character": "1", "start": [225, 122], "end": [286, 207]}, {"character": "+", "start": [298, 166], "end": [327, 197]}, {"character": "2", "start": [352, 114], "end": [435, 198]}]}, {"filename": "3a3.0.png", "bounds": [{"character": "3", "start": [227, 88], "end": [288, 168]}, {"character": "+", "start": [302, 128], "end": [328, 154]}, {"character": "3", "start": [350, 83], "end": [410, 172]}]}]
+[
+  {
+    "filename": "1a2.0.png",
+    "bounds": [
+      {
+        "character": "1",
+        "start": [
+          225,
+          122
+        ],
+        "end": [
+          286,
+          207
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          298,
+          166
+        ],
+        "end": [
+          327,
+          197
+        ]
+      },
+      {
+        "character": "2",
+        "start": [
+          352,
+          114
+        ],
+        "end": [
+          435,
+          198
+        ]
+      }
+    ]
+  },
+  {
+    "filename": "3a3.0.png",
+    "bounds": [
+      {
+        "character": "3",
+        "start": [
+          227,
+          88
+        ],
+        "end": [
+          288,
+          168
+        ]
+      },
+      {
+        "character": "+",
+        "start": [
+          302,
+          128
+        ],
+        "end": [
+          328,
+          154
+        ]
+      },
+      {
+        "character": "3",
+        "start": [
+          350,
+          83
+        ],
+        "end": [
+          410,
+          172
+        ]
+      }
+    ]
+  }
+]
