@@ -74,21 +74,5 @@
         ]
       }
     ]
-  },
-  {
-    "filename": "test.0.png",
-    "bounds": [
-      {
-        "character": "t",
-        "start": [
-          261,
-          113
-        ],
-        "end": [
-          401,
-          239
-        ]
-      }
-    ]
   }
 ]
