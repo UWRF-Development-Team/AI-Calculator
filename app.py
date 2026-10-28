@@ -59,6 +59,37 @@ class DisplayFrame(ttk.Frame):
         self.a3.grid(column = 1, row = 2, sticky = "E")
         self.output.grid(column = 0, row = 3, columnspan = 3, sticky ="EW")
 
+
+class DisplayFrameExtended(ttk.Frame):
+    def __init__(self, container):
+        super().__init__(container)
+        
+        self["relief"] = "solid"
+        self["borderwidth"] = 2
+
+        self.stored_equations = []
+
+
+        self.columnconfigure(0, weight = 3)
+        self.columnconfigure(1, weight = 1)
+        self.rowconfigure(0, weight = 1, uniform = "rows")
+        self.rowconfigure(1, weight = 1, uniform = "rows")
+        self.rowconfigure(2, weight = 1, uniform = "rows")
+
+        self.eq1 = ttk.Label(self, text = "Equation 1")
+        self.eq2 = ttk.Label(self, text = "Equation 2")
+        self.eq3 = ttk.Label(self, text = "Equation 3")
+        self.a1 = ttk.Label(self, text = "Answer 1")
+        self.a2 = ttk.Label(self, text = "Answer 2")
+        self.a3 = ttk.Label(self, text = "Answer 3")
+
+        self.eq1.grid(column = 0, row = 0, sticky = "W")
+        self.eq2.grid(column = 0, row = 1, sticky = "W")
+        self.eq3.grid(column = 0, row = 2, sticky = "W")
+        self.a1.grid(column = 1, row = 0, sticky = "E")
+        self.a2.grid(column = 1, row = 1, sticky = "E")
+        self.a3.grid(column = 1, row = 2, sticky = "E")        
+
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
     def __init__(self, container):
@@ -236,6 +267,8 @@ class App(tk.Tk):
         self.__create_frames()
     
     def __create_frames(self):
+
+        # Calculator Tab
         tabs_frame = TabsFrame(self)
         tabs_frame.grid(column=0, row=0)
 
@@ -247,6 +280,14 @@ class App(tk.Tk):
 
         toolbar_frame = ToolbarFrame(tabs_frame.tab1, canvas_frame)
         toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+
+        # History Tab
+        display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
+        display_frame_extended.grid(column = 0, row = 0, sticky="NSEW")
+
+        
+
+        #Settings Tab
 
 
 
