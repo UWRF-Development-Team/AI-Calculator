@@ -215,7 +215,7 @@ class CanvasFrame(ttk.Frame):
                 if int(file.name.split(".", 2)[1]) >= int(highest_name.split(".", 1)[1]):
                     highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
 
-        self.image.save(f"./training-data/{highest_name}.png")
+        self.image.save(f"./training-data/images/{highest_name}.png")
         self.update_json(highest_name + ".png", file_name, bounds)
 
     def update_json(self, file_name, key, bounds):
