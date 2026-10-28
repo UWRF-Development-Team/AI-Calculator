@@ -7,6 +7,7 @@ import json
 
 from history import *
 
+
 background_color = "#E1E2E4"
 canvas_color = "#F8F9FA"
 accent_color_light = "#ad1233"
@@ -90,8 +91,9 @@ class CanvasFrame(ttk.Frame):
         self.drawing = True
         self.calc_mode = True
 
+        self.history_changed = None
+
         # Create and set up Canvas, Image, and ImageDraw
-        self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 5, highlightbackground=accent_color_dark, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
@@ -109,6 +111,11 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
 
+    # tells toolbar to update buttons
+    def signal_toolbar(self):
+        if self.history_changed:
+            self.history_changed()
+    
     def toggle(self, event=None):
         if self.calc_mode: return
         self.drawing = not self.drawing
@@ -158,6 +165,8 @@ class CanvasFrame(ttk.Frame):
             # Save in history, unlike when moving
             self.history.add_stroke(BoundingStroke(start, end))
 
+        self.signal_toolbar()
+
         # Reset some states
         self.current_stroke = []
 
@@ -167,13 +176,16 @@ class CanvasFrame(ttk.Frame):
 
     def redo(self, event=None):
         self.history.redo()
+        self.signal_toolbar()
 
     def undo(self, event=None):
         self.history.undo()
+        self.signal_toolbar()
 
     def clear(self, event=None):
         self.drawing = True
         self.history.reset()
+        self.signal_toolbar()
     
     def convert_symbols(self, text):
         assert_type(text, str)
@@ -197,7 +209,7 @@ class CanvasFrame(ttk.Frame):
         bounds = self.history.main_history.get_strokes_of_type(BoundingStroke)
         if len(file_name) != bounds.length():
             messagebox.showerror(title="Save Error", message="Key does not match bounds!")
-            return
+            #return
 
         # Parse name to remove special characters
         converted_name = self.convert_symbols(file_name) + ".0"
@@ -220,7 +232,7 @@ class CanvasFrame(ttk.Frame):
 
     def update_json(self, file_name, key, bounds):
         # Double check that the target and boxes have the same number of features
-        if len(key) != bounds.length(): raise ValueError("key does not match bounds")
+        #if len(key) != bounds.length(): raise ValueError("key does not match bounds")
 
         # Create empty JSON array if the file does not exist
         if not Path("./training-data/data.json").is_file():
@@ -273,24 +285,48 @@ class ToolbarFrame(ttk.Frame):
         self.columnconfigure(4, weight = 1)
         self.rowconfigure(0, weight = 1)
 
-        undo_button = ttk.Button(self, text = "Undo", command = canvas.undo)
-        undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
+        self.undo_button = ttk.Button(self, text = "Undo", command = canvas.undo)
+        self.undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
 
-        redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
-        redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
+        self.redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
+        self.redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
 
         # Not displayed by default
         self.file_name = ttk.Entry(self)
         self.toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
+        self.file_name.bind("<KeyRelease>", self.update_buttons)
 
-        clear_button = ttk.Button(self, text = "Clear", command = self.clear)
-        clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.clear_button = ttk.Button(self, text = "Clear", command = self.clear)
+        self.clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
         
-        self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
+        self.save_button = ttk.Button(self, text = "Calc", command = self.submit)
         self.save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+
+    # disabled/enables toolbar buttons.
+    def update_buttons(self, event=None):
+        # Checks undos
+        if(self.canvas.history.main_history.is_empty()):
+            self.undo_button.state(["disabled"])
+            self.clear_button.state(["disabled"])
+            self.save_button.state(["disabled"])
+        else:
+            self.undo_button.state(["!disabled"])
+            self.clear_button.state(["!disabled"])
+            self.save_button.state(["!disabled"])
         
+        # checks redos
+        if(self.canvas.history.undo_history.is_empty()):
+            self.redo_button.state(["disabled"])
+        else:
+            self.redo_button.state(["!disabled"])
+
+        # checks if entry is empty only in training data mode
+        if (not self.calc_mode and self.file_name.get() == ""):
+            self.save_button.state(["disabled"])
+
     def save(self):
         self.canvas.save(self.file_name.get())
+        self.clear(self)
 
     def clear(self, event=None):
         self.canvas.clear()
@@ -308,16 +344,17 @@ class ToolbarFrame(ttk.Frame):
         else:
             self.toggle_button.grid_forget()
             self.file_name.grid_forget()
-            self.save_button.configure(text="Submit", command=self.submit)
+            self.save_button.configure(text="Calc", command=self.submit)
         self.calc_mode = not self.calc_mode
+        self.update_buttons()
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("AI Calculator!")
         self.configure(background=background_color, padx=5, pady=5)
-    
-        # self.window_height = 640
+     
+        # self.window_height = 640 
         # self.window_width  = 640
         # screen_height = self.winfo_screenheight()
         # screen_width  = self.winfo_screenwidth()
@@ -337,6 +374,7 @@ class App(tk.Tk):
         # Uppercase T means shift-t, wow
         self.bind("<Control-T>", self.toggle_mode)
 
+
     def __create_frames(self):
         self.display_frame = DisplayFrame(self)
         self.display_frame.grid(column = 0, row = 0, sticky="NEW")
@@ -346,6 +384,11 @@ class App(tk.Tk):
 
         self.toolbar_frame = ToolbarFrame(self, self.canvas_frame)
         self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+
+        # connectes canvas's history changed var and toolbar's update buttons function, so you can call update buttons from canvas frame
+        self.canvas_frame.history_changed = self.toolbar_frame.update_buttons
+        # initial update
+        self.toolbar_frame.update_buttons()
 
     def toggle_mode(self, event=None):
         self.toolbar_frame.toggle_mode()
