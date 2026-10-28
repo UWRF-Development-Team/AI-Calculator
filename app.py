@@ -305,7 +305,7 @@ class ToolbarFrame(ttk.Frame):
     # disabled/enables toolbar buttons.
     def update_buttons(self, event=None):
         # Checks undos
-        if(self.canvas.history.main_history.is_empty()):
+        if self.canvas.history.main_history.is_empty():
             self.undo_button.state(["disabled"])
             self.clear_button.state(["disabled"])
             self.save_button.state(["disabled"])
@@ -315,18 +315,18 @@ class ToolbarFrame(ttk.Frame):
             self.save_button.state(["!disabled"])
         
         # checks redos
-        if(self.canvas.history.undo_history.is_empty()):
+        if self.canvas.history.undo_history.is_empty():
             self.redo_button.state(["disabled"])
         else:
             self.redo_button.state(["!disabled"])
 
         # checks if entry is empty only in training data mode
-        if (not self.calc_mode and self.file_name.get() == ""):
+        if not self.calc_mode and self.file_name.get() == "":
             self.save_button.state(["disabled"])
 
     def save(self):
         self.canvas.save(self.file_name.get())
-        self.clear(self)
+        self.clear()
 
     def clear(self, event=None):
         self.canvas.clear()
@@ -383,7 +383,7 @@ class App(tk.Tk):
         self.toolbar_frame = ToolbarFrame(self, self.canvas_frame)
         self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
 
-        # connectes canvas's history changed var and toolbar's update buttons function, so you can call update buttons from canvas frame
+        # connects canvas's history changed var and toolbar's update buttons function, so you can call update buttons from canvas frame
         self.canvas_frame.history_changed = self.toolbar_frame.update_buttons
         # initial update
         self.toolbar_frame.update_buttons()
