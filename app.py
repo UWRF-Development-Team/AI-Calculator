@@ -168,6 +168,7 @@ class CanvasFrame(ttk.Frame):
         self.current_stroke = []
         self.drawing = True
         self.calc_mode = True
+        self.draw_type = EraserStroke
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
@@ -210,7 +211,8 @@ class CanvasFrame(ttk.Frame):
         end = CoordinatePair(x, y)
         if self.drawing:
             start = CoordinatePair(self.old_x, self.old_y)
-            stroke = BrushStroke(start, end)
+            # Can be either a dark line (Brush) or white line (Eraser)
+            stroke = self.draw_type(start, end)
             stroke.draw(self.canvas, self.draw)
             self.current_stroke.append(stroke)
         else:
@@ -333,6 +335,12 @@ class CanvasFrame(ttk.Frame):
 
     def toggle_mode(self):
         self.calc_mode = not self.calc_mode
+
+    def toggle_eraser(self):
+        if self.draw_type == BrushStroke:
+            self.draw_type = EraserStroke
+        else:
+            self.draw_type = BrushStroke
 
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
