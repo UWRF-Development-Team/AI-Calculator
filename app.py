@@ -188,6 +188,7 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-y>", self.redo)
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
+        self.canvas.bind("<Control-e>", self.toggle_eraser)
 
     def toggle(self, event=None):
         if self.calc_mode: return
@@ -336,7 +337,7 @@ class CanvasFrame(ttk.Frame):
     def toggle_mode(self):
         self.calc_mode = not self.calc_mode
 
-    def toggle_eraser(self):
+    def toggle_eraser(self, event=None):
         if self.draw_type == BrushStroke:
             self.draw_type = EraserStroke
         else:
