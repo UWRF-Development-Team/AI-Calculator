@@ -64,13 +64,24 @@ class BoundingStroke(Stroke):
 
 class EraserStroke(Stroke):
     def __init__(self, start, end):
+        # Start is unused in this class
         super().__init__(start, end, "white")
 
     def draw_canvas(self, canvas):
-        canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=16)
+        coords = self.get_circle_coords(self.end, 16)
+        canvas.create_oval(coords[0], coords[1], coords[2], coords[3], fill=self.color, outline=self.color)
 
     def draw_image(self, image):
-        image.line([self.start.x, self.start.y, self.end.x, self.end.y], self.color, width=16)
+        image.ellipse(self.get_circle_coords(self.end, 16), self.color)
+
+    def get_circle_coords(self, coords, width):
+        return [
+            coords.x - width/2,
+            coords.y - width/2,
+            coords.x + width/2,
+            coords.y + width/2
+        ]
+
 
 
 # A Stroke that contains other Strokes
