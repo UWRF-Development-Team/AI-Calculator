@@ -40,7 +40,7 @@ class BrushStroke(Stroke):
         canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=3)
 
     def draw_image(self, image):
-        image.line([self.start.x, self.start.y, self.end.x, self.end.y], (0, 0, 0), width=3)
+        image.line([self.start.x, self.start.y, self.end.x, self.end.y], self.color, width=3)
 
 class BoundingStroke(Stroke):
     def __init__(self, start, end):
@@ -70,7 +70,7 @@ class EraserStroke(Stroke):
         canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=16)
 
     def draw_image(self, image):
-        image.line([self.start.x, self.start.y, self.end.x, self.end.y], (0, 0, 0), width=16)
+        image.line([self.start.x, self.start.y, self.end.x, self.end.y], self.color, width=16)
 
 
 # A Stroke that contains other Strokes
