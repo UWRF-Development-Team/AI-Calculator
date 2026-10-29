@@ -67,10 +67,10 @@ class EraserStroke(Stroke):
         super().__init__(start, end, "white")
 
     def draw_canvas(self, canvas):
-        canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=5)
+        canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=16)
 
     def draw_image(self, image):
-        image.line([self.start.x, self.start.y, self.end.x, self.end.y], (0, 0, 0), width=5)
+        image.line([self.start.x, self.start.y, self.end.x, self.end.y], (0, 0, 0), width=16)
 
 
 # A Stroke that contains other Strokes
