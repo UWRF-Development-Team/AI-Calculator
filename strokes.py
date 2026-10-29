@@ -62,6 +62,17 @@ class BoundingStroke(Stroke):
             self.start = self.end
             self.end = temp
 
+class EraserStroke(Stroke):
+    def __init__(self, start, end):
+        super().__init__(start, end, "white")
+
+    def draw_canvas(self, canvas):
+        canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=5)
+
+    def draw_image(self, image):
+        image.line([self.start.x, self.start.y, self.end.x, self.end.y], (0, 0, 0), width=5)
+
+
 # A Stroke that contains other Strokes
 # Useful for long lines that are a number of smaller strokes
 # Also useful as a collection in other ways
