@@ -367,15 +367,18 @@ class ToolbarFrame(ttk.Frame):
         redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
         redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
 
+        brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
+        brush_button.grid(column=2, row=0, padx=5, pady=5)
+
         # Not displayed by default
         self.file_name = ttk.Entry(self)
         self.toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
 
         clear_button = ttk.Button(self, text = "Clear", command = self.clear)
-        clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
+        clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
         self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
-        self.save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.save_button.grid(column = 6, row = 0, sticky="ES", padx = 5, pady = 5)
         
     def save(self):
         self.canvas.save(self.file_name.get())
@@ -390,8 +393,8 @@ class ToolbarFrame(ttk.Frame):
 
     def toggle_mode(self):
         if self.calc_mode:
-            self.toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
-            self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
+            self.toggle_button.grid(column=4, row=0, sticky="ES", padx=5, pady=5)
+            self.file_name.grid(column = 3, row = 0, sticky="S", padx = 5, pady = 5)
             self.save_button.configure(text="Save", command=self.save)
         else:
             self.toggle_button.grid_forget()
