@@ -168,7 +168,7 @@ class CanvasFrame(ttk.Frame):
         self.current_stroke = []
         self.drawing = True
         self.calc_mode = True
-        self.draw_type = EraserStroke
+        self.draw_type = BrushStroke
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
