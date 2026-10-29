@@ -188,7 +188,7 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-y>", self.redo)
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
-        self.canvas.bind("<Control-e>", self.toggle_eraser)
+        self.winfo_toplevel().bind("<Control-e>", self.toggle_eraser)
 
     def toggle(self, event=None):
         if self.calc_mode: return
