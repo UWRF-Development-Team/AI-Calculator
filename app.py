@@ -168,6 +168,7 @@ class CanvasFrame(ttk.Frame):
         self.current_stroke = []
         self.drawing = True
         self.calc_mode = True
+        self.draw_type = BrushStroke
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
@@ -187,6 +188,7 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-y>", self.redo)
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
+        self.winfo_toplevel().bind("<Control-e>", self.toggle_eraser)
 
     def toggle(self, event=None):
         if self.calc_mode: return
@@ -210,7 +212,8 @@ class CanvasFrame(ttk.Frame):
         end = CoordinatePair(x, y)
         if self.drawing:
             start = CoordinatePair(self.old_x, self.old_y)
-            stroke = BrushStroke(start, end)
+            # Can be either a dark line (Brush) or white line (Eraser)
+            stroke = self.draw_type(start, end)
             stroke.draw(self.canvas, self.draw)
             self.current_stroke.append(stroke)
         else:
@@ -334,6 +337,12 @@ class CanvasFrame(ttk.Frame):
     def toggle_mode(self):
         self.calc_mode = not self.calc_mode
 
+    def toggle_eraser(self, event=None):
+        if self.draw_type == BrushStroke:
+            self.draw_type = EraserStroke
+        else:
+            self.draw_type = BrushStroke
+
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
     def __init__(self, container, canvas):
@@ -358,15 +367,18 @@ class ToolbarFrame(ttk.Frame):
         redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
         redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
 
+        brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
+        brush_button.grid(column=2, row=0, padx=5, pady=5)
+
         # Not displayed by default
         self.file_name = ttk.Entry(self)
         self.toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
 
         clear_button = ttk.Button(self, text = "Clear", command = self.clear)
-        clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
+        clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
         self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
-        self.save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.save_button.grid(column = 6, row = 0, sticky="ES", padx = 5, pady = 5)
         
     def save(self):
         self.canvas.save(self.file_name.get())
@@ -381,8 +393,8 @@ class ToolbarFrame(ttk.Frame):
 
     def toggle_mode(self):
         if self.calc_mode:
-            self.toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
-            self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
+            self.toggle_button.grid(column=4, row=0, sticky="ES", padx=5, pady=5)
+            self.file_name.grid(column = 3, row = 0, sticky="S", padx = 5, pady = 5)
             self.save_button.configure(text="Save", command=self.save)
         else:
             self.toggle_button.grid_forget()
