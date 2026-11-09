@@ -43,9 +43,9 @@ class History:
         if self.undo_history.is_empty():
             return
 
-        self.main_history.push(self.undo_history.pop())
-        # Could just draw the last stroke, but done this way for parity
-        self.redraw()
+        stroke = self.undo_history.pop()
+        stroke.draw(self.canvas, self.image)
+        self.main_history.push(stroke)
 
     # Save a stroke to the history, but does not draw it
     def add_stroke(self, stroke):
