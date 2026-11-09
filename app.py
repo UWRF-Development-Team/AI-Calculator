@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
 from PIL import Image, ImageDraw
+from keras.utils import img_to_array
 import json
 
 from history import *
@@ -175,7 +176,7 @@ class CanvasFrame(ttk.Frame):
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 5, highlightbackground=accent_color_dark, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
-        self.image = Image.new("RGB", (640, 320), (255, 255, 255))
+        self.image = Image.new("L", (640, 320), 255)
         self.draw = ImageDraw.Draw(self.image)
 
         # Initialize history
@@ -388,8 +389,8 @@ class ToolbarFrame(ttk.Frame):
         self.file_name.delete(0, tk.END)
 
     def submit(self, event=None):
-        # TODO send information to model
-        pass
+        image_array = img_to_array(self.canvas.image)
+        # todo hook me up to the detector!
 
     def toggle_mode(self):
         if self.calc_mode:
