@@ -24,7 +24,7 @@ class Stroke(ABC):
         self.draw_image(image)
 
     def remove_canvas(self, canvas):
-        canvas.remove(self.canvas_object_id)
+        canvas.delete(self.canvas_object_id)
 
     @abstractmethod
     def draw_canvas(self, canvas):
@@ -108,7 +108,7 @@ class StrokeCollection(Stroke):
 
     def remove_canvas(self, canvas):
         for stroke in self.strokes:
-            canvas.remove(stroke.canvas_object_id)
+            canvas.delete(stroke.canvas_object_id)
 
     def push(self, stroke):
         self.strokes.append(stroke)

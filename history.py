@@ -26,7 +26,7 @@ class History:
     # Reset image
     def redraw_image(self):
         # Fill area with white
-        self.image.rectangle(-1, -1, 1000, 1000, fill="white")
+        self.image.rectangle([-1, -1, 1000, 1000], fill="white")
         self.main_history.draw_image(self.image)
 
     def undo(self):
@@ -34,10 +34,13 @@ class History:
         if self.main_history.is_empty():
             return
 
+        # Remove the last drawn stroke on the canvas
+        old_stroke = self.main_history.pop()
+        old_stroke.remove_canvas(self.canvas)
         # Move the last entry from the main history to the undo history
-        self.undo_history.push(self.main_history.pop())
+        self.undo_history.push(old_stroke)
         # Redrawing is much easier than erasing
-        self.redraw()
+        self.redraw_image()
 
     def redo(self):
         if self.undo_history.is_empty():
