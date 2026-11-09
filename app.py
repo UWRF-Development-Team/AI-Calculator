@@ -88,6 +88,13 @@ class DisplayFrame(ttk.Frame):
         self.clipboard_clear()
         self.clipboard_append(answer)
 
+    def update_text(self, equation):
+        # todo send model code here
+        # todo update to do more than just the first equation/answer pair (may need some refactoring)
+        self.eq1.configure(text=equation)
+        # UNSAFE OPERATION!!!
+        self.a1.configure(text=eval(equation))
+
 
 class DisplayFrameExtended(ttk.Frame):
     def __init__(self, container):
