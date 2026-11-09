@@ -169,6 +169,7 @@ class CanvasFrame(ttk.Frame):
         self.drawing = True
         self.calc_mode = True
         self.draw_type = BrushStroke
+        self.previous_bounds = None # For bounding box
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
@@ -219,9 +220,13 @@ class CanvasFrame(ttk.Frame):
         else:
             # Use starting coordinates, not previous ones
             start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
-            # Redraw without saving history for moving box effect
-            self.history.redraw()
+            # Remove previous bound if it exists, cheaper than redrawing
+            if self.previous_bounds is not None:
+                self.previous_bounds.remove_canvas(self.canvas)
+
+            # Create, save, and draw new bounding box
             stroke = BoundingStroke(start, end)
+            self.previous_bounds = stroke
             stroke.draw(self.canvas, self.draw)
 
         # Reset old variables
