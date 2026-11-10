@@ -9,16 +9,16 @@ class Model(ABC):
         self.model.summary()
 
 class Classifier(Model):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self):
+        super().__init__("./classifier.keras")
 
     def predict(self, image):
         self.model.predict(image)
         # TODO return list of character confidences, maybe like dict or something with char as key
 
 class Detector(Model):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self):
+        super().__init__("./detector.keras")
 
     def predict(self, image):
         self.model.predict(image)
