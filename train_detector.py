@@ -16,7 +16,7 @@ IMAGE_W = 640
 IMAGE_H = 320
 
 LR = 1e-4
-EPOCHS = 20
+EPOCHS = 10
 BATCH_SIZE = 32
 BOXES_PREDICT = 25
 
@@ -50,6 +50,7 @@ def image(filename):
 
     return img
 
+@keras.saving.register_keras_serializable()
 def bbox_loss(true_y, pred_y):
     true_bboxes = true_y[..., :4]
     pred_bboxes = pred_y[..., :4]
