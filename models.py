@@ -11,7 +11,7 @@ class Classifier(Model):
         super().__init__("./classifier.keras")
 
     def crop(self, image, bounds):
-        return np.asarray(image.crop([*bounds[:4]]))
+        return image.crop([*bounds[:4]])
 
     def predict(self, image):
         self.model.predict(image)
