@@ -1,12 +1,9 @@
-import tensorflow as tf
-
 from keras import models
 from abc import ABC
 
 class Model(ABC):
     def __init__(self, path):
         self.model = models.load_model(path, compile=False)
-        self.model.summary()
 
 class Classifier(Model):
     def __init__(self):
