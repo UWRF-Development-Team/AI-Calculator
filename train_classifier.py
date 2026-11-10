@@ -88,3 +88,5 @@ history = model.fit(
     validation_data=[X_test_final, y_test_mapped],
     epochs=EPOCHS
 )
+
+model.save("classifier.keras")

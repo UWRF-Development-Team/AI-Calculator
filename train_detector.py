@@ -111,7 +111,7 @@ train_size = int(0.8 * len(X))
 train_dataset = dataset.take(train_size).batch(BATCH_SIZE)
 test_dataset = dataset.skip(train_size).batch(BATCH_SIZE)
 
-model = build_model(convolves=((16, 32)))
+model = build_model(convolves=((16, 32, 64, 128)))
 model.summary()
 
 model.compile(
@@ -124,3 +124,5 @@ history = model.fit(
     validation_data=test_dataset,
     epochs=EPOCHS
 )
+
+model.save("detector.keras")
