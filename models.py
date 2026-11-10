@@ -1,4 +1,5 @@
 from keras import models
+import numpy as np
 from abc import ABC
 
 class Model(ABC):
@@ -18,5 +19,11 @@ class Detector(Model):
         super().__init__("./detector.keras")
 
     def predict(self, image):
-        self.model.predict(image)
-        # TODO return list of bounding box coords (denormalized to actual pixels) and confidence
+        predicts = self.model.predict(image) 
+        print(predicts.shape)
+        predicts = predicts[predicts[:,:,4] > 0.1]
+        newPreds = []
+        for array in predicts:
+            newPreds.append(np.multiply(array, np.asarray([640, 320, 640, 320, 1])).tolist())
+        print(newPreds)
+        return np.asarray(newPreds)
