@@ -14,8 +14,8 @@ canvas_color = "#F8F9FA"
 accent_color_light = "#ad1233"
 accent_color_dark = "#696E71"
 
-classifier = Classifier("classifier.keras")
-detector = Detector("detector.keras")
+classifier = Classifier()
+detector = Detector()
 
 # Tab Frame
 class TabsFrame(ttk.Frame):
