@@ -26,7 +26,7 @@ def build_model(convolves, input_shape=(320, 640, 1)):
     for filters in convolves:
         model.add(layers.Conv2D(filters, (3, 3), activation='relu', padding='same'))
         model.add(layers.BatchNormalization())
-        model.add(layers.MaxPool2D((2, 2)))
+        model.add(layers.MaxPool2D((2, 2), padding='same'))
 
     model.add(layers.GlobalAveragePooling2D())
 
