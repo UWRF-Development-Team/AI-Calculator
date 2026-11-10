@@ -27,6 +27,7 @@ class Detector(Model):
         predicts = predicts[predicts[:,:,4] > 0.1]
         newPreds = []
         for array in predicts:
+            if array[0] > array[2] or array[1] > array[3]: continue
             newPreds.append(np.multiply(array, np.asarray([640, 320, 640, 320, 1])).tolist())
         print(newPreds)
         return np.asarray(newPreds)
