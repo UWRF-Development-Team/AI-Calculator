@@ -18,7 +18,7 @@ BATCH_SIZE = 32
 BOXES_PREDICT = 25
 
 # this was originally 640, 320, 3 but our images are monochrome so we can reduce the input size
-def build_model(convolves, input_shape=(320, 640, 1)):
+def build_model(convolves, input_shape=(80, 160, 1)):
     model = models.Sequential()
 
     model.add(layers.Input(shape=input_shape))
@@ -43,6 +43,7 @@ def build_model(convolves, input_shape=(320, 640, 1)):
 def image(filename):
     img = tf.io.read_file(os.path.sep.join([IMAGES, filename]))
     img = tf.io.decode_png(img, channels=1)
+    img = tf.image.resize(img, (80, 160))
     img = tf.cast(img, tf.float32) / 255.0
 
     return img

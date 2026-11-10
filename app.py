@@ -401,7 +401,7 @@ class ToolbarFrame(ttk.Frame):
         self.file_name.delete(0, tk.END)
 
     def submit(self, event=None):
-        image_array = img_to_array(self.canvas.image)
+        image_array = img_to_array(self.canvas.image.resize((160, 80)))
         image_array = np.expand_dims(image_array, axis=0)
         detector_prediction = detector.predict(image_array)
         print(detector_prediction)
