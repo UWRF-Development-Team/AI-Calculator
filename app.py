@@ -406,6 +406,7 @@ class ToolbarFrame(ttk.Frame):
         detector_prediction = detector.predict(image_array)
         print(detector_prediction)
         for bounds in detector_prediction:
+            BoundingStroke(CoordinatePair(*bounds[:2]), CoordinatePair(*bounds[2:4])).draw(self.canvas.canvas, self.canvas.image)
             classifier.predict(self.canvas.image.crop([*bounds[:4]]))
         # TODO: hook me up to the detector!
 
