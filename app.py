@@ -7,11 +7,15 @@ from keras.utils import img_to_array
 import json
 
 from history import *
+from models import *
 
 background_color = "#E1E2E4"
 canvas_color = "#F8F9FA"
 accent_color_light = "#ad1233"
 accent_color_dark = "#696E71"
+
+classifier = Classifier("classifier.keras")
+detector = Detector("detector.keras")
 
 # Tab Frame
 class TabsFrame(ttk.Frame):
@@ -397,7 +401,7 @@ class ToolbarFrame(ttk.Frame):
 
     def submit(self, event=None):
         image_array = img_to_array(self.canvas.image)
-        # todo hook me up to the detector!
+        # TODO: hook me up to the detector!
 
     def toggle_mode(self):
         if self.calc_mode:
