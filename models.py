@@ -3,11 +3,9 @@ import tensorflow as tf
 from keras import models
 from abc import ABC
 
-from train_detector import bbox_loss
-
 class Model(ABC):
     def __init__(self, path):
-        self.model = models.load_model(path)
+        self.model = models.load_model(path, compile=False)
         self.model.summary()
 
 class Classifier(Model):
