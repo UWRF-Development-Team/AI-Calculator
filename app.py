@@ -406,7 +406,9 @@ class ToolbarFrame(ttk.Frame):
         detector_prediction = detector.predict(image_array)
         print(detector_prediction)
         for bounds in detector_prediction:
-            classifier.predict(self.canvas.image.crop([*bounds[:4]]))
+            if bounds[0] > bounds[2] or bounds[1] > bounds[3]:
+                continue
+            classifier.predict(classifier.crop(self.canvas.image, bounds))
         # TODO: hook me up to the detector!
 
     def toggle_mode(self):
