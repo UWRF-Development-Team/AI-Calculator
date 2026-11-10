@@ -1,8 +1,9 @@
 import tensorflow as tf
 
 from keras import models
+from abc import ABC
 
-class Model:
+class Model(ABC):
     def __init__(self, path):
         self.model = models.load_model(path)
         self.model.summary()

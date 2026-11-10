@@ -401,6 +401,7 @@ class ToolbarFrame(ttk.Frame):
 
     def submit(self, event=None):
         image_array = img_to_array(self.canvas.image)
+        detector_prediction = detector.predict(image_array)
         # TODO: hook me up to the detector!
 
     def toggle_mode(self):
