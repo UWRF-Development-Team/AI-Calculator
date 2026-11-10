@@ -9,9 +9,6 @@ BASE_PATH = "training-data"
 IMAGES = os.path.sep.join([BASE_PATH, "images"])
 BOXES = os.path.sep.join([BASE_PATH, "data.json"])
 
-OUTPUT_PATH = "output"
-MODEL_PATH = os.path.sep.join([OUTPUT_PATH, "segmentor.h5"])
-
 IMAGE_W = 640
 IMAGE_H = 320
 
@@ -27,7 +24,7 @@ def build_model(convolves, input_shape=(320, 640, 1)):
     model.add(layers.Input(shape=input_shape))
 
     for filters in convolves:
-        model.add(layers.Conv2D(filters, (3, 3), activation='relu'))
+        model.add(layers.Conv2D(filters, (3, 3), activation='relu', padding='same'))
         model.add(layers.BatchNormalization())
         model.add(layers.MaxPool2D((2, 2)))
 

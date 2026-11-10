@@ -11,9 +11,6 @@ from keras import layers, models, losses, optimizers, metrics
 # dont run this if you for some reason dont have 100MB free
 DATA = hasy_tools.load_data()
 
-OUTPUT_PATH = "output"
-MODEL_PATH = os.path.sep.join([OUTPUT_PATH, "segmentor.h5"])
-
 IMAGE_W = 32
 IMAGE_H = 32
 

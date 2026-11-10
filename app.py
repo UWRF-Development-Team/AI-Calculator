@@ -1,4 +1,5 @@
 import tkinter as tk
+import numpy as np
 from tkinter import ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
@@ -401,6 +402,8 @@ class ToolbarFrame(ttk.Frame):
 
     def submit(self, event=None):
         image_array = img_to_array(self.canvas.image)
+        print(image_array.shape)
+        image_array = np.expand_dims(image_array, axis=0)
         detector_prediction = detector.predict(image_array)
         # TODO: hook me up to the detector!
 
