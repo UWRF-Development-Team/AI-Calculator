@@ -59,7 +59,7 @@ def build_model(convolves, input_shape=(32, 32, 1)):
         model.add(layers.MaxPool2D((2, 2), padding='same'))
 
     model.add(layers.GlobalAveragePooling2D())
-
+    model.add(layers.Dropout(0.5))
     model.add(layers.Dense(512, activation='relu'))
     model.add(layers.Dropout(0.3))
 
@@ -72,7 +72,7 @@ def build_model(convolves, input_shape=(32, 32, 1)):
 # note symbol 163, uppercase lambda, which we will use for the caret ^
 # hasyv2 lacks this for some reason, in addition to the equals sign
 # but its not like we're gonna get a better dataset so we gotta cope
-model = build_model(convolves=(16, 32, 64, 128))
+model = build_model(convolves=(16, 32, 64, 128, 256))
 model.summary()
 
 # just guessing here that our dataset will have the labels encoded as a one-hot vector

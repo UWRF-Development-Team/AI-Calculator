@@ -6,6 +6,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 from keras.utils import img_to_array
 import json
+from matplotlib import pyplot as plt
 
 from history import *
 from models import *
@@ -409,9 +410,12 @@ class ToolbarFrame(ttk.Frame):
             if bounds[0] > bounds[2] or bounds[1] > bounds[3]:
                 continue
             BoundingStroke(CoordinatePair(*bounds[:2]), CoordinatePair(*bounds[2:4])).draw(self.canvas.canvas, self.canvas.image)
-            array = np.expand_dims(img_to_array(classifier.crop(self.canvas.image, bounds).resize((32, 32))), axis=0)
-            print(array.shape)
-            classifier.predict(array)
+            arr = img_to_array(classifier.crop(self.canvas.image, bounds).resize((32, 32)))
+            # TODO double double double check shape here, this might not actually be the right image portion
+            # or even a meaningful image at all
+            # plt.plot(arr)
+            array = np.expand_dims(arr, axis=0)
+            print(classifier.predict(array))
         # TODO: hook me up to the detector!
 
     def toggle_mode(self):
