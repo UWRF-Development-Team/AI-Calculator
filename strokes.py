@@ -17,10 +17,14 @@ class Stroke(ABC):
         self.start = start
         self.end = end
         self.color = color
+        self.canvas_object_id = None
 
     def draw(self, canvas, image):
         self.draw_canvas(canvas)
         self.draw_image(image)
+
+    def remove_canvas(self, canvas):
+        canvas.delete(self.canvas_object_id)
 
     @abstractmethod
     def draw_canvas(self, canvas):
@@ -37,10 +41,10 @@ class BrushStroke(Stroke):
         super().__init__(start, end, "black")
 
     def draw_canvas(self, canvas):
-        canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=3)
+        self.canvas_object_id = canvas.create_line(self.start.x, self.start.y, self.end.x, self.end.y, fill=self.color, width=3)
 
     def draw_image(self, image):
-        image.line([self.start.x, self.start.y, self.end.x, self.end.y], (0, 0, 0), width=3)
+        image.line([self.start.x, self.start.y, self.end.x, self.end.y], self.color, width=3)
 
 class BoundingStroke(Stroke):
     def __init__(self, start, end):
@@ -49,7 +53,7 @@ class BoundingStroke(Stroke):
 
     # Creates a red unfilled rectangle
     def draw_canvas(self, canvas):
-        canvas.create_rectangle(self.start.x, self.start.y, self.end.x, self.end.y, outline=self.color, width=3)
+        self.canvas_object_id = canvas.create_rectangle(self.start.x, self.start.y, self.end.x, self.end.y, outline=self.color, width=3)
 
     # Bounding boxes should not be in the image itself, pass
     def draw_image(self, image):
@@ -61,6 +65,28 @@ class BoundingStroke(Stroke):
             temp = self.start
             self.start = self.end
             self.end = temp
+
+class EraserStroke(Stroke):
+    def __init__(self, start, end):
+        # Start is unused in this class
+        super().__init__(start, end, "white")
+
+    def draw_canvas(self, canvas):
+        coords = self.get_circle_coords(self.end, 16)
+        self.canvas_object_id = canvas.create_oval(coords[0], coords[1], coords[2], coords[3], fill=self.color, outline=self.color)
+
+    def draw_image(self, image):
+        image.ellipse(self.get_circle_coords(self.end, 16), self.color)
+
+    def get_circle_coords(self, coords, width):
+        return [
+            coords.x - width/2,
+            coords.y - width/2,
+            coords.x + width/2,
+            coords.y + width/2
+        ]
+
+
 
 # A Stroke that contains other Strokes
 # Useful for long lines that are a number of smaller strokes
@@ -79,6 +105,10 @@ class StrokeCollection(Stroke):
     def draw_image(self, image):
         for stroke in self.strokes:
             stroke.draw_image(image)
+
+    def remove_canvas(self, canvas):
+        for stroke in self.strokes:
+            canvas.delete(stroke.canvas_object_id)
 
     def push(self, stroke):
         self.strokes.append(stroke)

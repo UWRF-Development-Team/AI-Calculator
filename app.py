@@ -7,6 +7,7 @@ import json
 
 from history import *
 
+
 background_color = "#E1E2E4"
 canvas_color = "#F8F9FA"
 accent_color_light = "#ad1233"
@@ -152,9 +153,12 @@ class CanvasFrame(ttk.Frame):
         self.current_stroke = []
         self.drawing = True
         self.calc_mode = True
+        self.draw_type = BrushStroke
+        self.previous_bounds = None # For bounding box
+
+        self.history_changed = None
 
         # Create and set up Canvas, Image, and ImageDraw
-        self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 0, width=640, height=320)
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 5, highlightbackground=accent_color_dark, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
@@ -171,6 +175,12 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-y>", self.redo)
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
+        self.winfo_toplevel().bind("<Control-e>", self.toggle_eraser)
+
+    # tells toolbar to update buttons
+    def signal_toolbar(self):
+        if self.history_changed:
+            self.history_changed()
 
     def toggle(self, event=None):
         if self.calc_mode: return
@@ -194,15 +204,20 @@ class CanvasFrame(ttk.Frame):
         end = CoordinatePair(x, y)
         if self.drawing:
             start = CoordinatePair(self.old_x, self.old_y)
-            stroke = BrushStroke(start, end)
+            # Can be either a dark line (Brush) or white line (Eraser)
+            stroke = self.draw_type(start, end)
             stroke.draw(self.canvas, self.draw)
             self.current_stroke.append(stroke)
         else:
             # Use starting coordinates, not previous ones
             start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
-            # Redraw without saving history for moving box effect
-            self.history.redraw()
+            # Remove previous bound if it exists, cheaper than redrawing
+            if self.previous_bounds is not None:
+                self.previous_bounds.remove_canvas(self.canvas)
+
+            # Create, save, and draw new bounding box
             stroke = BoundingStroke(start, end)
+            self.previous_bounds = stroke
             stroke.draw(self.canvas, self.draw)
 
         # Reset old variables
@@ -220,6 +235,9 @@ class CanvasFrame(ttk.Frame):
             end = CoordinatePair(event.x, event.y)
             # Save in history, unlike when moving
             self.history.add_stroke(BoundingStroke(start, end))
+            self.previous_bounds = None
+
+        self.signal_toolbar()
 
         # Reset some states
         self.current_stroke = []
@@ -230,14 +248,17 @@ class CanvasFrame(ttk.Frame):
 
     def redo(self, event=None):
         self.history.redo()
+        self.signal_toolbar()
 
     def undo(self, event=None):
         self.history.undo()
+        self.signal_toolbar()
 
     def clear(self, event=None):
         self.drawing = True
         self.history.reset()
-    
+        self.signal_toolbar()
+
     def convert_symbols(self, text):
         assert_type(text, str)
         return (text.replace("/", "d")
@@ -318,11 +339,17 @@ class CanvasFrame(ttk.Frame):
     def toggle_mode(self):
         self.calc_mode = not self.calc_mode
 
+    def toggle_eraser(self, event=None):
+        if self.draw_type == BrushStroke:
+            self.draw_type = EraserStroke
+        else:
+            self.draw_type = BrushStroke
+
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
     def __init__(self, container, canvas, display):
         super().__init__(container)
-        
+
         self.canvas = canvas
         self.display = display
 
@@ -338,24 +365,59 @@ class ToolbarFrame(ttk.Frame):
         self.columnconfigure(4, weight = 1)
         self.rowconfigure(0, weight = 1)
 
-        undo_button = ttk.Button(self, text = "Undo", command = canvas.undo)
-        undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
+        self.undo_button = ttk.Button(self, text = "Undo", command = canvas.undo)
+        self.undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
 
-        redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
-        redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
+        self.redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
+        self.redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
+
+        self.brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
+        self.brush_button.grid(column=2, row=0, padx=5, pady=5)
 
         # Not displayed by default
         self.file_name = ttk.Entry(self)
         self.toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
+        self.file_name.bind("<KeyRelease>", self.update_buttons)
 
-        clear_button = ttk.Button(self, text = "Clear", command = self.clear)
-        clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.clear_button = ttk.Button(self, text = "Clear", command = self.clear)
+        self.clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
-        self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
-        self.save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.save_button = ttk.Button(self, text = "Calc", command = self.submit)
+        self.save_button.grid(column = 6, row = 0, sticky="ES", padx = 5, pady = 5)
+
+    # disabled/enables toolbar buttons.
+    def update_buttons(self, event=None):
+        # Checks undos
+        if self.canvas.history.main_history.is_empty():
+            self.undo_button.state(["disabled"])
+            self.save_button.state(["disabled"])
+        else:
+            self.undo_button.state(["!disabled"])
+            self.save_button.state(["!disabled"])
+
+        # Disable clear only if NOTHING has been done
+        if self.canvas.history.main_history.is_empty() and self.canvas.history.undo_history.is_empty():
+            self.clear_button.state(["disabled"])
+        else:
+            self.clear_button.state(["!disabled"])
         
+        # checks redos
+        if self.canvas.history.undo_history.is_empty():
+            self.redo_button.state(["disabled"])
+        else:
+            self.redo_button.state(["!disabled"])
+
+        # checks if entry is empty only in training data mode
+        if not self.calc_mode and self.file_name.get() == "":
+            self.save_button.state(["disabled"])
+
+        if len(list(self.file_name.get())) != self.canvas.history.main_history.get_strokes_of_type(BoundingStroke).length():
+            self.save_button.state(["disabled"])
+
+
     def save(self):
         self.canvas.save(self.file_name.get())
+        self.clear()
 
     def clear(self, event=None):
         self.canvas.clear()
@@ -372,21 +434,22 @@ class ToolbarFrame(ttk.Frame):
 
     def toggle_mode(self):
         if self.calc_mode:
-            self.toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
-            self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
+            self.toggle_button.grid(column=4, row=0, sticky="ES", padx=5, pady=5)
+            self.file_name.grid(column = 3, row = 0, sticky="S", padx = 5, pady = 5)
             self.save_button.configure(text="Save", command=self.save)
         else:
             self.toggle_button.grid_forget()
             self.file_name.grid_forget()
-            self.save_button.configure(text="Submit", command=self.submit)
+            self.save_button.configure(text="Calc", command=self.submit)
         self.calc_mode = not self.calc_mode
+        self.update_buttons()
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("AI Calculator!")
         self.configure(background=background_color, padx=5, pady=5)
-    
+
         # self.window_height = 640
         # self.window_width  = 640
         # screen_height = self.winfo_screenheight()
@@ -395,7 +458,6 @@ class App(tk.Tk):
         # center_y = int(screen_height / 2 - self.window_height / 2)
         # self.geometry(f'{self.window_width}x{self.window_height}+{center_x}+{center_y}')
         # self.minsize(640, 320)
-
 
         self.columnconfigure(0, weight = 1)
         # self.rowconfigure(0, weight = 3, uniform = "rows")
@@ -423,12 +485,17 @@ class App(tk.Tk):
         self.display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
         self.display_frame_extended.grid(column = 0, row = 0, sticky="NEW")
 
-        #Settings Tab
-
-
         #Toolbar Frame
         self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame, self.display_frame_extended)
         self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+
+
+        # connects canvas's history changed var and toolbar's update buttons function, so you can call update buttons from canvas frame
+        self.canvas_frame.history_changed = self.toolbar_frame.update_buttons
+        # initial update
+        self.toolbar_frame.update_buttons()
+
+        #Settings Tab
 
 
     def toggle_mode(self, event=None):
