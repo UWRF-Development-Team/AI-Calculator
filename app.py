@@ -379,8 +379,8 @@ class ToolbarFrame(ttk.Frame):
         self.redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
         self.redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
 
-        brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
-        brush_button.grid(column=2, row=0, padx=5, pady=5)
+        self.brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
+        self.brush_button.grid(column=2, row=0, padx=5, pady=5)
 
         # Not displayed by default
         self.file_name = ttk.Entry(self)
@@ -388,10 +388,10 @@ class ToolbarFrame(ttk.Frame):
         self.file_name.bind("<KeyRelease>", self.update_buttons)
 
         self.clear_button = ttk.Button(self, text = "Clear", command = self.clear)
-        self.clear_button.grid(column = 4, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
         self.save_button = ttk.Button(self, text = "Calc", command = self.submit)
-        self.save_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.save_button.grid(column = 6, row = 0, sticky="ES", padx = 5, pady = 5)
 
     # disabled/enables toolbar buttons.
     def update_buttons(self, event=None):
