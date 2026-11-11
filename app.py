@@ -406,9 +406,9 @@ class ToolbarFrame(ttk.Frame):
         detector_prediction = detector.predict(image_array)
         print(detector_prediction)
         for bounds in detector_prediction:
-            BoundingStroke(CoordinatePair(*bounds[:2]), CoordinatePair(*bounds[2:4])).draw(self.canvas.canvas, self.canvas.image)
             if bounds[0] > bounds[2] or bounds[1] > bounds[3]:
                 continue
+            BoundingStroke(CoordinatePair(*bounds[:2]), CoordinatePair(*bounds[2:4])).draw(self.canvas.canvas, self.canvas.image)
             array = np.expand_dims(img_to_array(classifier.crop(self.canvas.image, bounds).resize((32, 32))), axis=0)
             print(array.shape)
             classifier.predict(array)

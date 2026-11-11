@@ -24,10 +24,10 @@ class Detector(Model):
     def predict(self, image):
         predicts = self.model.predict(image) 
         print(predicts.shape)
-        predicts = predicts[predicts[:,:,4] > 0.1]
+        predicts = predicts[predicts[:,:,4] > 0.8]
         newPreds = []
         for array in predicts:
             if array[0] > array[2] or array[1] > array[3]: continue
             newPreds.append(np.multiply(array, np.asarray([640, 320, 640, 320, 1])).tolist())
-        print(newPreds)
+        # print(newPreds)
         return np.asarray(newPreds)
