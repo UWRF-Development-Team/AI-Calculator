@@ -1,17 +1,24 @@
 import tkinter as tk
+import numpy as np
 from tkinter import ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
 from PIL import Image, ImageDraw
+from keras.utils import img_to_array
 import json
+from matplotlib import pyplot as plt
 
 from history import *
+from models import *
 
 
 background_color = "#E1E2E4"
 canvas_color = "#F8F9FA"
 accent_color_light = "#ad1233"
 accent_color_dark = "#696E71"
+
+classifier = Classifier()
+detector = Detector()
 
 # Tab Frame
 class TabsFrame(ttk.Frame):
@@ -88,6 +95,13 @@ class DisplayFrame(ttk.Frame):
         self.clipboard_clear()
         self.clipboard_append(answer)
 
+    def update_text(self, equation):
+        # todo send model code here
+        # todo update to do more than just the first equation/answer pair (may need some refactoring)
+        self.eq1.configure(text=equation)
+        # UNSAFE OPERATION!!!
+        self.a1.configure(text=eval(equation))
+
 
 class DisplayFrameExtended(ttk.Frame):
     def __init__(self, container):
@@ -162,7 +176,7 @@ class CanvasFrame(ttk.Frame):
         self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 5, highlightbackground=accent_color_dark, width=640, height=320)
         self.canvas.grid(row = 2, column = 0)
 
-        self.image = Image.new("RGB", (640, 320), (255, 255, 255))
+        self.image = Image.new("L", (640, 320), 255)
         self.draw = ImageDraw.Draw(self.image)
 
         # Initialize history
@@ -431,6 +445,21 @@ class ToolbarFrame(ttk.Frame):
         self.display.add_equation(equation, answer)
 #        # TODO send information to model
 #        pass
+        image_array = img_to_array(self.canvas.image.resize((160, 80)))
+        image_array = np.expand_dims(image_array, axis=0)
+        detector_prediction = detector.predict(image_array)
+        print(detector_prediction)
+        for bounds in detector_prediction:
+            if bounds[0] > bounds[2] or bounds[1] > bounds[3]:
+                continue
+            BoundingStroke(CoordinatePair(*bounds[:2]), CoordinatePair(*bounds[2:4])).draw(self.canvas.canvas, self.canvas.image)
+            arr = img_to_array(classifier.crop(self.canvas.image, bounds).resize((32, 32)))
+            # TODO double double double check shape here, this might not actually be the right image portion
+            # or even a meaningful image at all
+            # plt.plot(arr)
+            array = np.expand_dims(arr, axis=0)
+            print(classifier.predict(array))
+        # TODO: hook me up to the detector!
 
     def toggle_mode(self):
         if self.calc_mode:
