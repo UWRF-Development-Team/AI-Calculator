@@ -2,6 +2,9 @@ import os
 import keras
 import json
 import tensorflow as tf
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
 
 from keras import layers, models, losses, optimizers
 
@@ -9,36 +12,33 @@ BASE_PATH = "training-data"
 IMAGES = os.path.sep.join([BASE_PATH, "images"])
 BOXES = os.path.sep.join([BASE_PATH, "data.json"])
 
-OUTPUT_PATH = "output"
-MODEL_PATH = os.path.sep.join([OUTPUT_PATH, "segmentor.h5"])
-
 IMAGE_W = 640
 IMAGE_H = 320
 
 LR = 1e-4
-EPOCHS = 20
+EPOCHS = 30
 BATCH_SIZE = 32
-BOXES_PREDICT = 25
+BOXES_PREDICT = 10
 
 # this was originally 640, 320, 3 but our images are monochrome so we can reduce the input size
-def build_model(convolves, input_shape=(320, 640, 1)):
+def build_model(convolves, input_shape=(80, 160, 1)):
     model = models.Sequential()
 
     model.add(layers.Input(shape=input_shape))
 
-    for filters in convolves:
-        model.add(layers.Conv2D(filters, (3, 3), activation='relu'))
-        model.add(layers.BatchNormalization())
-        model.add(layers.MaxPool2D((2, 2)))
+    for i, filters in enumerate(convolves):
+        stride = 2 if i < 4 else 1
+        model.add(layers.Conv2D(filters, (3, 3), strides=stride, activation='relu', padding='same'))
+        model.add(layers.LayerNormalization())
 
-    model.add(layers.GlobalAveragePooling2D())
+    model.add(layers.Resizing(1, BOXES_PREDICT, interpolation="bilinear"))
+    model.add(layers.SpatialDropout2D(0.2))
+    model.add(layers.Conv2D(32, (1, 5), activation="relu", padding="same"))
 
-    model.add(layers.Dense(512, activation='relu'))
-    model.add(layers.Dropout(0.3))
+    model.add(layers.Conv2D(5, (1, 1), activation="sigmoid"))
 
     # x1, y1, x2, y2, confidence 
     # (we're gonna kill low confidence boxes after prediction)
-    model.add(layers.Dense(BOXES_PREDICT*5, activation='sigmoid'))
     model.add(layers.Reshape((BOXES_PREDICT, 5)))
 
     return model
@@ -46,10 +46,12 @@ def build_model(convolves, input_shape=(320, 640, 1)):
 def image(filename):
     img = tf.io.read_file(os.path.sep.join([IMAGES, filename]))
     img = tf.io.decode_png(img, channels=1)
+    img = tf.image.resize(img, (80, 160))
     img = tf.cast(img, tf.float32) / 255.0
 
     return img
 
+@keras.saving.register_keras_serializable()
 def bbox_loss(true_y, pred_y):
     true_bboxes = true_y[..., :4]
     pred_bboxes = pred_y[..., :4]
@@ -66,7 +68,7 @@ def bbox_loss(true_y, pred_y):
         tf.reduce_sum(mask) * 4.0, 1.0
     )
 
-    conf_loss = tf.reduce_mean(losses.binary_crossentropy(true_conf, pred_conf))
+    conf_loss = tf.reduce_mean(losses.huber(true_conf, pred_conf))
 
     return bbox_loss + conf_loss
 
@@ -98,12 +100,15 @@ y = tf.constant([
             bound["end"][0] / IMAGE_W,
             bound["end"][1] / IMAGE_H,
             bound["confidence"]
-        ] for bound in d["bounds"]
+        ]
+        for bound in sorted(
+            d["bounds"], 
+            key=lambda b: (0 if b["confidence"] > 0 else 1, b["start"][0])
+        )
     ] for d in data
 ], dtype=tf.float32)
 
 dataset = tf.data.Dataset.from_tensor_slices((X, y))
-dataset = dataset.shuffle(buffer_size=len(X), seed=5)
 
 # split data 80/20 train and test (since we wont get much of either lol)
 train_size = int(0.8 * len(X))
@@ -111,7 +116,7 @@ train_size = int(0.8 * len(X))
 train_dataset = dataset.take(train_size).batch(BATCH_SIZE)
 test_dataset = dataset.skip(train_size).batch(BATCH_SIZE)
 
-model = build_model(convolves=((16, 32)))
+model = build_model(convolves=((16, 32, 64, 128, 256)))
 model.summary()
 
 model.compile(
@@ -124,3 +129,5 @@ history = model.fit(
     validation_data=test_dataset,
     epochs=EPOCHS
 )
+
+model.save("detector.keras")

@@ -11,9 +11,6 @@ from keras import layers, models, losses, optimizers, metrics
 # dont run this if you for some reason dont have 100MB free
 DATA = hasy_tools.load_data()
 
-OUTPUT_PATH = "output"
-MODEL_PATH = os.path.sep.join([OUTPUT_PATH, "segmentor.h5"])
-
 IMAGE_W = 32
 IMAGE_H = 32
 
@@ -21,6 +18,9 @@ LR = 1e-4
 EPOCHS = 10
 BATCH_SIZE = 32
 
+            #0   1   2   3   4   5   6   7   8   9
+            #leq geq  lt   gt   -    +    div  x
+            #*   [    ]    sqrt /    |    Λ
 WHITELIST = [70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
             185, 186, 187, 188, 195, 196, 526, 549,
             514, 918, 919, 960, 922, 920, 163]
@@ -56,10 +56,10 @@ def build_model(convolves, input_shape=(32, 32, 1)):
     for filters in convolves:
         model.add(layers.Conv2D(filters, (3, 3), activation='relu', padding='same'))
         model.add(layers.BatchNormalization())
-        model.add(layers.MaxPool2D((2, 2)))
+        model.add(layers.MaxPool2D((2, 2), padding='same'))
 
     model.add(layers.GlobalAveragePooling2D())
-
+    model.add(layers.Dropout(0.5))
     model.add(layers.Dense(512, activation='relu'))
     model.add(layers.Dropout(0.3))
 
@@ -72,7 +72,7 @@ def build_model(convolves, input_shape=(32, 32, 1)):
 # note symbol 163, uppercase lambda, which we will use for the caret ^
 # hasyv2 lacks this for some reason, in addition to the equals sign
 # but its not like we're gonna get a better dataset so we gotta cope
-model = build_model(convolves=(16, 32, 64, 128))
+model = build_model(convolves=(16, 32, 64, 128, 256))
 model.summary()
 
 # just guessing here that our dataset will have the labels encoded as a one-hot vector
@@ -88,3 +88,5 @@ history = model.fit(
     validation_data=[X_test_final, y_test_mapped],
     epochs=EPOCHS
 )
+
+model.save("classifier.keras")
