@@ -111,60 +111,44 @@ class DisplayFrameExtended(ttk.Frame):
         self["borderwidth"] = 2
         self["padding"] = 10
 
-        self.submited_equations = []
-        
+        self.history_frame = ttk.Frame(self)
+        self.history_frame.grid(row = 0, column = 0, columnspan = 5, sticky = "EW")
 
-        #Setting Rows and Columns size/style
-        self.columnconfigure(0, weight = 0)
-        self.columnconfigure(1, weight = 1)
-        self.columnconfigure(2, weight = 1)
-        self.columnconfigure(3, weight = 0)
-        self.rowconfigure(0, weight = 1, uniform = "rows")
-        self.rowconfigure(1, weight = 1, uniform = "rows")
-        self.rowconfigure(2, weight = 1, uniform = "rows")
-        self.rowconfigure(3, weight = 1, uniform = "rows")
+        self.submitted_equations = []
 
-        #Equation and Answer Text
-        self.eq1 = ttk.Label(self, text = "Equation 1")
-        self.eq2 = ttk.Label(self, text = "Equation 2")
-        self.eq3 = ttk.Label(self, text = "Equation 3")
-        self.a1 = ttk.Label(self, text = "Answer 1")
-        self.a2 = ttk.Label(self, text = "Answer 2")
-        self.a3 = ttk.Label(self, text = "Answer 3")
+        #Grid
+        self.columnconfigure(0, weight=0) #Copy Equation
+        self.columnconfigure(1, weight=1) #Equation
+        self.columnconfigure(2, weight=0) #Equal Sign
+        self.columnconfigure(3, weight=1) #Answer
+        self.columnconfigure(4, weight=0) #Copy Answer
 
-        #Copy Buttons
-        self.copya1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
-        self.copya2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
-        self.copya3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
-        self.copyeq1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq1["text"]))
-        self.copyeq2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq2["text"]))
-        self.copyeq3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq3["text"]))
+    def add_equation(self, equation, answer):
 
-        #AI Output Row
-        self.output = tk.Text (self, height = 1, width = 40)
-        self.output.grid(row = 3)
-        self.output.insert(index = 1.0, chars = "AI OUTPUT")
-        self.output.config(state = "disabled")
+        row = len(self.submitted_equations)
 
-        #Setting elements into cells
-        self.copyeq1.grid(column = 0, row = 0, sticky = "W")
-        self.copyeq2.grid(column = 0, row = 1, sticky = "W")
-        self.copyeq3.grid(column = 0, row = 2, sticky = "W")
-        self.eq1.grid(column = 1, row = 0, sticky = "W")
-        self.eq2.grid(column = 1, row = 1, sticky = "W")
-        self.eq3.grid(column = 1, row = 2, sticky = "W")
-        self.a1.grid(column = 2, row = 0, sticky = "E")
-        self.a2.grid(column = 2, row = 1, sticky = "E")
-        self.a3.grid(column = 2, row = 2, sticky = "E")
-        self.copya1.grid(column = 3, row = 0, sticky = "E")
-        self.copya2.grid(column = 3, row = 1, sticky = "E")
-        self.copya3.grid(column = 3, row = 2, sticky = "E")
-        self.output.grid(column = 1, row = 3, columnspan = 2, sticky ="EW")
+        self.submitted_equations.append((equation, answer))
 
-    def copy(self, answer):
+        #Equation and answer labels
+        eq_label = ttk.Label(self.history_frame, text=equation)
+        equal_sign_label = ttk.Label(self.history_frame, text="=")
+        answer_label = ttk.Label(self.history_frame, text=answer)
+
+        #Buttons
+        copy_eq = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(equation))
+        copy_answer = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(answer))
+
+        #Add to grid
+        copy_eq.grid(column=0, row=row, sticky="w")
+        eq_label.grid(column=1, row=row, sticky="w")
+        equal_sign_label.grid(column=2, row=row)
+        answer_label.grid(column=3, row=row, sticky="e")
+        copy_answer.grid(column=4, row=row, sticky="e")
+
+    def copy(self, text):
         self.clipboard_clear()
-        self.clipboard_append(answer)
-       
+        self.clipboard_append(text)
+
 
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
@@ -211,7 +195,7 @@ class CanvasFrame(ttk.Frame):
     def signal_toolbar(self):
         if self.history_changed:
             self.history_changed()
-    
+
     def toggle(self, event=None):
         if self.calc_mode: return
         self.drawing = not self.drawing
@@ -288,7 +272,7 @@ class CanvasFrame(ttk.Frame):
         self.drawing = True
         self.history.reset()
         self.signal_toolbar()
-    
+
     def convert_symbols(self, text):
         assert_type(text, str)
         return (text.replace("/", "d")
@@ -377,9 +361,11 @@ class CanvasFrame(ttk.Frame):
 
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
-    def __init__(self, container, canvas):
+    def __init__(self, container, canvas, display):
         super().__init__(container)
+
         self.canvas = canvas
+        self.display = display
 
         self.calc_mode = True
 
@@ -441,7 +427,7 @@ class ToolbarFrame(ttk.Frame):
 
         if len(list(self.file_name.get())) != self.canvas.history.main_history.get_strokes_of_type(BoundingStroke).length():
             self.save_button.state(["disabled"])
-            
+
 
     def save(self):
         self.canvas.save(self.file_name.get())
@@ -452,6 +438,13 @@ class ToolbarFrame(ttk.Frame):
         self.file_name.delete(0, tk.END)
 
     def submit(self, event=None):
+
+        equation = "5 + 5"
+        answer = "10"
+
+        self.display.add_equation(equation, answer)
+#        # TODO send information to model
+#        pass
         image_array = img_to_array(self.canvas.image.resize((160, 80)))
         image_array = np.expand_dims(image_array, axis=0)
         detector_prediction = detector.predict(image_array)
@@ -485,8 +478,8 @@ class App(tk.Tk):
         super().__init__()
         self.title("AI Calculator!")
         self.configure(background=background_color, padx=5, pady=5)
-     
-        # self.window_height = 640 
+
+        # self.window_height = 640
         # self.window_width  = 640
         # screen_height = self.winfo_screenheight()
         # screen_width  = self.winfo_screenwidth()
@@ -517,16 +510,19 @@ class App(tk.Tk):
         self.canvas_frame = CanvasFrame(tabs_frame.tab1)
         self.canvas_frame.grid(column = 0, row = 2)
 
-        self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame)
+        # History Tab
+        self.display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
+        self.display_frame_extended.grid(column = 0, row = 0, sticky="NEW")
+
+        #Toolbar Frame
+        self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame, self.display_frame_extended)
         self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+
 
         # connects canvas's history changed var and toolbar's update buttons function, so you can call update buttons from canvas frame
         self.canvas_frame.history_changed = self.toolbar_frame.update_buttons
         # initial update
         self.toolbar_frame.update_buttons()
-        # History Tab
-        self.display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
-        self.display_frame_extended.grid(column = 0, row = 0, sticky="NEW")
 
         #Settings Tab
 
