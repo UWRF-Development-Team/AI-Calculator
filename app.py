@@ -13,6 +13,21 @@ canvas_color = "#F8F9FA"
 accent_color_light = "#ad1233"
 accent_color_dark = "#696E71"
 
+# Tab Frame
+class TabsFrame(ttk.Frame):
+    def __init__(self, container):
+            super().__init__(container)
+            self.notebook = ttk.Notebook(self)
+            self.notebook.pack(fill="both", expand=True)
+
+            self.tab1 = ttk.Frame(self.notebook)
+            self.tab2 = ttk.Frame(self.notebook)
+            self.tab3 = ttk.Frame(self.notebook)
+
+            self.notebook.add(self.tab1, text="Calculator")
+            self.notebook.add(self.tab2, text="History")
+            self.notebook.add(self.tab3, text="Settings")
+
 # Display Frame
 class DisplayFrame(ttk.Frame):
     def __init__(self, container):
@@ -73,6 +88,70 @@ class DisplayFrame(ttk.Frame):
         self.clipboard_clear()
         self.clipboard_append(answer)
 
+
+class DisplayFrameExtended(ttk.Frame):
+    def __init__(self, container):
+        super().__init__(container)
+
+        self["relief"] = "solid"
+        self["borderwidth"] = 2
+        self["padding"] = 10
+
+        self.submited_equations = []
+        
+
+        #Setting Rows and Columns size/style
+        self.columnconfigure(0, weight = 0)
+        self.columnconfigure(1, weight = 1)
+        self.columnconfigure(2, weight = 1)
+        self.columnconfigure(3, weight = 0)
+        self.rowconfigure(0, weight = 1, uniform = "rows")
+        self.rowconfigure(1, weight = 1, uniform = "rows")
+        self.rowconfigure(2, weight = 1, uniform = "rows")
+        self.rowconfigure(3, weight = 1, uniform = "rows")
+
+        #Equation and Answer Text
+        self.eq1 = ttk.Label(self, text = "Equation 1")
+        self.eq2 = ttk.Label(self, text = "Equation 2")
+        self.eq3 = ttk.Label(self, text = "Equation 3")
+        self.a1 = ttk.Label(self, text = "Answer 1")
+        self.a2 = ttk.Label(self, text = "Answer 2")
+        self.a3 = ttk.Label(self, text = "Answer 3")
+
+        #Copy Buttons
+        self.copya1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
+        self.copya2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
+        self.copya3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
+        self.copyeq1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq1["text"]))
+        self.copyeq2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq2["text"]))
+        self.copyeq3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq3["text"]))
+
+        #AI Output Row
+        self.output = tk.Text (self, height = 1, width = 40)
+        self.output.grid(row = 3)
+        self.output.insert(index = 1.0, chars = "AI OUTPUT")
+        self.output.config(state = "disabled")
+
+        #Setting elements into cells
+        self.copyeq1.grid(column = 0, row = 0, sticky = "W")
+        self.copyeq2.grid(column = 0, row = 1, sticky = "W")
+        self.copyeq3.grid(column = 0, row = 2, sticky = "W")
+        self.eq1.grid(column = 1, row = 0, sticky = "W")
+        self.eq2.grid(column = 1, row = 1, sticky = "W")
+        self.eq3.grid(column = 1, row = 2, sticky = "W")
+        self.a1.grid(column = 2, row = 0, sticky = "E")
+        self.a2.grid(column = 2, row = 1, sticky = "E")
+        self.a3.grid(column = 2, row = 2, sticky = "E")
+        self.copya1.grid(column = 3, row = 0, sticky = "E")
+        self.copya2.grid(column = 3, row = 1, sticky = "E")
+        self.copya3.grid(column = 3, row = 2, sticky = "E")
+        self.output.grid(column = 1, row = 3, columnspan = 2, sticky ="EW")
+
+    def copy(self, answer):
+        self.clipboard_clear()
+        self.clipboard_append(answer)
+       
+
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
     def __init__(self, container):
@@ -90,6 +169,7 @@ class CanvasFrame(ttk.Frame):
         self.current_stroke = []
         self.drawing = True
         self.calc_mode = True
+        self.draw_type = BrushStroke
 
         self.history_changed = None
 
@@ -110,6 +190,7 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-y>", self.redo)
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
+        self.winfo_toplevel().bind("<Control-e>", self.toggle_eraser)
 
     # tells toolbar to update buttons
     def signal_toolbar(self):
@@ -138,7 +219,8 @@ class CanvasFrame(ttk.Frame):
         end = CoordinatePair(x, y)
         if self.drawing:
             start = CoordinatePair(self.old_x, self.old_y)
-            stroke = BrushStroke(start, end)
+            # Can be either a dark line (Brush) or white line (Eraser)
+            stroke = self.draw_type(start, end)
             stroke.draw(self.canvas, self.draw)
             self.current_stroke.append(stroke)
         else:
@@ -227,7 +309,7 @@ class CanvasFrame(ttk.Frame):
                 if int(file.name.split(".", 2)[1]) >= int(highest_name.split(".", 1)[1]):
                     highest_name = file.name.split(".", 1)[0] + "." + str(int(file.name.rsplit(".", 2)[1]) + 1)
 
-        self.image.save(f"./training-data/{highest_name}.png")
+        self.image.save(f"{str(files)}/{highest_name}.png")
         self.update_json(highest_name + ".png", file_name, bounds)
 
     def update_json(self, file_name, key, bounds):
@@ -267,6 +349,12 @@ class CanvasFrame(ttk.Frame):
     def toggle_mode(self):
         self.calc_mode = not self.calc_mode
 
+    def toggle_eraser(self, event=None):
+        if self.draw_type == BrushStroke:
+            self.draw_type = EraserStroke
+        else:
+            self.draw_type = BrushStroke
+
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
     def __init__(self, container, canvas):
@@ -290,6 +378,9 @@ class ToolbarFrame(ttk.Frame):
 
         self.redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
         self.redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
+
+        brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
+        brush_button.grid(column=2, row=0, padx=5, pady=5)
 
         # Not displayed by default
         self.file_name = ttk.Entry(self)
@@ -317,6 +408,11 @@ class ToolbarFrame(ttk.Frame):
             self.clear_button.state(["disabled"])
         else:
             self.clear_button.state(["!disabled"])
+        clear_button = ttk.Button(self, text = "Clear", command = self.clear)
+        clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+        
+        self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
+        self.save_button.grid(column = 6, row = 0, sticky="ES", padx = 5, pady = 5)
         
         # checks redos
         if self.canvas.history.undo_history.is_empty():
@@ -346,8 +442,8 @@ class ToolbarFrame(ttk.Frame):
 
     def toggle_mode(self):
         if self.calc_mode:
-            self.toggle_button.grid(column=3, row=0, sticky="ES", padx=5, pady=5)
-            self.file_name.grid(column = 2, row = 0, sticky="S", padx = 5, pady = 5)
+            self.toggle_button.grid(column=4, row=0, sticky="ES", padx=5, pady=5)
+            self.file_name.grid(column = 3, row = 0, sticky="S", padx = 5, pady = 5)
             self.save_button.configure(text="Save", command=self.save)
         else:
             self.toggle_button.grid_forget()
@@ -382,25 +478,34 @@ class App(tk.Tk):
         self.bind("<Control-T>", self.toggle_mode)
 
     def __create_frames(self):
-        self.display_frame = DisplayFrame(self)
+
+        # Calculator Tab
+        tabs_frame = TabsFrame(self)
+        tabs_frame.grid(column=0, row=0)
+
+        self.display_frame = DisplayFrame(tabs_frame.tab1)
         self.display_frame.grid(column = 0, row = 0, sticky="NEW")
 
-        self.canvas_frame = CanvasFrame(self)
+        self.canvas_frame = CanvasFrame(tabs_frame.tab1)
         self.canvas_frame.grid(column = 0, row = 2)
 
-        self.toolbar_frame = ToolbarFrame(self, self.canvas_frame)
+        self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame)
         self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
 
         # connects canvas's history changed var and toolbar's update buttons function, so you can call update buttons from canvas frame
         self.canvas_frame.history_changed = self.toolbar_frame.update_buttons
         # initial update
         self.toolbar_frame.update_buttons()
+        # History Tab
+        self.display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
+        self.display_frame_extended.grid(column = 0, row = 0, sticky="NEW")
+
+        #Settings Tab
+
 
     def toggle_mode(self, event=None):
         self.toolbar_frame.toggle_mode()
         self.canvas_frame.toggle_mode()
-
-
 
 if __name__ == "__main__":
     app = App()
