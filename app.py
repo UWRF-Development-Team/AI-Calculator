@@ -328,6 +328,10 @@ class ToolbarFrame(ttk.Frame):
         if not self.calc_mode and self.file_name.get() == "":
             self.save_button.state(["disabled"])
 
+        if len(list(self.file_name.get())) != self.canvas.history.main_history.get_strokes_of_type(BoundingStroke).length():
+            self.save_button.state(["disabled"])
+            
+
     def save(self):
         self.canvas.save(self.file_name.get())
         self.clear()
