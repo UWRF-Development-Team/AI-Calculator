@@ -9,13 +9,8 @@ import json
 from matplotlib import pyplot as plt
 
 from history import *
+from themes import THEMES
 from models import *
-
-
-background_color = "#E1E2E4"
-canvas_color = "#F8F9FA"
-accent_color_light = "#ad1233"
-accent_color_dark = "#696E71"
 
 classifier = Classifier()
 detector = Detector()
@@ -173,7 +168,9 @@ class CanvasFrame(ttk.Frame):
         self.history_changed = None
 
         # Create and set up Canvas, Image, and ImageDraw
-        self.canvas = tk.Canvas(self, bg=canvas_color, highlightthickness = 5, highlightbackground=accent_color_dark, width=640, height=320)
+        self.canvas = tk.Canvas(self,bg=THEMES["Light"].canvas,highlightthickness=5,highlightbackground=THEMES["Light"].border,width=640,height=320)
+        self.canvas = tk.Canvas(self,bg=THEMES["Light"].canvas,highlightthickness=5,highlightbackground=THEMES["Light"].border,width=640,height=320)
+
         self.canvas.grid(row = 2, column = 0)
 
         self.image = Image.new("L", (640, 320), 255)
@@ -369,7 +366,6 @@ class ToolbarFrame(ttk.Frame):
 
         self.calc_mode = True
 
-        ttk.Style().configure("My.TFrame", background=accent_color_light)
         self.configure(style="My.TFrame")
 
         self.columnconfigure(0, weight = 1)
@@ -414,7 +410,7 @@ class ToolbarFrame(ttk.Frame):
             self.clear_button.state(["disabled"])
         else:
             self.clear_button.state(["!disabled"])
-        
+
         # checks redos
         if self.canvas.history.undo_history.is_empty():
             self.redo_button.state(["disabled"])
@@ -473,12 +469,23 @@ class ToolbarFrame(ttk.Frame):
         self.calc_mode = not self.calc_mode
         self.update_buttons()
 
+class SettingsFrame(ttk.Frame):
+    def __init__(self, container, app):
+        super().__init__(container)
+        self.app = app
+
+        ttk.Label(self, text="Application Theme:").grid(row=0, column=0)
+        ttk.Button(self,text="Switch Theme", command=self.app.toggle_theme).grid(row=0, column=1)
+
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("AI Calculator!")
-        self.configure(background=background_color, padx=5, pady=5)
+        self.configure(padx=5, pady=5)
 
+        self.current_theme = THEMES["Light"]
+        self.style = ttk.Style(self)
+    
         # self.window_height = 640
         # self.window_width  = 640
         # screen_height = self.winfo_screenheight()
@@ -525,6 +532,35 @@ class App(tk.Tk):
         self.toolbar_frame.update_buttons()
 
         #Settings Tab
+        self.settings_frame = SettingsFrame(tabs_frame.tab3, self)
+        self.settings_frame.grid(row=0, column=0, sticky="NW")
+
+        self.apply_theme()
+
+    def toggle_theme(self):
+        if self.current_theme == THEMES["Light"]:
+            self.current_theme = THEMES["Dark"]
+        else:
+            self.current_theme = THEMES["Light"]
+
+        self.apply_theme()
+
+    def apply_theme(self):
+        theme = self.current_theme
+
+        self.configure(bg=theme.background)
+
+        self.style.configure("TFrame", background=theme.background)
+
+        self.style.configure("TLabel", background=theme.background, foreground=theme.foreground)
+
+        self.style.configure("TNotebook", background=theme.background)
+
+        self.style.map("TNotebook.Tab",background=[("selected", theme.accent)])
+
+        self.style.configure("My.TFrame",background=theme.accent)
+
+        self.canvas_frame.canvas.configure(bg=theme.canvas, highlightbackground=theme.border)
 
 
     def toggle_mode(self, event=None):
