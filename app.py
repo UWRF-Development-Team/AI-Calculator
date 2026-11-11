@@ -408,11 +408,6 @@ class ToolbarFrame(ttk.Frame):
             self.clear_button.state(["disabled"])
         else:
             self.clear_button.state(["!disabled"])
-        clear_button = ttk.Button(self, text = "Clear", command = self.clear)
-        clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
-        
-        self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
-        self.save_button.grid(column = 6, row = 0, sticky="ES", padx = 5, pady = 5)
         
         # checks redos
         if self.canvas.history.undo_history.is_empty():
