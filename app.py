@@ -1,12 +1,19 @@
 import tkinter as tk
+import numpy as np
 from tkinter import ttk, messagebox
 from typing import assert_type 
 from pathlib import Path
 from PIL import Image, ImageDraw
+from keras.utils import img_to_array
 import json
+from matplotlib import pyplot as plt
 
 from history import *
 from themes import THEMES
+from models import *
+
+classifier = Classifier()
+detector = Detector()
 
 # Tab Frame
 class TabsFrame(ttk.Frame):
@@ -83,6 +90,13 @@ class DisplayFrame(ttk.Frame):
         self.clipboard_clear()
         self.clipboard_append(answer)
 
+    def update_text(self, equation):
+        # todo send model code here
+        # todo update to do more than just the first equation/answer pair (may need some refactoring)
+        self.eq1.configure(text=equation)
+        # UNSAFE OPERATION!!!
+        self.a1.configure(text=eval(equation))
+
 
 class DisplayFrameExtended(ttk.Frame):
     def __init__(self, container):
@@ -92,60 +106,44 @@ class DisplayFrameExtended(ttk.Frame):
         self["borderwidth"] = 2
         self["padding"] = 10
 
-        self.submited_equations = []
-        
+        self.history_frame = ttk.Frame(self)
+        self.history_frame.grid(row = 0, column = 0, columnspan = 5, sticky = "EW")
 
-        #Setting Rows and Columns size/style
-        self.columnconfigure(0, weight = 0)
-        self.columnconfigure(1, weight = 1)
-        self.columnconfigure(2, weight = 1)
-        self.columnconfigure(3, weight = 0)
-        self.rowconfigure(0, weight = 1, uniform = "rows")
-        self.rowconfigure(1, weight = 1, uniform = "rows")
-        self.rowconfigure(2, weight = 1, uniform = "rows")
-        self.rowconfigure(3, weight = 1, uniform = "rows")
+        self.submitted_equations = []
 
-        #Equation and Answer Text
-        self.eq1 = ttk.Label(self, text = "Equation 1")
-        self.eq2 = ttk.Label(self, text = "Equation 2")
-        self.eq3 = ttk.Label(self, text = "Equation 3")
-        self.a1 = ttk.Label(self, text = "Answer 1")
-        self.a2 = ttk.Label(self, text = "Answer 2")
-        self.a3 = ttk.Label(self, text = "Answer 3")
+        #Grid
+        self.columnconfigure(0, weight=0) #Copy Equation
+        self.columnconfigure(1, weight=1) #Equation
+        self.columnconfigure(2, weight=0) #Equal Sign
+        self.columnconfigure(3, weight=1) #Answer
+        self.columnconfigure(4, weight=0) #Copy Answer
 
-        #Copy Buttons
-        self.copya1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
-        self.copya2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
-        self.copya3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
-        self.copyeq1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq1["text"]))
-        self.copyeq2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq2["text"]))
-        self.copyeq3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq3["text"]))
+    def add_equation(self, equation, answer):
 
-        #AI Output Row
-        self.output = tk.Text (self, height = 1, width = 40)
-        self.output.grid(row = 3)
-        self.output.insert(index = 1.0, chars = "AI OUTPUT")
-        self.output.config(state = "disabled")
+        row = len(self.submitted_equations)
 
-        #Setting elements into cells
-        self.copyeq1.grid(column = 0, row = 0, sticky = "W")
-        self.copyeq2.grid(column = 0, row = 1, sticky = "W")
-        self.copyeq3.grid(column = 0, row = 2, sticky = "W")
-        self.eq1.grid(column = 1, row = 0, sticky = "W")
-        self.eq2.grid(column = 1, row = 1, sticky = "W")
-        self.eq3.grid(column = 1, row = 2, sticky = "W")
-        self.a1.grid(column = 2, row = 0, sticky = "E")
-        self.a2.grid(column = 2, row = 1, sticky = "E")
-        self.a3.grid(column = 2, row = 2, sticky = "E")
-        self.copya1.grid(column = 3, row = 0, sticky = "E")
-        self.copya2.grid(column = 3, row = 1, sticky = "E")
-        self.copya3.grid(column = 3, row = 2, sticky = "E")
-        self.output.grid(column = 1, row = 3, columnspan = 2, sticky ="EW")
+        self.submitted_equations.append((equation, answer))
 
-    def copy(self, answer):
+        #Equation and answer labels
+        eq_label = ttk.Label(self.history_frame, text=equation)
+        equal_sign_label = ttk.Label(self.history_frame, text="=")
+        answer_label = ttk.Label(self.history_frame, text=answer)
+
+        #Buttons
+        copy_eq = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(equation))
+        copy_answer = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(answer))
+
+        #Add to grid
+        copy_eq.grid(column=0, row=row, sticky="w")
+        eq_label.grid(column=1, row=row, sticky="w")
+        equal_sign_label.grid(column=2, row=row)
+        answer_label.grid(column=3, row=row, sticky="e")
+        copy_answer.grid(column=4, row=row, sticky="e")
+
+    def copy(self, text):
         self.clipboard_clear()
-        self.clipboard_append(answer)
-       
+        self.clipboard_append(text)
+
 
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
@@ -165,6 +163,9 @@ class CanvasFrame(ttk.Frame):
         self.drawing = True
         self.calc_mode = True
         self.draw_type = BrushStroke
+        self.previous_bounds = None # For bounding box
+
+        self.history_changed = None
 
         # Create and set up Canvas, Image, and ImageDraw
         self.canvas = tk.Canvas(self,bg=THEMES["Light"].canvas,highlightthickness=5,highlightbackground=THEMES["Light"].border,width=640,height=320)
@@ -172,7 +173,7 @@ class CanvasFrame(ttk.Frame):
 
         self.canvas.grid(row = 2, column = 0)
 
-        self.image = Image.new("RGB", (640, 320), (255, 255, 255))
+        self.image = Image.new("L", (640, 320), 255)
         self.draw = ImageDraw.Draw(self.image)
 
         # Initialize history
@@ -186,6 +187,11 @@ class CanvasFrame(ttk.Frame):
         self.winfo_toplevel().bind("<Control-q>", self.toggle)
         self.canvas.bind("<Configure>", self.on_resize)
         self.winfo_toplevel().bind("<Control-e>", self.toggle_eraser)
+
+    # tells toolbar to update buttons
+    def signal_toolbar(self):
+        if self.history_changed:
+            self.history_changed()
 
     def toggle(self, event=None):
         if self.calc_mode: return
@@ -216,9 +222,13 @@ class CanvasFrame(ttk.Frame):
         else:
             # Use starting coordinates, not previous ones
             start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
-            # Redraw without saving history for moving box effect
-            self.history.redraw()
+            # Remove previous bound if it exists, cheaper than redrawing
+            if self.previous_bounds is not None:
+                self.previous_bounds.remove_canvas(self.canvas)
+
+            # Create, save, and draw new bounding box
             stroke = BoundingStroke(start, end)
+            self.previous_bounds = stroke
             stroke.draw(self.canvas, self.draw)
 
         # Reset old variables
@@ -236,6 +246,9 @@ class CanvasFrame(ttk.Frame):
             end = CoordinatePair(event.x, event.y)
             # Save in history, unlike when moving
             self.history.add_stroke(BoundingStroke(start, end))
+            self.previous_bounds = None
+
+        self.signal_toolbar()
 
         # Reset some states
         self.current_stroke = []
@@ -246,14 +259,17 @@ class CanvasFrame(ttk.Frame):
 
     def redo(self, event=None):
         self.history.redo()
+        self.signal_toolbar()
 
     def undo(self, event=None):
         self.history.undo()
+        self.signal_toolbar()
 
     def clear(self, event=None):
         self.drawing = True
         self.history.reset()
-    
+        self.signal_toolbar()
+
     def convert_symbols(self, text):
         assert_type(text, str)
         return (text.replace("/", "d")
@@ -342,9 +358,11 @@ class CanvasFrame(ttk.Frame):
 
 # Bottom Toolbar Frame
 class ToolbarFrame(ttk.Frame):
-    def __init__(self, container, canvas):
+    def __init__(self, container, canvas, display):
         super().__init__(container)
+
         self.canvas = canvas
+        self.display = display
 
         self.calc_mode = True
 
@@ -357,35 +375,87 @@ class ToolbarFrame(ttk.Frame):
         self.columnconfigure(4, weight = 1)
         self.rowconfigure(0, weight = 1)
 
-        undo_button = ttk.Button(self, text = "Undo", command = canvas.undo)
-        undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
+        self.undo_button = ttk.Button(self, text = "Undo", command = canvas.undo)
+        self.undo_button.grid(column = 0, row = 0, sticky="WS", padx = 5, pady = 5)
 
-        redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
-        redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
+        self.redo_button = ttk.Button(self, text = "Redo", command = canvas.redo)
+        self.redo_button.grid(column = 1, row = 0, sticky="WS", padx = 5, pady = 5)
 
-        brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
-        brush_button.grid(column=2, row=0, padx=5, pady=5)
+        self.brush_button = ttk.Button(self, text="Brush", command=canvas.toggle_eraser)
+        self.brush_button.grid(column=2, row=0, padx=5, pady=5)
 
         # Not displayed by default
         self.file_name = ttk.Entry(self)
         self.toggle_button = ttk.Button(self, text="Toggle", command=canvas.toggle)
+        self.file_name.bind("<KeyRelease>", self.update_buttons)
 
-        clear_button = ttk.Button(self, text = "Clear", command = self.clear)
-        clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
+        self.clear_button = ttk.Button(self, text = "Clear", command = self.clear)
+        self.clear_button.grid(column = 5, row = 0, sticky="ES", padx = 5, pady = 5)
         
-        self.save_button = ttk.Button(self, text = "Submit", command = self.submit)
+        self.save_button = ttk.Button(self, text = "Calc", command = self.submit)
         self.save_button.grid(column = 6, row = 0, sticky="ES", padx = 5, pady = 5)
-        
+
+    # disabled/enables toolbar buttons.
+    def update_buttons(self, event=None):
+        # Checks undos
+        if self.canvas.history.main_history.is_empty():
+            self.undo_button.state(["disabled"])
+            self.save_button.state(["disabled"])
+        else:
+            self.undo_button.state(["!disabled"])
+            self.save_button.state(["!disabled"])
+
+        # Disable clear only if NOTHING has been done
+        if self.canvas.history.main_history.is_empty() and self.canvas.history.undo_history.is_empty():
+            self.clear_button.state(["disabled"])
+        else:
+            self.clear_button.state(["!disabled"])
+
+        # checks redos
+        if self.canvas.history.undo_history.is_empty():
+            self.redo_button.state(["disabled"])
+        else:
+            self.redo_button.state(["!disabled"])
+
+        # checks if entry is empty only in training data mode
+        if not self.calc_mode and self.file_name.get() == "":
+            self.save_button.state(["disabled"])
+
+        if len(list(self.file_name.get())) != self.canvas.history.main_history.get_strokes_of_type(BoundingStroke).length():
+            self.save_button.state(["disabled"])
+
+
     def save(self):
         self.canvas.save(self.file_name.get())
+        self.clear()
 
     def clear(self, event=None):
         self.canvas.clear()
         self.file_name.delete(0, tk.END)
 
     def submit(self, event=None):
-        # TODO send information to model
-        pass
+
+        equation = "5 + 5"
+        answer = "10"
+
+        self.display.add_equation(equation, answer)
+#        # TODO send information to model
+#        pass
+        image_array = img_to_array(self.canvas.image.resize((160, 80)))
+        image_array = np.expand_dims(image_array, axis=0)
+        detector_prediction = detector.predict(image_array)
+        print(detector_prediction)
+        for bounds in detector_prediction:
+            if bounds[0] > bounds[2] or bounds[1] > bounds[3]:
+                continue
+            BoundingStroke(CoordinatePair(*bounds[:2]), CoordinatePair(*bounds[2:4])).draw(self.canvas.canvas, self.canvas.image)
+            arr = img_to_array(classifier.crop(self.canvas.image, bounds).resize((32, 32)))
+            # TODO double double double check shape here, this might not actually be the right image portion
+            # or even a meaningful image at all
+            # plt.plot(arr)
+            array = np.expand_dims(arr, axis=0)
+            print(classifier.predict(array))
+        # TODO: hook me up to the detector!
 
     def toggle_mode(self):
         if self.calc_mode:
@@ -395,8 +465,9 @@ class ToolbarFrame(ttk.Frame):
         else:
             self.toggle_button.grid_forget()
             self.file_name.grid_forget()
-            self.save_button.configure(text="Submit", command=self.submit)
+            self.save_button.configure(text="Calc", command=self.submit)
         self.calc_mode = not self.calc_mode
+        self.update_buttons()
 
 class SettingsFrame(ttk.Frame):
     def __init__(self, container, app):
@@ -424,7 +495,6 @@ class App(tk.Tk):
         # self.geometry(f'{self.window_width}x{self.window_height}+{center_x}+{center_y}')
         # self.minsize(640, 320)
 
-
         self.columnconfigure(0, weight = 1)
         # self.rowconfigure(0, weight = 3, uniform = "rows")
         # self.rowconfigure(1, weight = 0, uniform = "rows")
@@ -447,12 +517,19 @@ class App(tk.Tk):
         self.canvas_frame = CanvasFrame(tabs_frame.tab1)
         self.canvas_frame.grid(column = 0, row = 2)
 
-        self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame)
-        self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
-
         # History Tab
         self.display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
         self.display_frame_extended.grid(column = 0, row = 0, sticky="NEW")
+
+        #Toolbar Frame
+        self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame, self.display_frame_extended)
+        self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
+
+
+        # connects canvas's history changed var and toolbar's update buttons function, so you can call update buttons from canvas frame
+        self.canvas_frame.history_changed = self.toolbar_frame.update_buttons
+        # initial update
+        self.toolbar_frame.update_buttons()
 
         #Settings Tab
         self.settings_frame = SettingsFrame(tabs_frame.tab3, self)

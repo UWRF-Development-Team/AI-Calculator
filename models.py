@@ -1,0 +1,38 @@
+from keras import models
+import numpy as np
+from abc import ABC
+
+class Model(ABC):
+    def __init__(self, path):
+        self.model = models.load_model(path, compile=False)
+
+class Classifier(Model):
+    def __init__(self):
+        super().__init__("./classifier.keras")
+        self.map = ["0","1","2","3","4","5","6","7","8","9","leq","geq","<",">","-","+","div","x","*","[","]","sqrt","/","|","Λ"]
+
+    def crop(self, image, bounds):
+        return image.crop([*bounds[:4]])
+
+    def predict(self, image):
+        predict = self.model.predict(image)
+        for i, p in enumerate(predict[0]):
+            # print(p)
+            if p > 0.7:
+                return self.map[i]
+
+
+class Detector(Model):
+    def __init__(self):
+        super().__init__("./detector.keras")
+
+    def predict(self, image):
+        predicts = self.model.predict(image) 
+        print(predicts.shape)
+        predicts = predicts[predicts[:,:,4] > 0.8]
+        newPreds = []
+        for array in predicts:
+            if array[0] > array[2] or array[1] > array[3]: continue
+            newPreds.append(np.multiply(array, np.asarray([640, 320, 640, 320, 1])).tolist())
+        # print(newPreds)
+        return np.asarray(newPreds)
