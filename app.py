@@ -244,6 +244,7 @@ class CanvasFrame(ttk.Frame):
             end = CoordinatePair(event.x, event.y)
             # Save in history, unlike when moving
             self.history.add_stroke(BoundingStroke(start, end))
+            self.previous_bounds = None
 
         # Reset some states
         self.current_stroke = []
