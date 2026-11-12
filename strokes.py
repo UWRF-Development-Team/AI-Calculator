@@ -54,7 +54,6 @@ class BoundingStroke(Stroke):
     # Creates a red unfilled rectangle
     def draw_canvas(self, canvas):
         self.canvas_object_id = canvas.create_rectangle(self.start.x, self.start.y, self.end.x, self.end.y, outline=self.color, width=3)
-        print(self.canvas_object_id)
 
     # Bounding boxes should not be in the image itself, pass
     def draw_image(self, image):
