@@ -440,22 +440,18 @@ class ToolbarFrame(ttk.Frame):
         answer = "10"
 
         self.display.add_equation(equation, answer)
-#        # TODO send information to model
-#        pass
         image_array = img_to_array(self.canvas.image.convert("L").resize((160, 80)))
         image_array = np.expand_dims(image_array, axis=0)
-        # detector_prediction = detector.predict(image_array)
         _, thresh = cv2.threshold(np.array(self.canvas.image).copy(), 127, 255, cv2.THRESH_BINARY_INV)
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for cnt in contours:
-            # Filter out tiny noise by area
             if cv2.contourArea(cnt) > 5:
                 x, y, w, h = cv2.boundingRect(cnt)
                 BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
+                # noticed we werent actually normalizing the values [0,1] here lol
                 arr = img_to_array(classifier.crop(self.canvas.image, [x,y,x+w,y+h]).resize((32, 32)), dtype="float32")/255.0
                 # TODO double double double check shape here, this might not actually be the right image portion
                 # or even a meaningful image at all
-                # plt.plot(arr)
                 array = np.expand_dims(arr, axis=0)
                 print(classifier.predict(array))
         # TODO: hook me up to the detector!
