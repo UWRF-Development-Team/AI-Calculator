@@ -11,7 +11,7 @@ class EquationHistory:
     def enqueue(self, equation_string):
         last_equation = equation_string
         for element in self.queue:
-            temp = element.equation
+            temp = element.equation["text"]
             element.update(last_equation)
             last_equation = temp
 
@@ -35,7 +35,8 @@ class EquationElement:
 
     def update(self, equation_string):
         self.equation["text"] = equation_string
-        self.answer["text"] = eval(equation_string) # Technically bad
+        if equation_string == "": self.answer["text"] = ""
+        else: self.answer["text"] = eval(equation_string) # Technically bad
 
 def copy(frame, answer):
     frame.clipboard_clear()
