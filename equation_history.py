@@ -1,16 +1,22 @@
 from tkinter.ttk import Label, Button
 
-
 class EquationHistory:
     def __init__(self, frame, amount):
         self.frame = frame
-        pass
+        self.queue = []
+
+        for i in range(amount):
+            self.queue.append(EquationElement(frame, i))
 
     def enqueue(self, equation_string):
-        pass
+        last_equation = equation_string
+        for element in self.queue:
+            temp = element.equation
+            element.update(last_equation)
+            last_equation = temp
 
     def extend(self):
-        pass
+        self.queue.append(EquationElement(self.frame, len(self.queue)-1))
 
 class EquationElement:
     def __init__(self, frame, num):
