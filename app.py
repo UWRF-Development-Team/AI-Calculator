@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw
 from keras.utils import img_to_array
 import json
 from matplotlib import pyplot as plt
+import cv2
 
 from history import *
 from themes import THEMES
@@ -441,20 +442,22 @@ class ToolbarFrame(ttk.Frame):
         self.display.add_equation(equation, answer)
 #        # TODO send information to model
 #        pass
-        image_array = img_to_array(self.canvas.image.resize((160, 80)))
+        image_array = img_to_array(self.canvas.image.convert("L").resize((160, 80)))
         image_array = np.expand_dims(image_array, axis=0)
-        detector_prediction = detector.predict(image_array)
-        print(detector_prediction)
-        for bounds in detector_prediction:
-            if bounds[0] > bounds[2] or bounds[1] > bounds[3]:
-                continue
-            BoundingStroke(CoordinatePair(*bounds[:2]), CoordinatePair(*bounds[2:4])).draw(self.canvas.canvas, self.canvas.image)
-            arr = img_to_array(classifier.crop(self.canvas.image, bounds).resize((32, 32)))
-            # TODO double double double check shape here, this might not actually be the right image portion
-            # or even a meaningful image at all
-            # plt.plot(arr)
-            array = np.expand_dims(arr, axis=0)
-            print(classifier.predict(array))
+        # detector_prediction = detector.predict(image_array)
+        _, thresh = cv2.threshold(np.array(self.canvas.image).copy(), 127, 255, cv2.THRESH_BINARY_INV)
+        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        for cnt in contours:
+            # Filter out tiny noise by area
+            if cv2.contourArea(cnt) > 5:
+                x, y, w, h = cv2.boundingRect(cnt)
+                BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
+                arr = img_to_array(classifier.crop(self.canvas.image, [x,y,x+w,y+h]).resize((32, 32)), dtype="float32")/255.0
+                # TODO double double double check shape here, this might not actually be the right image portion
+                # or even a meaningful image at all
+                # plt.plot(arr)
+                array = np.expand_dims(arr, axis=0)
+                print(classifier.predict(array))
         # TODO: hook me up to the detector!
 
     def toggle_mode(self):

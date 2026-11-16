@@ -35,11 +35,12 @@ num_classes = len(WHITELIST)
 
 X_train_trim = X_train[np.isin(y_train, WHITELIST)]
 y_train_trim = y_train[np.isin(y_train, WHITELIST)]
-X_test_trim = X_test[np.isin(y_train, WHITELIST)]
-y_test_trim = y_test[np.isin(y_train, WHITELIST)]
+X_test_trim = X_test[np.isin(y_test, WHITELIST)]
+y_test_trim = y_test[np.isin(y_test, WHITELIST)]
 
 # because we want our targets to match the array bounds
 class_mapping = {original_id: new_id for new_id, original_id in enumerate(WHITELIST)}
+print(class_mapping)
 
 y_train_mapped = np.array([class_mapping[label] for label in y_train_trim])
 y_test_mapped = np.array([class_mapping[label] for label in y_test_trim])
@@ -79,7 +80,7 @@ model.summary()
 model.compile(
     optimizer=optimizers.Adam(learning_rate=LR),
     loss=losses.sparse_categorical_crossentropy,
-    metrics=[metrics.sparse_categorical_accuracy]
+    metrics=['accuracy']
 )
 
 history = model.fit(

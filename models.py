@@ -17,9 +17,8 @@ class Classifier(Model):
     def predict(self, image):
         predict = self.model.predict(image)
         for i, p in enumerate(predict[0]):
-            # print(p)
-            if p > 0.7:
-                return self.map[i]
+            print(predict[0])
+            return self.map[int(np.argmax(predict))]
 
 
 class Detector(Model):
