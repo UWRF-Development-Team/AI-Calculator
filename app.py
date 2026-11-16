@@ -54,7 +54,7 @@ class HistoryFrame(ttk.Frame):
         self.equation_history = EquationHistory(self, 3)
 
         #AI Output Row
-        self.output = tk.Text (self, height = 1, width = 40)
+        self.output = tk.Text(self, height = 1, width = 40)
         self.output.grid(row = 3)
         self.output.insert(index = 1.0, chars = "AI OUTPUT")
         self.output.config(state = "disabled")
@@ -69,45 +69,6 @@ class ExtendedHistoryFrame(ttk.Frame):
         self["padding"] = 10
 
         self.equation_history = EquationHistory(self, 10)
-
-        self.history_frame = ttk.Frame(self)
-        self.history_frame.grid(row = 0, column = 0, columnspan = 5, sticky = "EW")
-
-        self.submitted_equations = []
-
-        #Grid
-        self.columnconfigure(0, weight=0) #Copy Equation
-        self.columnconfigure(1, weight=1) #Equation
-        self.columnconfigure(2, weight=0) #Equal Sign
-        self.columnconfigure(3, weight=1) #Answer
-        self.columnconfigure(4, weight=0) #Copy Answer
-
-    def add_equation(self, equation, answer):
-
-        row = len(self.submitted_equations)
-
-        self.submitted_equations.append((equation, answer))
-
-        #Equation and answer labels
-        eq_label = ttk.Label(self.history_frame, text=equation)
-        equal_sign_label = ttk.Label(self.history_frame, text="=")
-        answer_label = ttk.Label(self.history_frame, text=answer)
-
-        #Buttons
-        copy_eq = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(equation))
-        copy_answer = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(answer))
-
-        #Add to grid
-        copy_eq.grid(column=0, row=row, sticky="w")
-        eq_label.grid(column=1, row=row, sticky="w")
-        equal_sign_label.grid(column=2, row=row)
-        answer_label.grid(column=3, row=row, sticky="e")
-        copy_answer.grid(column=4, row=row, sticky="e")
-
-    def copy(self, text):
-        self.clipboard_clear()
-        self.clipboard_append(text)
-
 
 # Canvas Frame
 class CanvasFrame(ttk.Frame):

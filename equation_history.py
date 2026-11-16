@@ -38,6 +38,6 @@ class EquationElement:
         if equation_string == "": self.answer["text"] = ""
         else: self.answer["text"] = eval(equation_string) # Technically bad
 
-def copy(frame, answer):
+def copy(frame, text):
     frame.clipboard_clear()
-    frame.clipboard_append(answer)
+    frame.clipboard_append(text)
