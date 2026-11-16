@@ -237,6 +237,7 @@ class CanvasFrame(ttk.Frame):
 
     # Stops drawing
     def on_mouse_released(self, event):
+        if self.current_stroke is None or not self.current_stroke: return # If mouse didn't move, return
         # Don't draw in this method because it was done in the last on_mouse_pressed() call
         if self.drawing:
             # Create new stroke collection and save it
@@ -245,7 +246,10 @@ class CanvasFrame(ttk.Frame):
             start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
             end = CoordinatePair(event.x, event.y)
             # Save in history, unlike when moving
-            self.history.add_stroke(BoundingStroke(start, end))
+            new_stroke = BoundingStroke(start, end)
+            new_stroke.draw(self.canvas, self.image)
+            if self.previous_bounds: self.previous_bounds.remove_canvas(self.canvas)
+            self.history.add_stroke(new_stroke)
             self.previous_bounds = None
 
         self.signal_toolbar()
