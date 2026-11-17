@@ -447,7 +447,7 @@ class ToolbarFrame(ttk.Frame):
         for cnt in contours:
             if cv2.contourArea(cnt) > 5:
                 x, y, w, h = cv2.boundingRect(cnt)
-                cropped = classifier.crop(self.canvas.image, [x,y,x+w,y+h]).resize((28, 28)).convert("L")
+                cropped = classifier.crop(self.canvas.image, [x,y,x+w,y+h]).convert("L")
                 BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
                 cropped.thumbnail((28, 28), Image.Resampling.LANCZOS)
                 padded_img = ImageOps.pad(cropped, (32, 32), color=255, centering=(0.5, 0.5))
