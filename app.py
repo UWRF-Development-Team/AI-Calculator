@@ -8,6 +8,7 @@ from keras.utils import img_to_array
 import json
 from matplotlib import pyplot as plt
 import cv2
+from tensorflow.python.keras.utils.data_utils import Sequence
 
 from equation_history import EquationHistory
 from history import *
@@ -365,24 +366,26 @@ class ToolbarFrame(ttk.Frame):
 
     def submit(self, event=None):
 
-        # self.display.add_equation(equation, answer)
-        image_array = img_to_array(self.canvas.image.convert("L").resize((160, 80)))
-        image_array = np.expand_dims(image_array, axis=0)
+        # Todo move me to model or something probably and just take self.canvas.image as a parameter
+        # And return a string
         _, thresh = cv2.threshold(np.array(self.canvas.image).copy(), 127, 255, cv2.THRESH_BINARY_INV)
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         predicted_characters = []
+        sorted_contours = []
         for cnt in contours:
             if cv2.contourArea(cnt) > 5:
                 x, y, w, h = cv2.boundingRect(cnt)
-                proc = process_image(self.canvas.image, [x,y,x+w,y+h])
-                BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
-                arr = img_to_array(proc, dtype="float32")/255.0
-                # TODO double double double check shape here, this might not actually be the right image portion
-                # or even a meaningful image at all
-                array = np.expand_dims(arr, axis=0)
-                prediction = classifier.predict(array)
-                predicted_characters.append(prediction)
-                print(prediction)
+                sorted_contours.append([x, y, w, h])
+        sorted_contours.sort()
+        for bounds in sorted_contours:
+            x, y, w, h = bounds
+            proc = process_image(self.canvas.image, [x,y,x+w,y+h])
+            BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
+            arr = img_to_array(proc, dtype="float32")/255.0
+            array = np.expand_dims(arr, axis=0)
+            prediction = classifier.predict(array)
+            predicted_characters.append(prediction)
+            print(prediction)
 
         app.update_text("".join(predicted_characters))
 
