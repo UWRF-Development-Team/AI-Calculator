@@ -368,7 +368,7 @@ class ToolbarFrame(ttk.Frame):
         equation = "5 + 5"
         answer = "10"
 
-        self.display.add_equation(equation, answer)
+        # self.display.add_equation(equation, answer)
         image_array = img_to_array(self.canvas.image.convert("L").resize((160, 80)))
         image_array = np.expand_dims(image_array, axis=0)
         _, thresh = cv2.threshold(np.array(self.canvas.image).copy(), 127, 255, cv2.THRESH_BINARY_INV)
