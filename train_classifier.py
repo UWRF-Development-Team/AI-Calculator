@@ -10,7 +10,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from keras import layers, models, losses, optimizers, metrics
-from keras.src.utils import array_to_img
+from keras.src.utils import img_to_array
 
 
 def create_local_dataset():
@@ -19,19 +19,19 @@ def create_local_dataset():
     characters = []
 
     json_path = pathlib.Path("./training-data/data.json")
-    with open(str(json_path), "w") as j:
+    with open(str(json_path), "r") as j:
         json_file = json.load(j)
 
     for image_data in json_file:
-        full_image = Image.open(open(images_path + image_data.filename), "r")
-        for segment in image_data.bounds:
-            characters.append(segment.character)
+        full_image = Image.open(pathlib.Path(images_path + image_data["filename"]), "r")
+        for segment in image_data["bounds"]:
+            characters.append(segment["character"])
 
-            image_segment = full_image.crop(segment.start + segment.end)
-            # image_segment = image_segment.convert("RGB")
+            image_segment = full_image.crop(segment["start"] + segment["end"])
+            image_segment = image_segment.convert("RGBA") #Some are L, some are RGB
             image_segment.putalpha(255)
 
-            bg = Image.new("L", image_segment.size, "white")
+            bg = Image.new("RGBA", image_segment.size, "white")
             image_segment = ImageChops.difference(image_segment, bg)
 
             image_segment = image_segment.convert("L")
@@ -40,9 +40,9 @@ def create_local_dataset():
             image_segment.thumbnail((28, 28), Image.Resampling.LANCZOS)
             final_image = ImageOps.expand(image_segment, 2, 255)
 
-            final_pil_images.append(array_to_img(final_image))
+            final_pil_images.append(img_to_array(final_image))
 
-    dataset = tf.data.Dataset.from_tensor_slices([final_pil_images, characters])
+    dataset = tf.data.Dataset.from_tensor_slices([final_pil_images, characters]) # TODO I break :(
     dataset.shuffle(1e4)
     return dataset
 
