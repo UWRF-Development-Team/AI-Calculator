@@ -142,8 +142,10 @@ def build_model(convolves, input_shape=(32, 32, 1)):
         model.add(layers.MaxPool2D((2, 2), padding='same', strides=2))
 
     model.add(layers.GlobalAveragePooling2D())
+    model.add(layers.Dense(256, activation='relu'))
     model.add(layers.Dense(128, activation='relu'))
     model.add(layers.Dense(128, activation='relu'))
+    model.add(layers.Dense(64, activation='relu'))
 
     model.add(layers.Dense(len(WHITELIST), activation='softmax'))
     # model.add(layers.Reshape(len(WHITELIST)))
