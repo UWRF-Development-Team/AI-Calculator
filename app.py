@@ -9,6 +9,7 @@ import json
 from matplotlib import pyplot as plt
 import cv2
 
+from equation_history import EquationHistory
 from history import *
 from themes import THEMES
 from models import *
@@ -32,7 +33,7 @@ class TabsFrame(ttk.Frame):
             self.notebook.add(self.tab3, text="Settings")
 
 # Display Frame
-class DisplayFrame(ttk.Frame):
+class HistoryFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
 
@@ -50,56 +51,17 @@ class DisplayFrame(ttk.Frame):
         self.rowconfigure(2, weight = 1, uniform = "rows")
         self.rowconfigure(3, weight = 1, uniform = "rows")
 
-        #Equation and Answer Text
-        self.eq1 = ttk.Label(self, text = "Equation 1")
-        self.eq2 = ttk.Label(self, text = "Equation 2")
-        self.eq3 = ttk.Label(self, text = "Equation 3")
-        self.a1 = ttk.Label(self, text = "Answer 1")
-        self.a2 = ttk.Label(self, text = "Answer 2")
-        self.a3 = ttk.Label(self, text = "Answer 3")
-
-        #Copy Buttons
-        self.copya1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a1["text"]))
-        self.copya2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a2["text"]))
-        self.copya3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.a3["text"]))
-        self.copyeq1 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq1["text"]))
-        self.copyeq2 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq2["text"]))
-        self.copyeq3 = ttk.Button(self, text="Copy", command=lambda : DisplayFrame.copy(self, self.eq3["text"]))
+        #Equation History
+        self.equation_history = EquationHistory(self, 3)
 
         #AI Output Row
-        self.output = tk.Text (self, height = 1, width = 40)
+        self.output = tk.Text(self, height = 1, width = 40)
         self.output.grid(row = 3)
         self.output.insert(index = 1.0, chars = "AI OUTPUT")
         self.output.config(state = "disabled")
-
-        #Setting elements into cells
-        self.copyeq1.grid(column = 0, row = 0, sticky = "W")
-        self.copyeq2.grid(column = 0, row = 1, sticky = "W")
-        self.copyeq3.grid(column = 0, row = 2, sticky = "W")
-        self.eq1.grid(column = 1, row = 0, sticky = "W")
-        self.eq2.grid(column = 1, row = 1, sticky = "W")
-        self.eq3.grid(column = 1, row = 2, sticky = "W")
-        self.a1.grid(column = 2, row = 0, sticky = "E")
-        self.a2.grid(column = 2, row = 1, sticky = "E")
-        self.a3.grid(column = 2, row = 2, sticky = "E")
-        self.copya1.grid(column = 3, row = 0, sticky = "E")
-        self.copya2.grid(column = 3, row = 1, sticky = "E")
-        self.copya3.grid(column = 3, row = 2, sticky = "E")
         self.output.grid(column = 1, row = 3, columnspan = 2, sticky ="EW")
 
-    def copy(self, answer):
-        self.clipboard_clear()
-        self.clipboard_append(answer)
-
-    def update_text(self, equation):
-        # todo send model code here
-        # todo update to do more than just the first equation/answer pair (may need some refactoring)
-        self.eq1.configure(text=equation)
-        # UNSAFE OPERATION!!!
-        self.a1.configure(text=eval(equation))
-
-
-class DisplayFrameExtended(ttk.Frame):
+class ExtendedHistoryFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
 
@@ -107,44 +69,7 @@ class DisplayFrameExtended(ttk.Frame):
         self["borderwidth"] = 2
         self["padding"] = 10
 
-        self.history_frame = ttk.Frame(self)
-        self.history_frame.grid(row = 0, column = 0, columnspan = 5, sticky = "EW")
-
-        self.submitted_equations = []
-
-        #Grid
-        self.columnconfigure(0, weight=0) #Copy Equation
-        self.columnconfigure(1, weight=1) #Equation
-        self.columnconfigure(2, weight=0) #Equal Sign
-        self.columnconfigure(3, weight=1) #Answer
-        self.columnconfigure(4, weight=0) #Copy Answer
-
-    def add_equation(self, equation, answer):
-
-        row = len(self.submitted_equations)
-
-        self.submitted_equations.append((equation, answer))
-
-        #Equation and answer labels
-        eq_label = ttk.Label(self.history_frame, text=equation)
-        equal_sign_label = ttk.Label(self.history_frame, text="=")
-        answer_label = ttk.Label(self.history_frame, text=answer)
-
-        #Buttons
-        copy_eq = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(equation))
-        copy_answer = ttk.Button(self.history_frame, text="Copy", command=lambda: self.copy(answer))
-
-        #Add to grid
-        copy_eq.grid(column=0, row=row, sticky="w")
-        eq_label.grid(column=1, row=row, sticky="w")
-        equal_sign_label.grid(column=2, row=row)
-        answer_label.grid(column=3, row=row, sticky="e")
-        copy_answer.grid(column=4, row=row, sticky="e")
-
-    def copy(self, text):
-        self.clipboard_clear()
-        self.clipboard_append(text)
-
+        self.equation_history = EquationHistory(self, 10)
 
 # Canvas Frame
 class CanvasFrame(ttk.Frame):
@@ -238,6 +163,7 @@ class CanvasFrame(ttk.Frame):
 
     # Stops drawing
     def on_mouse_released(self, event):
+        if self.current_stroke is None or not self.current_stroke: return # If mouse didn't move, return
         # Don't draw in this method because it was done in the last on_mouse_pressed() call
         if self.drawing:
             # Create new stroke collection and save it
@@ -246,7 +172,10 @@ class CanvasFrame(ttk.Frame):
             start = CoordinatePair(self.current_stroke[0][0], self.current_stroke[0][1])
             end = CoordinatePair(event.x, event.y)
             # Save in history, unlike when moving
-            self.history.add_stroke(BoundingStroke(start, end))
+            new_stroke = BoundingStroke(start, end)
+            new_stroke.draw(self.canvas, self.image)
+            if self.previous_bounds: self.previous_bounds.remove_canvas(self.canvas)
+            self.history.add_stroke(new_stroke)
             self.previous_bounds = None
 
         self.signal_toolbar()
@@ -510,18 +439,18 @@ class App(tk.Tk):
         tabs_frame = TabsFrame(self)
         tabs_frame.grid(column=0, row=0)
 
-        self.display_frame = DisplayFrame(tabs_frame.tab1)
-        self.display_frame.grid(column = 0, row = 0, sticky="NEW")
+        self.history_frame = HistoryFrame(tabs_frame.tab1)
+        self.history_frame.grid(column = 0, row = 0, sticky="NEW")
 
         self.canvas_frame = CanvasFrame(tabs_frame.tab1)
         self.canvas_frame.grid(column = 0, row = 2)
 
         # History Tab
-        self.display_frame_extended = DisplayFrameExtended(tabs_frame.tab2)
-        self.display_frame_extended.grid(column = 0, row = 0, sticky="NEW")
+        self.extended_history_frame = ExtendedHistoryFrame(tabs_frame.tab2)
+        self.extended_history_frame.grid(column = 0, row = 0, sticky="NEW")
 
         #Toolbar Frame
-        self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame, self.display_frame_extended)
+        self.toolbar_frame = ToolbarFrame(tabs_frame.tab1, self.canvas_frame, self.extended_history_frame)
         self.toolbar_frame.grid(column = 0, row = 3, sticky="SEW")
 
 
@@ -565,6 +494,11 @@ class App(tk.Tk):
     def toggle_mode(self, event=None):
         self.toolbar_frame.toggle_mode()
         self.canvas_frame.toggle_mode()
+
+    def update_text(self, equation):
+        # todo send model code here
+        self.extended_history_frame.equation_history.enqueue(equation)
+        self.history_frame.equation_history.enqueue(equation)
 
 if __name__ == "__main__":
     app = App()
