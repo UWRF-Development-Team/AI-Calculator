@@ -27,23 +27,39 @@ def create_local_dataset():
             characters.append(segment["character"])
 
             image_segment = full_image.crop(segment["start"] + segment["end"])
-            image_segment = image_segment.convert("RGBA") #Some are L, some are RGB
+            image_segment = image_segment.convert("LA") #Some are L, some are RGB
             image_segment.putalpha(255)
+            image_segment.save("create_test0.png")
 
-            bg = Image.new("RGBA", image_segment.size, "white")
-            image_segment = ImageChops.difference(image_segment, bg)
+            pixel_data = image_segment.getdata()
 
+            new_data = []
+            for pixel in pixel_data:
+                if pixel[0] == 255:
+                    new_data.append((255, 0))
+                else:
+                    new_data.append(pixel)
+
+            image_segment.putdata(new_data)
+
+            image_segment.save("create_test1.png")
+            print(image_segment.getbbox(alpha_only=True))
+
+            image_segment = image_segment.crop(image_segment.getbbox(alpha_only=True))
             image_segment = image_segment.convert("L")
+            image_segment.save("create_test2.png")
 
-            image_segment.crop(image_segment.getbbox())
+
             image_segment.thumbnail((28, 28), Image.Resampling.LANCZOS)
             final_image = ImageOps.expand(image_segment, 2, 255)
+            final_image = ImageOps.pad(final_image, (32, 32), Image.Resampling.LANCZOS, color=255)
+            final_image.save("create_test.png")
 
             final_pil_images.append(img_to_array(final_image))
 
-    dataset = tf.data.Dataset.from_tensor_slices([final_pil_images, characters]) # TODO I break :(
-    dataset.shuffle(1e4)
-    return dataset
+    # dataset = tf.data.Dataset.from_tensor_slices([final_pil_images, characters]) # TODO I break :(
+    # dataset.shuffle(1e4)
+    # return dataset
 
 create_local_dataset()
 
