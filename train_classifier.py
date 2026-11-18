@@ -1,4 +1,7 @@
 import os
+import pathlib
+
+from PIL import Image, ImageChops, ImageOps
 import keras
 import json
 import tensorflow as tf
@@ -6,6 +9,43 @@ import hasy_tools
 import numpy as np
 
 from keras import layers, models, losses, optimizers, metrics
+from keras.src.utils import array_to_img
+
+
+def create_local_dataset():
+    images_path = "./training-data/images/"
+    final_pil_images = []
+    characters = []
+
+    json_path = pathlib.Path("./training-data/data.json")
+    with open(str(json_path), "w") as j:
+        json_file = json.load(j)
+
+    for image_data in json_file:
+        full_image = Image.open(open(images_path + image_data.filename), "r")
+        for segment in image_data.bounds:
+            characters.append(segment.character)
+
+            image_segment = full_image.crop(segment.start + segment.end)
+            # image_segment = image_segment.convert("RGB")
+            image_segment.putalpha(255)
+
+            bg = Image.new("L", image_segment.size, "white")
+            image_segment = ImageChops.difference(image_segment, bg)
+
+            image_segment = image_segment.convert("L")
+
+            image_segment.crop(image_segment.getbbox())
+            image_segment.thumbnail((28, 28), Image.Resampling.LANCZOS)
+            final_image = ImageOps.expand(image_segment, 2, 255)
+
+            final_pil_images.append(array_to_img(final_image))
+
+    dataset = tf.data.Dataset.from_tensor_slices([final_pil_images, characters])
+    dataset.shuffle(1e4)
+    return dataset
+
+create_local_dataset()
 
 # this downloads it locally, so, y'know
 # dont run this if you for some reason dont have 100MB free
