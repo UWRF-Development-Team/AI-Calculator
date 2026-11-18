@@ -1,7 +1,7 @@
 import os
 import pathlib
 
-from PIL import Image, ImageChops, ImageOps
+from PIL import Image
 import keras
 import json
 import tensorflow as tf
@@ -10,7 +10,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from keras import layers, models, losses, optimizers, metrics
-from keras.src.utils import img_to_array
+
+from models import process_image
 
 
 def create_local_dataset():
@@ -27,42 +28,9 @@ def create_local_dataset():
         for segment in image_data["bounds"]:
             characters.append(segment["character"])
 
-            image_segment = full_image.crop(segment["start"] + segment["end"])
-            image_segment = image_segment.convert("LA") #Some are L, some are RGB
-            image_segment.putalpha(255)
+            image_segment = process_image(full_image, segment["start"] + segment["end"])
 
-            pixel_data = image_segment.get_flattened_data()
-
-            new_data = []
-            for pixel in pixel_data:
-                if pixel[0] == 255:
-                    new_data.append((255, 0))
-                else:
-                    new_data.append(pixel)
-
-            image_segment.putdata(new_data)
-
-
-            image_segment = image_segment.crop(image_segment.getbbox(alpha_only=True))
-            image_segment = image_segment.convert("L")
-
-
-            image_segment.thumbnail((28, 28), Image.Resampling.LANCZOS)
-            image_segment = ImageOps.expand(image_segment, 2, 255)
-            image_segment = ImageOps.pad(image_segment, (32, 32), Image.Resampling.LANCZOS, color=255)
-
-            pixel_data = image_segment.get_flattened_data()
-
-            new_data = []
-            for pixel in pixel_data:
-                if pixel < 230:
-                    new_data.append(0)
-                else:
-                    new_data.append(255)
-
-            image_segment.putdata(new_data)
-
-            final_pil_images.append(img_to_array(image_segment))
+            final_pil_images.append(image_segment)
 
     # dataset = tf.data.Dataset.from_tensor_slices([final_pil_images, characters]) # TODO I break :(
     # dataset.shuffle(1e4)
