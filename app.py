@@ -365,14 +365,12 @@ class ToolbarFrame(ttk.Frame):
 
     def submit(self, event=None):
 
-        equation = "5 + 5"
-        answer = "10"
-
         # self.display.add_equation(equation, answer)
         image_array = img_to_array(self.canvas.image.convert("L").resize((160, 80)))
         image_array = np.expand_dims(image_array, axis=0)
         _, thresh = cv2.threshold(np.array(self.canvas.image).copy(), 127, 255, cv2.THRESH_BINARY_INV)
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        predicted_characters = []
         for cnt in contours:
             if cv2.contourArea(cnt) > 5:
                 x, y, w, h = cv2.boundingRect(cnt)
@@ -382,8 +380,11 @@ class ToolbarFrame(ttk.Frame):
                 # TODO double double double check shape here, this might not actually be the right image portion
                 # or even a meaningful image at all
                 array = np.expand_dims(arr/255.0, axis=0)
-                print(classifier.predict(array))
-        # TODO: hook me up to the detector!
+                prediction = classifier.predict(array)
+                predicted_characters.append(prediction)
+                print(prediction)
+
+        app.update_text("".join(predicted_characters))
 
     def toggle_mode(self):
         if self.calc_mode:
