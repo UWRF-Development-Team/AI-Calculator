@@ -7,6 +7,7 @@ import json
 import tensorflow as tf
 import hasy_tools
 import numpy as np
+from matplotlib import pyplot as plt
 
 from keras import layers, models, losses, optimizers, metrics
 from keras.src.utils import array_to_img
@@ -45,31 +46,34 @@ def create_local_dataset():
     dataset.shuffle(1e4)
     return dataset
 
-create_local_dataset()
+# create_local_dataset()
 
 # this downloads it locally, so, y'know
 # dont run this if you for some reason dont have 100MB free
 DATA = hasy_tools.load_data()
 
+# for i, label in enumerate(DATA["labels"]):
+    # print(i, label)
+
 IMAGE_W = 32
 IMAGE_H = 32
 
 LR = 1e-4
-EPOCHS = 10
+EPOCHS = 25
 BATCH_SIZE = 32
 
             #0   1   2   3   4   5   6   7   8   9
-            #leq geq  lt   gt   -    +    div  x
-            #*   [    ]    sqrt /    |    Λ
-WHITELIST = [70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
-            185, 186, 187, 188, 195, 196, 526, 549,
-            514, 918, 919, 960, 922, 920, 163]
+            #-   +    x
+            #*   sqrt /    |    Λ
+WHITELIST = [27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+            112, 113, 132,
+            133, 272, 82]
 
 
 X_train = DATA['x_train']
 y_train = DATA['y_train'].squeeze()
-X_test = DATA['x_train']
-y_test = DATA['y_train'].squeeze()
+X_test = DATA['x_test']
+y_test = DATA['y_test'].squeeze()
 
 num_classes = len(WHITELIST)
 
@@ -88,21 +92,28 @@ y_test_mapped = np.array([class_mapping[label] for label in y_test_trim])
 X_train_final = X_train_trim.astype("float32") / 255.0
 X_test_final = X_test_trim.astype("float32") / 255.0
 
+Image.fromarray(
+    X_train_trim[0].squeeze()
+).save("hasy_sample.png")
+
 
 def build_model(convolves, input_shape=(32, 32, 1)):
     model = models.Sequential()
 
     model.add(layers.Input(shape=input_shape))
 
+    model.add(layers.RandomRotation(0.1))
+    model.add(layers.RandomTranslation(0.1, 0.1))
+    model.add(layers.RandomZoom(0.15))
+
     for filters in convolves:
         model.add(layers.Conv2D(filters, (3, 3), activation='relu', padding='same'))
         model.add(layers.BatchNormalization())
         model.add(layers.MaxPool2D((2, 2), padding='same'))
 
-    model.add(layers.GlobalAveragePooling2D())
-    model.add(layers.Dropout(0.5))
+    model.add(layers.Flatten())
     model.add(layers.Dense(512, activation='relu'))
-    model.add(layers.Dropout(0.3))
+    model.add(layers.Dropout(0.4))
 
     model.add(layers.Dense(len(WHITELIST), activation='softmax'))
     # model.add(layers.Reshape(len(WHITELIST)))
@@ -113,7 +124,7 @@ def build_model(convolves, input_shape=(32, 32, 1)):
 # note symbol 163, uppercase lambda, which we will use for the caret ^
 # hasyv2 lacks this for some reason, in addition to the equals sign
 # but its not like we're gonna get a better dataset so we gotta cope
-model = build_model(convolves=(16, 32, 64, 128, 256))
+model = build_model(convolves=(16, 32, 64, 128))
 model.summary()
 
 # just guessing here that our dataset will have the labels encoded as a one-hot vector

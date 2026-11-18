@@ -450,12 +450,14 @@ class ToolbarFrame(ttk.Frame):
                 cropped = classifier.crop(self.canvas.image, [x,y,x+w,y+h]).convert("L")
                 BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
                 cropped.thumbnail((28, 28), Image.Resampling.LANCZOS)
-                padded_img = ImageOps.pad(cropped, (32, 32), color=255, centering=(0.5, 0.5))
-                arr = img_to_array(padded_img, dtype="float32")
+                padded_img = ImageOps.expand(cropped, border=(2,2,2,2), fill=255)
+                padded_img = ImageOps.pad(padded_img, (32, 32), Image.Resampling.LANCZOS, color=255, centering=(0.5, 0.5))
+                padded_img.save("test.png")
+                _, thresh2 = cv2.threshold(np.array(padded_img).copy(), 127, 255, cv2.THRESH_BINARY_INV)
+                arr = img_to_array(padded_img, dtype="float32")/255.0
                 # TODO double double double check shape here, this might not actually be the right image portion
                 # or even a meaningful image at all
-                array = np.expand_dims(arr, axis=0)
-                print(array)
+                array = np.expand_dims(thresh2/255.0, axis=0)
                 print(classifier.predict(array))
         # TODO: hook me up to the detector!
 

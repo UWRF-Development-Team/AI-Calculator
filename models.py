@@ -9,16 +9,21 @@ class Model(ABC):
 class Classifier(Model):
     def __init__(self):
         super().__init__("./classifier.keras")
-        self.map = ["0","1","2","3","4","5","6","7","8","9","leq","geq","<",">","-","+","div","x","*","[","]","sqrt","/","|","Λ"]
+        self.map = ["0","1","2","3","4","5","6","7","8","9","-","+","x","*","/","Λ"]
 
     def crop(self, image, bounds):
         return image.crop([*bounds[:4]])
 
     def predict(self, image):
         predict = self.model.predict(image)
-        for i, p in enumerate(predict[0]):
-            print(predict[0])
-            return self.map[int(np.argmax(predict))]
+        top = np.argsort(predict[0])[-5:][::-1]
+        for i in top:
+            print(
+                f"Class {i} "
+                f"({self.map[i]}): "
+                f"{predict[0][i]:.4f}"
+            )
+        return self.map[int(np.argmax(predict))]
 
 
 class Detector(Model):
