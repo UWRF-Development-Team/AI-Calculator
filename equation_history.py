@@ -36,7 +36,11 @@ class EquationElement:
     def update(self, equation_string):
         self.equation["text"] = equation_string
         if equation_string == "": self.answer["text"] = ""
-        else: self.answer["text"] = eval(equation_string) # Technically bad
+        else:
+            try:
+                self.answer["text"] = eval(equation_string) # Technically bad
+            except SyntaxError:
+                self.answer["text"] = "?"
 
 def copy(frame, text):
     frame.clipboard_clear()
