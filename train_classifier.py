@@ -14,11 +14,11 @@ from keras import layers, models, losses, optimizers, metrics
 from models import process_image
 
             #0   1   2   3   4   5   6   7   8   9
-            #-   +    x
-            #*   sqrt /    |    Λ
+            #-   +    ×
+            #/     Λ
 WHITELIST = [27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
             112, 113, 132,
-            133, 272, 82]
+            272, 82]
 
 # this downloads it locally, so, y'know
 # dont run this if you for some reason dont have 100MB free
@@ -101,7 +101,7 @@ IMAGE_W = 32
 IMAGE_H = 32
 
 LR = 1e-4
-EPOCHS = 25
+EPOCHS = 10
 BATCH_SIZE = 32
 
 X_train = DATA['x_train']
@@ -136,18 +136,14 @@ def build_model(convolves, input_shape=(32, 32, 1)):
 
     model.add(layers.Input(shape=input_shape))
 
-    model.add(layers.RandomRotation(0.1))
-    model.add(layers.RandomTranslation(0.1, 0.1))
-    model.add(layers.RandomZoom(0.15))
-
     for filters in convolves:
-        model.add(layers.Conv2D(filters, (3, 3), activation='relu', padding='same'))
+        model.add(layers.Conv2D(filters, (6, 6), activation='relu', padding='same'))
         model.add(layers.BatchNormalization())
-        model.add(layers.MaxPool2D((2, 2), padding='same'))
+        model.add(layers.MaxPool2D((2, 2), padding='same', strides=2))
 
-    model.add(layers.Flatten())
-    model.add(layers.Dense(512, activation='relu'))
-    model.add(layers.Dropout(0.4))
+    model.add(layers.GlobalAveragePooling2D())
+    model.add(layers.Dense(128, activation='relu'))
+    model.add(layers.Dense(128, activation='relu'))
 
     model.add(layers.Dense(len(WHITELIST), activation='softmax'))
     # model.add(layers.Reshape(len(WHITELIST)))
@@ -169,9 +165,9 @@ model.compile(
 )
 
 history = model.fit(
-    X_local_train,
-    y_local_train,
-    validation_data=[X_local_val, y_local_val],
+    X_train_final,
+    y_train_mapped,
+    validation_data=[X_test_final, y_test_mapped],
     epochs=EPOCHS,
     shuffle=True
 )

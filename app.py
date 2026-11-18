@@ -379,7 +379,7 @@ class ToolbarFrame(ttk.Frame):
                 arr = img_to_array(proc, dtype="float32")/255.0
                 # TODO double double double check shape here, this might not actually be the right image portion
                 # or even a meaningful image at all
-                array = np.expand_dims(arr/255.0, axis=0)
+                array = np.expand_dims(arr, axis=0)
                 prediction = classifier.predict(array)
                 predicted_characters.append(prediction)
                 print(prediction)
