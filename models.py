@@ -25,7 +25,7 @@ class Classifier(Model):
                 f"({self.map[i]}): "
                 f"{predict[0][i]:.4f}"
             )
-        return self.map[int(np.argmax(predict))]
+        return self.map[int(np.argmax(predict))], predict[0][top[0]] > 0.7
 
 
 class Detector(Model):
