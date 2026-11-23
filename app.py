@@ -380,7 +380,7 @@ class ToolbarFrame(ttk.Frame):
         for bounds in sorted_contours:
             x, y, w, h = bounds
             proc = process_image(self.canvas.image, [x,y,x+w,y+h])
-            BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
+            # BoundingStroke(CoordinatePair(x,y), CoordinatePair(x+w, y+h)).draw(self.canvas.canvas, self.canvas.image)
             arr = img_to_array(proc, dtype="float32")/255.0
             array = np.expand_dims(arr, axis=0)
             prediction = classifier.predict(array)
